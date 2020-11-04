@@ -10,10 +10,30 @@ class Register extends Component {
     constructor(){
         super();
         this.state = {
+            secureTextEntryPass: true,
+            iconNamePass: "eye-off",
+            secureTextEntry: true,
+            iconName: "eye-off",
             selectedValue:'',
            }
            this.handleChange = this.handleChange.bind(this);
       }
+
+      updateSecureTextEntryPass = () => {
+        let iconNamePass = (this.state.secureTextEntryPass) ? "eye" : "eye-off"
+        this.setState({
+            secureTextEntryPass: !this.state.secureTextEntryPass,
+            iconNamePass: iconNamePass
+        });
+    }
+
+    updateSecureTextEntry = () => {
+        let iconName = (this.state.secureTextEntry) ? "eye" : "eye-off"
+        this.setState({
+            secureTextEntry: !this.state.secureTextEntry,
+            iconName: iconName
+        });
+    }
 
       renderSelectedForm(param) {
         switch(param) {
@@ -197,15 +217,15 @@ class Register extends Component {
                         <Icon name="lock" color="#05375a" size={20}></Icon>                                        
                         <TextInput 
                             placeholder="Password"
-                            secureTextEntry={true}
+                            secureTextEntry={this.state.secureTextEntryPass}
                             placeholderTextColor="#666666"
                             style={styles.textInput}
                             autoCapitalize="none"
                         />
                                                             
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={this.updateSecureTextEntryPass}>
                             <Feather 
-                                name="eye-off"
+                                name={this.state.iconNamePass}
                                 color="grey"
                                 size={20}
                             />            
@@ -217,15 +237,15 @@ class Register extends Component {
                         <Icon name="lock" color="#05375a" size={20}></Icon>                                        
                         <TextInput 
                             placeholder="Conferma Password"
-                            secureTextEntry={true}
+                            secureTextEntry={this.state.secureTextEntry}
                             placeholderTextColor="#666666"
                             style={styles.textInput}
                             autoCapitalize="none"
                         />
                                                             
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={this.updateSecureTextEntry}>
                             <Feather 
-                                name="eye-off"
+                                name={this.state.iconName}
                                 color="grey"
                                 size={20}
                             />            
