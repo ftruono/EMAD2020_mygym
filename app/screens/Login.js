@@ -41,7 +41,7 @@ class Login extends Component {
                     </View>
 
                 <View style={styles.button}>
-                    <TouchableOpacity style={styles.appButtonContainer} onPress={() => this.props.navigation.navigate('Home')}>
+                    <TouchableOpacity style={styles.appButtonContainer} onPress={() => this.props.navigation.replace('Menu' ,{screen : "Home"})}>
                         <Text style={styles.appButtonText}>Log In</Text>
                     </TouchableOpacity>
                 </View>
