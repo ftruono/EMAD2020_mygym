@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
-import {View,Text} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, Button } from 'react-native';
 
-class Home extends Component {
-    state={}
+class Home extends React.Component {
+    state = {}
     render() {
         return (
-            <View style= {styles.container}>
-               <Text style = {styles.textLogin}>HomePage</Text>
+            <View>
+                <Text>HomePage</Text>
+                <Button title="Open drawer" onPress={() => this.props.navigation.openDrawer()} />
             </View>
         );
     }
