@@ -9,6 +9,7 @@ import Login from './app/screens/Login';
 import DrawerNavigator from './app/config/appNavigator';
 
 
+
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
 
@@ -54,13 +55,21 @@ const optionsTab = {
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer >
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={Tabs} />
-        <Stack.Screen name="Menu" component={DrawerNavigator} options={{}} />
+        <Stack.Screen name="Home" component={Tabs} options={{headerTintColor: 'white',headerStyle: { backgroundColor: 'tomato' },}}/>
+        <Stack.Screen name="Menu" component={DrawerNavigator} options={{headerTintColor: 'white',headerStyle: { backgroundColor: 'tomato' },headerLeft:()=>(
+          <Icon name="menu"
+              onPress={() => this.props.params.navigation.openDrawer()}
+              title="Info"
+              color="#fff"
+               size={20}
+            ></Icon>),}} />
       </Stack.Navigator>
 
     </NavigationContainer>
+
+
 
   );
 };
