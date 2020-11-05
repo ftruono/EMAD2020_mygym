@@ -4,21 +4,10 @@ import Icon from "react-native-vector-icons/FontAwesome"
 import Feather from "react-native-vector-icons/Feather"
 
 
-const initialState = {
-    userid: "",
-    password: "",
-    useridError: "",
-    passwordError: ""
-  };
-
 class Login extends Component {
     constructor(){
         super();
         this.state = {
-            userid: '',
-            password:'',
-            useridError:'',
-            passwordError:'',
             secureTextEntry: true,
             iconName: "eye-off",
         }
@@ -32,34 +21,6 @@ class Login extends Component {
         });
     }
 
-    checkFormValid = () => {
-        let useridError = "";
-        let passwordError = "";
-        // let passwordError = "";
-    
-        if (!this.state.userid) {
-          nameError = "UserID non può essere vuoto";
-        }
-    
-        if (!this.state.password) {
-          emailError = "Invalid Password";
-        }
-    
-        if (useridError || passwordError) {
-          this.setState({ useridError, passwordError });
-          return false;
-        }
-    
-        return true;
-    }
-
-    handleSubmit = event => {
-        event.preventDefault();
-        const isValid = this.checkFormValid();
-        if (isValid) {
-          this.setState(initialState);
-        }
-      };
     render() {
         return (
             <View style= {styles.container}>
