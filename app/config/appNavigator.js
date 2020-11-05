@@ -9,24 +9,25 @@ const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
     return (
-      <Drawer.Navigator drawerIcon={ ()=>{ 
-      <Icon
-        name="home"
-        size={20}
-        color='black'
-      /> } } >
-        <Drawer.Screen name="Home" component={Home} options={{
-          title: 'Home',
-          drawerIcon: ({}) => (
+        <Drawer.Navigator drawerIcon={() => {
             <Icon
-              name="home"
-              size={20}
-              color='black'
+                name="home"
+                size={20}
+                color='black'
             />
-          ),
-        }}/>
-      </Drawer.Navigator>
+        }} >
+            <Drawer.Screen name="Home" component={Home} options={{
+                title: 'Home',
+                drawerIcon: ({ }) => (
+                    <Icon
+                        name="home"
+                        size={20}
+                        color='black'
+                    />
+                ),
+            }} />
+        </Drawer.Navigator>
     );
-  };
+};
 
-  export default DrawerNavigator
+export default DrawerNavigator
