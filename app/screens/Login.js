@@ -1,17 +1,17 @@
-import React, {Component} from 'react';
-import {View,Text,StyleSheet,TextInput,TouchableOpacity} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome"
 import Feather from "react-native-vector-icons/Feather"
 
 
 class Login extends Component {
-    constructor(){
+    constructor() {
         super();
         this.state = {
             secureTextEntry: true,
             iconName: "eye-off",
         }
-      }
+    }
 
     updateSecureTextEntry = () => {
         let iconName = (this.state.secureTextEntry) ? "eye" : "eye-off"
@@ -23,10 +23,10 @@ class Login extends Component {
 
     render() {
         return (
-            <View style= {styles.container}>
-               <Text style = {styles.textLogin}>UserID</Text>
-               <View style={styles.action}>
-                    <Icon name="user-o" color="#05375a" size={20}></Icon>                      
+            <View style={styles.container}>
+                <Text style={styles.textLogin}>UserID</Text>
+                <View style={styles.action}>
+                    <Icon name="user-o" color="#05375a" size={20}></Icon>
                     <TextInput
                         placeholder="UserID"
                         placeholderTextColor="#666666"
@@ -36,28 +36,33 @@ class Login extends Component {
                     />
                 </View>
 
-                <Text style = {[styles.textLogin,{marginTop:35}]}>Password</Text>
-                    <View style={styles.action}>
-                        <Icon name="lock" color="#05375a" size={20}></Icon>                                        
-                        <TextInput 
-                            placeholder="Password"
-                            secureTextEntry={this.state.secureTextEntry}
-                            placeholderTextColor="#666666"
-                            style={styles.textInput}
-                            autoCapitalize="none"
+                <Text style={[styles.textLogin, { marginTop: 35 }]}>Password</Text>
+                <View style={styles.action}>
+                    <Icon name="lock" color="#05375a" size={20}></Icon>
+                    <TextInput
+                        placeholder="Password"
+                        secureTextEntry={this.state.secureTextEntry}
+                        placeholderTextColor="#666666"
+                        style={styles.textInput}
+                        autoCapitalize="none"
+                    />
+
+                    <TouchableOpacity onPress={this.updateSecureTextEntry}>
+                        <Feather
+                            name={this.state.iconName}
+                            color="grey"
+                            size={20}
                         />
-                                                            
-                        <TouchableOpacity onPress={this.updateSecureTextEntry}> 
-                            <Feather 
-                                name= {this.state.iconName}
-                                color="grey"
-                                size={20}
-                            />         
-                        </TouchableOpacity>
-                    </View>
-                
+                    </TouchableOpacity>
+                </View>
+
                 <View style={styles.button}>
-                    <TouchableOpacity style={styles.appButtonContainer} onPress={() => this.props.navigation.replace("Menu", {screen : "Home" , params:{ user:'XX', userType:'UT'} }) } >
+                    <TouchableOpacity style={styles.appButtonContainer} onPress={() => {
+                        global.userType='PT';
+                        global.user='XX';
+                        this.props.navigation.replace("Menu", { screen: "Home", params: { user: 'XX', userType: 'UT' } })
+                    }
+                    } >
                         <Text style={styles.appButtonText}>Log In</Text>
                     </TouchableOpacity>
                 </View>
@@ -118,12 +123,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingVertical: 10,
         paddingHorizontal: 12
-      },
-      appButtonText: {
+    },
+    appButtonText: {
         fontSize: 18,
         color: "#fff",
         fontWeight: "bold",
         alignSelf: "center",
         textTransform: "uppercase"
-      }
+    }
 });

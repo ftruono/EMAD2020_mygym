@@ -6,12 +6,16 @@ import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Register from './app/screens/Register';
 import Login from './app/screens/Login';
-import DrawerNavigator from './app/config/appNavigator';
+import DrawerNavigator from './app/config/AppNavigator';
+import { AuthContex } from './app/config/GlobalConfig';
+
 
 
 
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
+
+
 
 function Tabs() {
   return (<Tab.Navigator swipeEnabled="true" tabBarOptions={optionsTab}>
@@ -55,19 +59,19 @@ const optionsTab = {
 
 export default function App() {
   return (
-    <NavigationContainer >
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Tabs} options={{headerTintColor: 'white',headerStyle: { backgroundColor: 'tomato' },}}/>
-        <Stack.Screen name="Menu" component={DrawerNavigator} options={{headerTintColor: 'white',headerStyle: { backgroundColor: 'tomato' },headerLeft:()=>(
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={Tabs} options={{headerTintColor: 'white',headerStyle: { backgroundColor: 'white' },}}/>
+          <Stack.Screen name="Menu" component={DrawerNavigator} options={{headerTintColor: 'white',headerStyle: { backgroundColor: 'white' },headerLeft:()=>(
           <Icon name="menu"
-              onPress={() => this.props.params.navigation.openDrawer()}
+              onPress={() => this.props.params.navigation.openDrawer()} //TODO VA FIXATO!@nellop97
               title="Info"
               color="#fff"
                size={20}
-            ></Icon>),}} />
-      </Stack.Navigator>
+            ></Icon>),} } ></Stack.Screen>
+        </Stack.Navigator>
 
-    </NavigationContainer>
+      </NavigationContainer>
 
 
 
