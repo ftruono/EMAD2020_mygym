@@ -7,8 +7,40 @@ import WorkoutCard from '../../component/WorkoutCard';
 // dimension permette di accedere alle dimensioni della schermata
 // su di essa si possono anche implementare dei metodi basta cercarli
 
-var dimensioni = Dimensions.get('window');
+const { width, height } = Dimensions.get('screen');
 
+const eventi = [
+    {
+        day: '2020-11-04',
+        evento: [{
+            titolo: 'Lezione',
+            durata: '10 ore',
+            descrizione: 'Link della lezione'
+        }]
+    }, {
+        day: '2020-11-05',
+        evento: [{
+            titolo: 'Lezione',
+            durata: '3 ore',
+            descrizione: 'Link della lezione'
+        }]
+    }, {
+        day: '2020-11-18',
+        evento: [{
+            titolo: 'Lezione',
+            durata: '3 ore',
+            descrizione: 'Link della lezione'
+        }]
+    }, {
+        day: '2020-11-25',
+        evento: [{
+            titolo: 'Lezione',
+            durata: '3 ore',
+            descrizione: 'Link della lezione'
+        }]
+    },
+
+];
 const schedaDb = [
     {
         day: 'day1',
@@ -57,23 +89,44 @@ class HomeUser extends React.Component {
     constructor(props) {
         super(props);
     }
+
     state = {}
     render() {
-
+        var eventoSelected =[];
+        eventoSelected.push(eventi.find(item=>item.day=="2020-11-04"));
+        console.log(eventoSelected.map((u)=> u.evento.map((u)=>u.durata)));
         return (
             <SafeAreaView style={styles.container}>
                 {/* view dedicata alla visual delle schede di allenamento */}
-                <View style={{ flex: 2, flexDirection: 'column' }}>
-                    <ScrollView style={styles.scrollView}>
-                        <WorkoutCard scheda={schedaDb} />
+                <View style={{ flex: 2, flexDirection: 'column', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
+                    <ScrollView>
+                        <View sstyle={styles.boxStyle}>
+                            <WorkoutCard scheda={JSON.stringify(schedaDb)} />
+                        </View>
                     </ScrollView>
+
+
                 </View>
                 <View style={{ flex: 2, flexDirection: 'column' }}>
-                    {/* <ScrollView style={styles.scrollView}>
-                        <WorkoutCard params={scheda} />
-                    </ScrollView> */}
+                    <Text> dimenisioni schermo {width}</Text>
+                    {/* {console.log(eventi.map((u, i) => (u.evento.map((x)=> x.titolo))))} */}
+                    
+
+                    <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
+                        <View style={styles.boxStyle} />
+                        <View style={styles.boxStyle} />
+                        <View style={styles.boxStyle} />
+                        <View style={styles.boxStyle} />
+                        <View style={styles.boxStyle} />
+                        <View style={styles.boxStyle} />
+                        <View style={styles.boxStyle} />
+                        <View style={styles.boxStyle} />
+                        <View style={styles.boxStyle} />
+                        <View style={styles.boxStyle} />
+                        <View style={styles.boxStyle} />
+                        <View style={styles.boxStyle} />
+                    </View>
                 </View>
-                
 
 
             </SafeAreaView>
@@ -86,17 +139,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    item: {
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-    },
-    title: {
-        fontSize: 32,
-    },
+    boxStyle: {
+        height: 100, 
+        width: 50, 
+        borderWidth: 1, 
+        backgroundColor: 'orange', 
+        marginBottom: 5
+      },
     scrollView: {
-        backgroundColor: 'pink',
-        marginHorizontal: 20,
+        justifyContent: 'flex-start',
+        flexWrap: 'wrap',
+        marginHorizontal: width / 150,
     },
 
 });

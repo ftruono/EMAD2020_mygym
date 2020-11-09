@@ -61,14 +61,18 @@ export default function App() {
   return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Home" component={Tabs} options={{headerTintColor: 'white',headerStyle: { backgroundColor: 'white' },}}/>
-          <Stack.Screen name="Menu" component={DrawerNavigator} options={{headerTintColor: 'white',headerStyle: { backgroundColor: 'white' },headerLeft:()=>(
+          <Stack.Screen name="Home" component={Tabs} options={{headerTintColor: 'white',headerStyle: { backgroundColor: 'red' },}}/>
+          <Stack.Screen name="Menu" component={DrawerNavigator} options={{headerTintColor: 'white',headerStyle: { backgroundColor: 'red' },headerLeft:()=>(
           <Icon name="menu"
               onPress={() => this.props.params.navigation.openDrawer()} //TODO VA FIXATO!@nellop97
               title="Info"
               color="#fff"
                size={20}
-            ></Icon>),} } ></Stack.Screen>
+            ></Icon>
+            ),
+            } } >
+
+            </Stack.Screen>
         </Stack.Navigator>
 
       </NavigationContainer>
