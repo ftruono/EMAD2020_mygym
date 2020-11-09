@@ -6,6 +6,7 @@ import HomeUser from "../screens/user/HomeUser";
 import HomeNT from "../screens/nutritionist/HomeNT";
 import HomePT from "../screens/personaltrainer/HomePT";
 import { View, StyleSheet, Text, Image, ImageBackground, SafeAreaView } from "react-native";
+import LiveCalendar from "../screens/LiveCalendar";
 
 
 const Drawer = createDrawerNavigator();
@@ -86,7 +87,7 @@ const DrawerNavigator = () => {
                             />
                         ),
                     }} />
-                    <Drawer.Screen name="Calendario" component={HomeUser} options={{
+                    <Drawer.Screen name="Calendario" component={LiveCalendar} options={{
                         title: 'Calendario Live',
                         drawerIcon: ({ }) => (
                             <Icon
@@ -181,7 +182,7 @@ const DrawerNavigator = () => {
                                     />
                                 ),
                             }} />
-                            <Drawer.Screen name="Calendario_Live" component={HomePT} options={{
+                            <Drawer.Screen name="Calendario_Live" component={LiveCalendar} options={{
                                 title: 'Calendario Live',
                                 drawerIcon: ({ }) => (
                                     <Icon
