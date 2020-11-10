@@ -74,7 +74,7 @@ export default class LiveCalendar extends Component{
 
     render() {
         return(
-            <SafeAreaView style={styles.containerSafe}>
+            <SafeAreaView>
             <HeaderComponent {...this.props} title="Calendario Live" />
                 <View style= {styles.containerModal}>
                     <Text style = {styles.textLogin}>Calendar</Text>
@@ -92,9 +92,6 @@ export default class LiveCalendar extends Component{
 }
      
 const styles = StyleSheet.create({
-    containerSafe: {
-        flex:1
-    },
     container: {
         padding: 25,
         flex: 1,
@@ -103,9 +100,6 @@ const styles = StyleSheet.create({
       },
       containerModal: {
         flex: 3,
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
         paddingHorizontal: 20,
         paddingVertical: 30
     },
