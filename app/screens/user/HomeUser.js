@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from "react";
 import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions } from 'react-native';
 import { Card, ListItem, Icon } from 'react-native-elements';
+import HeaderComponent from "../../component/HeaderComponent";
 import WorkoutCard from '../../component/WorkoutCard';
 
 
@@ -96,7 +97,10 @@ class HomeUser extends React.Component {
         eventoSelected.push(eventi.find(item=>item.day=="2020-11-04"));
         console.log(eventoSelected.map((u)=> u.evento.map((u)=>u.durata)));
         return (
+            
             <SafeAreaView style={styles.container}>
+                <HeaderComponent {...this.props} title="Home" />
+                
                 {/* view dedicata alla visual delle schede di allenamento */}
                 <View style={{ flex: 2, flexDirection: 'column', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
                     <ScrollView>

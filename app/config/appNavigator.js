@@ -1,12 +1,10 @@
 import React from "react";
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, } from "@react-navigation/drawer";
-import Home from "../screens/Home";
 import Icon from "react-native-vector-icons/Entypo";
 import HomeUser from "../screens/user/HomeUser";
 import HomeNT from "../screens/nutritionist/HomeNT";
 import HomePT from "../screens/personaltrainer/HomePT";
-import { View, StyleSheet, Text, Image, ImageBackground, SafeAreaView } from "react-native";
-import LiveCalendar from "../screens/LiveCalendar";
+import { StyleSheet, Image, SafeAreaView } from "react-native";
 
 
 const Drawer = createDrawerNavigator();

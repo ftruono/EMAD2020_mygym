@@ -8,6 +8,7 @@ import Register from './app/screens/Register';
 import Login from './app/screens/Login';
 import DrawerNavigator from './app/config/AppNavigator';
 import { AuthContex } from './app/config/GlobalConfig';
+import MenuHeader from './app/screens/MenuHeader';
 
 
 
@@ -57,25 +58,16 @@ const optionsTab = {
 
 
 
+
 export default function App() {
   return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Home" component={Tabs} options={{headerTintColor: 'white',headerStyle: { backgroundColor: 'red' },}}/>
-          <Stack.Screen name="Menu" component={DrawerNavigator} options={{headerTintColor: 'white',headerStyle: { backgroundColor: 'red' },headerLeft:()=>(
-          <Icon name="menu"
-              onPress={() => this.props.params.navigation.openDrawer()} //TODO VA FIXATO!@nellop97
-              title="Info"
-              color="#fff"
-               size={20}
-            ></Icon>
-            ),
-            } } >
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Tabs} options={{ headerTintColor: '#ff6c16', headerStyle: { backgroundColor: '#ff6c16' },title:'My Pocket Gym' }} />
+        <Stack.Screen name="Menu" component={DrawerNavigator} options={{ headerShown: false }}></Stack.Screen>
+      </Stack.Navigator>
 
-            </Stack.Screen>
-        </Stack.Navigator>
-
-      </NavigationContainer>
+    </NavigationContainer >
 
 
 
