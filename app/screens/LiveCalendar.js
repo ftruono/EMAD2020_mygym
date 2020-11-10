@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {View,Text,StyleSheet,TextInput,TouchableOpacity,Modal} from 'react-native';
+import {View,Text,StyleSheet,SafeAreaView} from 'react-native';
 import Calendar from "react-native-customize-selected-date"
 import Icon from "react-native-vector-icons/FontAwesome"
 import _ from "lodash"
 import ModalEvent from '../component/ModalEvent'
+import HeaderComponent from "../component/HeaderComponent";
 
 
 const eventi = [
@@ -41,8 +42,8 @@ const eventi = [
 
 
 export default class LiveCalendar extends Component{
-    constructor() {
-    super();
+    constructor(props) {
+    super(props);
     this.state = {
         isModalVisible: false,
         data:'',
@@ -73,21 +74,27 @@ export default class LiveCalendar extends Component{
 
     render() {
         return(
-            <View style= {styles.containerModal}>
-                <Text style = {styles.textLogin}>Calendar</Text>
-                <Calendar
-                    date={this.state.time}
-                    changeDate={(date) => this.onChangeDate(date)}
-                    format='YYYY-MM-DD'
-                    renderChildDay={(day) => this.renderChildDay(day)}
-                />
-                <ModalEvent isModalVisible={this.state.isModalVisible} date={this.state.data} event={JSON.stringify(eventi)} handleClose={this.handleModalClose}/>
-        </View>
+            <SafeAreaView style={styles.containerSafe}>
+            <HeaderComponent {...this.props} title="Calendario Live" />
+                <View style= {styles.containerModal}>
+                    <Text style = {styles.textLogin}>Calendar</Text>
+                    <Calendar
+                        date={this.state.time}
+                        changeDate={(date) => this.onChangeDate(date)}
+                        format='YYYY-MM-DD'
+                        renderChildDay={(day) => this.renderChildDay(day)}
+                    />
+                    <ModalEvent isModalVisible={this.state.isModalVisible} date={this.state.data} event={JSON.stringify(eventi)} handleClose={this.handleModalClose}/>
+                </View>
+        </SafeAreaView>
         )
     };
 }
      
 const styles = StyleSheet.create({
+    containerSafe: {
+        flex:1
+    },
     container: {
         padding: 25,
         flex: 1,
