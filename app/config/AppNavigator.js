@@ -5,6 +5,7 @@ import HomeUser from "../screens/user/HomeUser";
 import HomeNT from "../screens/nutritionist/HomeNT";
 import HomePT from "../screens/personaltrainer/HomePT";
 import { StyleSheet, Image, SafeAreaView } from "react-native";
+import LiveCalendar from "../screens/LiveCalendar";
 
 
 const Drawer = createDrawerNavigator();
