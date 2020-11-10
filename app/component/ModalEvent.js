@@ -8,20 +8,16 @@ class ModalEvent extends Component {
     }
     state = {}
 
-    closeModal = () => {
-       //TODO da fare  
-    }
-
      renderLock = () => {
         alert("Click save")
       } 
-    render(){
+    
+      render(){
 
         var eventiX = JSON.parse(this.props.event);
         var eventoSelected =[];
-        eventoSelected.push(eventiX.find(item=>item.day=="2020-11-04"));
-        //Gestire lato user
-        console.log(global.userType)
+        eventoSelected.push(eventiX.find(item=>item.day==='2020-11-04'));
+        console.log(this.props.date)
             return (
                 
                 eventoSelected.map((u)=> u.evento.map((u)=>
@@ -33,43 +29,82 @@ class ModalEvent extends Component {
                             <Text style={styles.textLogin}>Inserisci un nuovo evento</Text>
                             <Text style={styles.textLogin}>Data: {this.props.date}</Text>
                                 <Text style={styles.text}>Titolo evento:</Text>
-                                    <View style={styles.action}>
-                                        <TextInput
-                                            placeholder="Inserisci titolo evento"
-                                            placeholderTextColor="#666666"
-                                            style={styles.textInput}
-                                            autoCapitalize="none"
-                                            onChange={(event) => this.setState({eventTitol:event.nativeEvent.text})}
-                                            value={u.titolo}
-                                        />
-                                    </View>
+                                    
+                                    {global.userType == 'PT' ? (
+                                        <>
+                                            <View style={styles.action}>
+                                            <TextInput
+                                                placeholder="Inserisci titolo evento"
+                                                placeholderTextColor="#666666"
+                                                style={styles.textInput}
+                                                autoCapitalize="none"
+                                                onChange={(event) => this.setState({eventTitol:event.nativeEvent.text})}
+                                                value={u.titolo}
+                                            />
+                                            </View>
 
-                                <Text style={[styles.text]}>Durata</Text>
-                                    <View style={styles.action}>
-                                        <TextInput
-                                            placeholder="Inserisci la sua durata"
-                                            placeholderTextColor="#666666"
-                                            style={styles.textInput}
-                                            autoCapitalize="none"
-                                            onChange={(event) => this.setState({duration:event.nativeEvent.text})}
-                                            value={u.durata}
-                                        />
-                                    </View>
+                                            <Text style={[styles.text]}>Durata</Text>
+                                            <View style={styles.action}>
+                                                <TextInput
+                                                    placeholder="Inserisci la sua durata"
+                                                    placeholderTextColor="#666666"
+                                                    style={styles.textInput}
+                                                    autoCapitalize="none"
+                                                    onChange={(event) => this.setState({duration:event.nativeEvent.text})}
+                                                    value={u.durata}
+                                                />
+                                            </View>
 
-                                <Text style={[styles.text]}>Descrizione</Text>
-                                    <View style={styles.action}>
-                                        <TextInput
-                                            placeholder="Inserisci decrizione/link alla stanza"
-                                            placeholderTextColor="#666666"
-                                            style={styles.textInput}
-                                            autoCapitalize="none"
-                                            onChange={(event) => this.setState({description:event.nativeEvent.text})}
-                                            value={u.descrizione}
-                                        />
-                                    </View>
-                                
+                                            <Text style={[styles.text]}>Descrizione</Text>
+                                            <View style={styles.action}>
+                                                <TextInput
+                                                    placeholder="Inserisci decrizione/link alla stanza"
+                                                    placeholderTextColor="#666666"
+                                                    style={styles.textInput}
+                                                    autoCapitalize="none"
+                                                    onChange={(event) => this.setState({description:event.nativeEvent.text})}
+                                                    value={u.descrizione}
+                                                />
+                                            </View>
+
+                                        </>):(
+                                            <>
+                                                <View style={styles.action}>
+                                                <TextInput
+                                                    placeholderTextColor="#666666"
+                                                    style={styles.textInput}
+                                                    autoCapitalize="none"
+                                                    editable={false}
+                                                    value={u.titolo}
+                                                />
+                                                </View>
+
+                                                <Text style={[styles.text]}>Durata</Text>
+                                                <View style={styles.action}>
+                                                    <TextInput
+                                                        placeholderTextColor="#666666"
+                                                        style={styles.textInput}
+                                                        autoCapitalize="none"
+                                                        editable={false}
+                                                        value={u.durata}
+                                                    />
+                                                </View>
+
+                                                <Text style={[styles.text]}>Descrizione</Text>
+                                                <View style={styles.action}>
+                                                    <TextInput
+                                                        placeholderTextColor="#666666"
+                                                        style={styles.textInput}
+                                                        autoCapitalize="none"
+                                                        editable={false}
+                                                        value={u.descrizione}
+                                                    />
+                                                </View>
+                                            </>
+                                        )}
+                                    
                                 <View style={styles.action}>
-                                    <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 150 }]} onPress={this.closeModal}>
+                                    <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 150 }]} onPress={this.props.handleClose}>
                                         <Text style={styles.appButtonText}>Chiudi</Text>
                                     </TouchableOpacity>
 

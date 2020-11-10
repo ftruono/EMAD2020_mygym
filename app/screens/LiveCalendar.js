@@ -17,23 +17,23 @@ const eventi = [
     }, {
         day: '2020-11-05',
         evento: [{
-            titolo: 'Lezione',
+            titolo: 'Lezione1',
             durata: '3 ore',
-            descrizione: 'Link della lezione'
+            descrizione: 'Link della lezione1'
         }]
     }, {
         day: '2020-11-18',
         evento: [{
-            titolo: 'Lezione',
+            titolo: 'Lezione2',
             durata: '3 ore',
-            descrizione: 'Link della lezione'
+            descrizione: 'Link della lezione2'
         }]
     }, {
         day: '2020-11-25',
         evento: [{
-            titolo: 'Lezione',
+            titolo: 'Lezione3',
             durata: '3 ore',
-            descrizione: 'Link della lezione'
+            descrizione: 'Link della lezione3'
         }]
     },
 
@@ -67,6 +67,10 @@ export default class LiveCalendar extends Component{
         } 
     }
 
+    handleModalClose = ()=>{
+        this.setState({isModalVisible: false})
+    }
+
     render() {
         return(
             <View style= {styles.containerModal}>
@@ -77,7 +81,7 @@ export default class LiveCalendar extends Component{
                     format='YYYY-MM-DD'
                     renderChildDay={(day) => this.renderChildDay(day)}
                 />
-                <ModalEvent isModalVisible={this.state.isModalVisible} date={this.state.data} event={JSON.stringify(eventi)}/>
+                <ModalEvent isModalVisible={this.state.isModalVisible} date={this.state.data} event={JSON.stringify(eventi)} handleClose={this.handleModalClose}/>
         </View>
         )
     };
