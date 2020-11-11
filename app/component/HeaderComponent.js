@@ -12,14 +12,13 @@ class HeaderComponent extends React.Component {
     state = {}
     render() {
         return (
-            <SafeAreaView style={styles.container}>
-                <Header size={90} backgroundColor='#ff6c16'
+              <Header size={90} backgroundColor='#ff6c16'
                     leftComponent={
                         <Icon name="menu" size={25} style={styles.iconMenu} onPress={() => this.props.navigation.openDrawer()} />}
                     centerComponent={<Text style={styles.headerText}>{this.props.title}</Text>}
                 />
 
-            </SafeAreaView>
+            
 
         );
     }
