@@ -6,6 +6,7 @@ import HomeNT from "../screens/nutritionist/HomeNT";
 import HomePT from "../screens/personaltrainer/HomePT";
 import { StyleSheet, Image, SafeAreaView } from "react-native";
 import LiveCalendar from "../screens/LiveCalendar";
+import DatiPersonaliUser from "../screens/user/DatiPersonaliUser"
 
 
 const Drawer = createDrawerNavigator();
@@ -55,7 +56,7 @@ const DrawerNavigator = () => {
                             />
                         ),
                     }} />
-                    <Drawer.Screen name="Dati_Personali" component={HomeUser} options={{
+                    <Drawer.Screen name="Dati_Personali" component={DatiPersonaliUser} options={{
                         title: 'Dati Personali',
                         drawerIcon: ({ }) => (
                             <Icon
