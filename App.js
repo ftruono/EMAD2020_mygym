@@ -8,7 +8,6 @@ import Register from './app/screens/Register';
 import Login from './app/screens/Login';
 import DrawerNavigator from './app/config/AppNavigator';
 import { AuthContex } from './app/config/GlobalConfig';
-import MenuHeader from './app/screens/MenuHeader';
 
 
 
