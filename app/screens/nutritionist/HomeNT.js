@@ -17,7 +17,7 @@
 // }
 
 // export default HomeNT;
-import * as Permissions from 'expo-permissions';
+// import * as Permissions from 'expo-permissions';
 
 import React, { useState } from 'react';
 // Import core components
@@ -32,22 +32,22 @@ import {
 import DocumentPicker from 'react-native-document-picker';
 
 const HomeNT = () => {
-  const [singleFile, setSingleFile] = useState(null);
-  const [permission, askPermission, getPermission] = usePermissions(Permissions.CAMERA, { ask: true });
+//   const [singleFile, setSingleFile] = useState(null);
+//   const [permission, askPermission, getPermission] = usePermissions(Permissions.CAMERA, { ask: true });
 
 
-    if (!permission || permission.status !== 'granted') {
-        return (
-          <View>
-            <Text>Permission is not granted</Text>
-            <Button title="Grant permission" onPress={askForPermission} />
-          </View>
-        );
-      }
+    // if (!permission || permission.status !== 'granted') {
+    //     return (
+    //       <View>
+    //         <Text>Permission is not granted</Text>
+    //         <Button title="Grant permission" onPress={askForPermission} />
+    //       </View>
+    //     );
+    //   }
     
       return (
         <View>
-          <Camera />
+          {/* <Camera /> */}
         </View>
       );
 //   const uploadImage = async () => {
