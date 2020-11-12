@@ -66,7 +66,7 @@ class HomeUser extends React.Component {
 
             <SafeAreaView style={styles.home}>
                 <HeaderComponent {...this.props} title="Home" />
-                
+                    {console.log(schedaDb)}
                     <FlatList style={{ margin: 10,flex:0.5 }}
                         data={schedaDb}
                         scrollEnabled={true} 

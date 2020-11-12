@@ -12,16 +12,7 @@ class WorkoutCard extends React.Component {
     state = {}
 
     render() {
-        const styles = StyleSheet.create({
-            item: {
-                width: width/2,
-                height: '30%' 
-            },
-            body:{
-                alignItems:'center', 
-                flex:0.8
-            }
-        });
+        
         var scheda = this.props.scheda;
 
         return (
@@ -53,3 +44,13 @@ class WorkoutCard extends React.Component {
 export default WorkoutCard;
 
 
+const styles = StyleSheet.create({
+            item: {
+                width: width/2,
+                height: '30%' 
+            },
+            body:{
+                alignItems:'center', 
+                flex:0.8
+            }
+        });

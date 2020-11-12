@@ -29,7 +29,7 @@ import {
 } from 'react-native';
 
 // Import Document Picker
-import DocumentPicker from 'react-native-document-picker';
+// import DocumentPicker from 'react-native-document-picker';
 
 const HomeNT = () => {
 //   const [singleFile, setSingleFile] = useState(null);

@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { DataTable, FAB, Portal, Provider, TextInput } from 'react-native-paper';
+import React, { Component, useState } from 'react';
+import { StyleSheet, View, TextInput, TouchableOpacity, Text, FlatList } from 'react-native';
+import { DataTable, FAB, Portal, Provider } from 'react-native-paper';
+import { RefreshControl, SafeAreaView } from 'react-navigation';
 import HeaderComponent from "../../component/HeaderComponent";
+
+
+import Scheda from './Scheda';
 // import ButtonCircleFlottante from "./buttonCircleFlottante";
-import Note from "./Note"
+import Note from "./Scheda"
 
 const ButtonCircleFlottante = () => {
     const [state, setState] = React.useState({ open: false });
@@ -49,6 +52,27 @@ const ButtonCircleFlottante = () => {
     );
 };
 
+var schedaArray = [
+    {
+        day: 'day1',
+        esercizi: [{
+            esercizio1: 'panca piana 5*10',
+            recupero: '30sec',
+        }, {
+            esercizio1: 'panca alta 5*10',
+            recupero: '30sec',
+        }]
+    }, {
+        day: 'day1',
+        esercizi: [{
+            esercizio1: 'panca piana 5*10',
+            recupero: '30sec',
+        }, {
+            esercizio1: 'panca alta 5*10',
+            recupero: '30sec',
+        }]
+    }
+];
 
 
 
@@ -56,18 +80,25 @@ export default class CreateWorkout extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            noteArray: [],
-            noteText: '',
-        }
+            isRefreshing:false,
+          };
+
     }
+    onRefresh() {
+        this.setState({ isFetching: true });
+      }
+    // let notes = this.state.schedaArray.map((val, key) => {
+    //     // val.scheda.day=key.toString();
+    //     console.log(this.schedaArray);
+    //     return <Note />
+    // })
     render() {
-        let notes = this.state.noteArray.map((val, key) => {
-            return <Note/>
-        })
+
         return (
+
             <SafeAreaView style={styles.container}>
                 <HeaderComponent {...this.props} title="Schede allenamento" />
-                <ScrollView style={styles.scrollContainer}>
+                {/* <ScrollView style={styles.scrollContainer}>
                     {notes}
                 </ScrollView>
 
@@ -83,24 +114,83 @@ export default class CreateWorkout extends Component {
                 </View> 
                 {/* <View style={{ flex: 1, flexDirection: 'column-reverse' }}>
                     <ButtonCircleFlottante />
-                </View>  */}
-                 <TouchableOpacity onPress={this.addNote.bind(this)} style={styles.addButton}>
+                </View>  */ }
+
+                        <FlatList style={{ margin: 10, flex: 0.5 }}
+                        data={schedaArray}
+                        scrollEnabled={true}
+                        numColumns={2}
+                        keyExtractor={(item, index) => item.day}
+                        onRefresh={this.state.isRefreshing}
+                        refreshing={this._onRefresh}
+                        renderItem={({ item }) => (
+                            <Scheda scheda={item} />
+    
+                        )}
+    
+                    />
+                    {console.log("qua")}
+               
+
+
+
+                <TouchableOpacity onPress={this.addElement.bind(this.schedaArray)} style={styles.addButton}>
                     <Text style={styles.addButtonText}>
                         +
                     </Text>
-                </TouchableOpacity> 
+                </TouchableOpacity>
             </SafeAreaView>
+
         );
     }
-    addNote() {
-            this.state.noteArray.push({
-                'data': "data",
-                'note': "ciao",
-            });
-            this.setState({ noteArray: this.state.noteArray });
-            // this.setState({ noteText: '' });
-        }
+
+    // addElement = () => {
+    //     var newArray = [...initialElements, { id: idx, text: "Object " + (idx + 1) }];
+    //     incr(idx + 1);
+    //     console.log(initialElements.length);
+    //     setExampleState(newArray);
+    //     changeEl(newArray);
+    // }
+    addElement(array) {
+        // array.map((element) => {
+        //     console.log(element);
+        // })
+
+        console.log(schedaArray)
+        schedaArray.push(
+            {
+                day: "day2", esercizi: [{
+                    esercizio1: 'panca piana 5*10',
+                    recupero: '30sec',
+                }, {
+                    esercizio1: 'panca alta 5*10',
+                    recupero: '30sec',
+                }]
+            }
+        );
+      
+        console.log("riga 162" );
+            // onRefresh();
+        console.log("riga 165" );
+        // if (onRefresh) {
+        //     onRefresh = false;
+        // }
+        // console.log("riga 169" + onRefresh);
+
+
+        // this.setState({ noteArray: this.state.schedaArray });
+        // this.setState({ noteText: '' });
     }
+    _onRefresh=()=>{
+        this.setState({isRefreshing:true},()=>{
+            setTimeout (()=> {
+                this.setState({isRefreshing:false});
+            },2000);
+        })
+    }
+
+
+}
 
 const styles = StyleSheet.create({
     container: {
