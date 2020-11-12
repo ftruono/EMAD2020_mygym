@@ -8,6 +8,7 @@ import { StyleSheet, Image, SafeAreaView } from "react-native";
 import LiveCalendar from "../screens/LiveCalendar";
 import DatiPersonaliUser from "../screens/user/DatiPersonaliUser"
 
+import CreateWorkout from "../screens/personaltrainer/createWorkout";
 
 const Drawer = createDrawerNavigator();
 
@@ -162,7 +163,7 @@ const DrawerNavigator = () => {
                                     />
                                 ),
                             }} />
-                            <Drawer.Screen name="Scheda_Allenamento" component={HomePT} options={{
+                            <Drawer.Screen name="Scheda_Allenamento" component={CreateWorkout} options={{
                                 title: 'Scheda Allenamento',
                                 drawerIcon: ({ }) => (
                                     <Icon
