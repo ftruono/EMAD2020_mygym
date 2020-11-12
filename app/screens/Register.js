@@ -15,6 +15,21 @@ class Register extends Component {
             secureTextEntry: true,
             iconName: "eye-off",
             selectedValue:'',
+            email:'',
+            userID:'',
+            password:'',
+            regione:'',
+            provincia:'',
+            citta:'',
+            categoria:'',
+            nameError:'',
+            emailError:'',
+            passwordError:'',
+            equalPswError:'',
+            regioneError:'',
+            provinciaError:'',
+            cittaError:'',
+            categoriaError:''
            }
            this.handleChange = this.handleChange.bind(this);
       }
@@ -35,6 +50,56 @@ class Register extends Component {
         });
     }
 
+    validateFormUser = () => {
+        if (this.state.email.trim() === "" ) {
+            this.setState(() => ({ emailError: "Campo obbligatorio."}));
+        } else{
+            this.setState(() => ({ emailError: ""}));
+        }
+        if (this.state.userID.trim() === "") {
+            this.setState(() => ({ nameError: "Campo obbligatorio."}));
+        } else{
+            this.setState(() => ({ nameError: ""}));
+        }
+
+        if(this.state.password.length < 8) {
+            this.setState(() => ({ passwordError: "La password deve essere almeno di 8 caratteri"}))
+        } else{
+            this.setState(() => ({ passwordError: ""}));
+        }
+
+        if(this.state.confirmPsw != this.state.password) {
+            this.setState(() => ({ equalPswError: "Le password non sono uguali"}))
+        } else{
+            this.setState(() => ({ equalPswError: ""}));
+        }
+      }
+
+      validateFormPT = () => {
+        if (this.state.regione.trim() === "" ) {
+            this.setState(() => ({ regioneError: "Campo obbligatorio."}));
+        } else{
+            this.setState(() => ({ regioneError: ""}));
+        }
+        if (this.state.provincia.trim() === "") {
+            this.setState(() => ({ provinciaError: "Campo obbligatorio."}));
+        } else{
+            this.setState(() => ({ provinciaError: ""}));
+        }
+
+        if(this.state.citta.trim() === "") {
+            this.setState(() => ({ cittaError: "Campo obbligatorio."}))
+        } else{
+            this.setState(() => ({ cittaError: ""}));
+        }
+
+        if(this.state.categoria.trim() === "") {
+            this.setState(() => ({ categoriaError: "Campo obbligatorio."}))
+        } else{
+            this.setState(() => ({ categoriaError: ""}));
+        }
+      }
+
       renderSelectedForm(param) {
         switch(param) {
           case 'form_user':
@@ -54,7 +119,7 @@ class Register extends Component {
 
 
                         <View style={styles.button}>
-                            <TouchableOpacity style={styles.appButtonContainer}>
+                            <TouchableOpacity style={styles.appButtonContainer} onPress={this.validateFormUser}>
                                 <Text style={styles.appButtonText}>Registrati</Text>
                             </TouchableOpacity>
                         </View>
@@ -71,8 +136,12 @@ class Register extends Component {
                                 placeholder='Regione'
                                 autoCapitalize="none"
                                 placeholderTextColor="#666666"
+                                onChangeText={(text) => this.setState({regione:text})}
+                                value={this.state.regione}
                             />
                         </View>
+
+                        <Text style={{color: 'red'}}>{this.state.regioneError}</Text>
 
                         <Text style={[styles.textLogin, { marginTop: 35 }]}>Provincia</Text>
                         <View style={styles.action}>
@@ -82,8 +151,12 @@ class Register extends Component {
                                 placeholder='Provincia'
                                 autoCapitalize="none"
                                 placeholderTextColor="#666666"
+                                onChangeText={(text) => this.setState({provincia:text})}
+                                value={this.state.provincia}
                             />
                         </View>
+
+                        <Text style={{color: 'red'}}>{this.state.provinciaError}</Text>
 
                         <Text style={[styles.textLogin, { marginTop: 35 }]}>Città</Text>
                         <View style={styles.action}>
@@ -93,8 +166,12 @@ class Register extends Component {
                                 placeholder="Città"
                                 autoCapitalize="none"
                                 placeholderTextColor="#666666"
+                                onChangeText={(text) => this.setState({citta:text})}
+                                value={this.state.citta}
                             />
                         </View>
+
+                        <Text style={{color: 'red'}}>{this.state.cittaError}</Text>
 
                         <Text style={[styles.textLogin, { marginTop: 35 }]}>Categoria</Text>
                         <View style={styles.action}>
@@ -103,8 +180,12 @@ class Register extends Component {
                                 placeholder="Categoria"
                                 autoCapitalize="none"
                                 placeholderTextColor="#666666"
+                                onChangeText={(text) => this.setState({categoria:text})}
+                                value={this.state.categoria}
                             />
                         </View>
+
+                        <Text style={{color: 'red'}}>{this.state.categoriaError}</Text>
 
                         <Text style={[styles.textLogin, { marginTop: 35 }]}>Allega il tuo certificato</Text>
                         <TouchableOpacity style={{ marginTop: 15 }}>
@@ -116,7 +197,7 @@ class Register extends Component {
                             <Entypo name="attachment" color="grey" size={30}></Entypo>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 200 }]}>
+                        <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 200 }]} onPress={this.validateFormPT}>
                             <Text style={styles.appButtonText}>Registrati</Text>
                         </TouchableOpacity>
                     </View>);
@@ -131,8 +212,12 @@ class Register extends Component {
                                 placeholder='Regione'
                                 autoCapitalize="none"
                                 placeholderTextColor="#666666"
+                                onChangeText={(text) => this.setState({regione:text})}
+                                value={this.state.regione}
                             />
                         </View>
+
+                        <Text style={{color: 'red'}}>{this.state.regioneError}</Text>
 
                         <Text style={[styles.textLogin, { marginTop: 35 }]}>Provincia</Text>
                         <View style={styles.action}>
@@ -142,8 +227,12 @@ class Register extends Component {
                                 placeholder='Provincia'
                                 autoCapitalize="none"
                                 placeholderTextColor="#666666"
+                                onChangeText={(text) => this.setState({provincia:text})}
+                                value={this.state.provincia}
                             />
                         </View>
+
+                        <Text style={{color: 'red'}}>{this.state.provinciaError}</Text>
 
                         <Text style={[styles.textLogin, { marginTop: 35 }]}>Città</Text>
                         <View style={styles.action}>
@@ -153,8 +242,12 @@ class Register extends Component {
                                 placeholder="Città"
                                 autoCapitalize="none"
                                 placeholderTextColor="#666666"
+                                onChangeText={(text) => this.setState({citta:text})}
+                                value={this.state.citta}
                             />
                         </View>
+
+                        <Text style={{color: 'red'}}>{this.state.cittaError}</Text>
 
                         <Text style={[styles.textLogin, { marginTop: 35 }]}>Categoria</Text>
                         <View style={styles.action}>
@@ -163,8 +256,12 @@ class Register extends Component {
                                 placeholder="Categoria"
                                 autoCapitalize="none"
                                 placeholderTextColor="#666666"
+                                onChangeText={(text) => this.setState({categoria:text})}
+                                value={this.state.categoria}
                             />
                         </View>
+
+                        <Text style={{color: 'red'}}>{this.state.categoriaError}</Text>
 
                         <Text style={[styles.textLogin, { marginTop: 35 }]}>Allega il tuo certificato</Text>
                         <TouchableOpacity style={{ marginTop: 15 }}>
@@ -176,7 +273,7 @@ class Register extends Component {
                             <Entypo name="attachment" color="grey" size={30}></Entypo>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 200 }]}>
+                        <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 200 }]} onPress={this.validateFormPT}>
                             <Text style={styles.appButtonText}>Registrati</Text>
                         </TouchableOpacity>
                     </View>);
@@ -197,10 +294,13 @@ class Register extends Component {
                             placeholderTextColor="#666666"
                             style={styles.textInput}
                             autoCapitalize="none"
-
+                            onChangeText={(text) => this.setState({email:text})}
+                            value={this.state.email}
                         />
                     </View>
 
+                    <Text style={{color: 'red'}}>{this.state.emailError}</Text>
+                    
                     <Text style={[styles.textLogin, { marginTop: 35 }]}>UserID</Text>
                     <View style={styles.action}>
                         <Icon name="user-o" color="#05375a" size={20}></Icon>
@@ -209,9 +309,13 @@ class Register extends Component {
                             placeholderTextColor="#666666"
                             style={styles.textInput}
                             autoCapitalize="none"
+                            onChangeText={(text) => this.setState({userID:text})}
+                            value={this.state.userID}
                         />
                     </View>
 
+                    <Text style={{color: 'red'}}>{this.state.nameError}</Text>
+                    
                     <Text style={[styles.textLogin, { marginTop: 35 }]}>Password</Text>
                     <View style={styles.action}>
                         <Icon name="lock" color="#05375a" size={20}></Icon>
@@ -221,8 +325,10 @@ class Register extends Component {
                             placeholderTextColor="#666666"
                             style={styles.textInput}
                             autoCapitalize="none"
+                            onChangeText={(text) => this.setState({password:text})}
+                            value={this.state.password}
                         />
-                                                            
+
                         <TouchableOpacity onPress={this.updateSecureTextEntryPass}>
                             <Feather 
                                 name={this.state.iconNamePass}
@@ -231,6 +337,8 @@ class Register extends Component {
                             />
                         </TouchableOpacity>
                     </View>
+
+                    <Text style={{color: 'red'}}>{this.state.passwordError}</Text>
 
                     <Text style={[styles.textLogin, { marginTop: 35 }]}>Conferma Password</Text>
                     <View style={styles.action}>
@@ -241,6 +349,8 @@ class Register extends Component {
                             placeholderTextColor="#666666"
                             style={styles.textInput}
                             autoCapitalize="none"
+                            onChangeText={(text) => this.setState({confirmPsw:text})}
+                            value={this.state.confirmPsw}
                         />
                                                             
                         <TouchableOpacity onPress={this.updateSecureTextEntry}>
@@ -251,6 +361,8 @@ class Register extends Component {
                             />
                         </TouchableOpacity>
                     </View>
+
+                    <Text style={{color: 'red'}}>{this.state.equalPswError}</Text>
 
                     <Text style={[styles.textLogin, { marginTop: 35 }]}>Che tipo di utente sei?</Text>
                     <View style={styles.action}>

@@ -10,6 +10,10 @@ class Login extends Component {
         this.state = {
             secureTextEntry: true,
             iconName: "eye-off",
+            //userID:'',
+            //password:'',
+            //nameError:'',
+            //passwordError:'',
         }
     }
 
@@ -20,6 +24,20 @@ class Login extends Component {
             iconName: iconName
         });
     }
+
+/*     validateForm = () => {
+        if (this.state.userID.trim() === "") {
+            this.setState(() => ({ nameError: "Il campo non può essere vuoto"}));
+        } else {
+            this.setState(() => ({ nameError: ""}));
+        }
+
+        if(this.state.password.length < 8) {
+            this.setState(() => ({ passwordError: "Il campo non può essere vuoto"}))
+        } else {
+            this.setState(() => ({ passwordError: ""}));
+        }
+      } */
 
     render() {
         return (
@@ -32,9 +50,12 @@ class Login extends Component {
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"
-
+                        //onChangeText={(text) => this.setState({userID:text})}
+                        //value={this.state.userID}
                     />
                 </View>
+
+                {/* <Text style={{color: 'red'}}>{this.state.nameError}</Text> */}
 
                 <Text style={[styles.textLogin, { marginTop: 35 }]}>Password</Text>
                 <View style={styles.action}>
@@ -45,6 +66,8 @@ class Login extends Component {
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"
+                        //onChangeText={(text) => this.setState({password:text})}
+                        //value={this.state.password}
                     />
 
                     <TouchableOpacity onPress={this.updateSecureTextEntry}>
@@ -55,6 +78,8 @@ class Login extends Component {
                         />
                     </TouchableOpacity>
                 </View>
+
+                {/* <Text style={{color: 'red'}}>{this.state.passwordError}</Text> */}
 
                 <View style={styles.button}>
                     <TouchableOpacity style={styles.appButtonContainer} onPress={() => {
