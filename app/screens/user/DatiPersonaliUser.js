@@ -101,19 +101,16 @@ export default class DatiPersonaliUser extends Component{
                         
                     </Card>
                     </View>
-
-                    <View style={styles.button}>
-                    <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 450, width: 50, marginLeft: 250 }]} onPress={this.addElements}>
-                        <Text style={styles.appButtonText}>+</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 20, width: 150, marginLeft: 200 }]}>
-                        <Text style={styles.appButtonText}>Salva</Text>
-                    </TouchableOpacity>
-                    </View>
-
             </View>
             </ScrollView>
+
+            <TouchableOpacity style={styles.appButtonContainer} onPress={this.addElements}>
+                    <Text style={styles.appButtonText}>+</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.appButtonSave}>
+                    <Text style={styles.appButtonText}>Salva</Text>
+            </TouchableOpacity>
             </SafeAreaView>
         )
     }
@@ -136,10 +133,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
         paddingBottom: 7
-    },
-    button: {
-        float: 'right',
-        marginTop: 30
     },
     textLogin: {
         color: '#05375a',
@@ -175,12 +168,33 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     appButtonContainer: {
-        paddingHorizontal:19,
-        paddingVertical:12,
+        position: 'absolute',
+        zIndex: 11,
+        right: 20,
+        bottom: 90,
+        width: 45,
+        height: 45,
+        borderRadius: 50,
+        backgroundColor: 'black',
+        borderColor:'black',
+        alignItems: 'center',
         justifyContent: 'center',
+        elevation: 8,
+    },
+
+    appButtonSave: {
+        position: 'absolute',
+        zIndex: 11,
+        right: 20,
+        bottom: 20,
+        width: 120,
+        height: 45,
         borderRadius: 30,
         backgroundColor: 'black',
-        borderColor:'black'
+        borderColor:'black',
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 8,
     },
     appButtonText: {
         fontSize: 20,
