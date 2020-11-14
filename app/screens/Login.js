@@ -10,10 +10,10 @@ class Login extends Component {
         this.state = {
             secureTextEntry: true,
             iconName: "eye-off",
-            //userID:'',
-            //password:'',
-            //nameError:'',
-            //passwordError:'',
+            userID:'',
+            password:'',
+            nameError:'',
+            passwordError:'',
         }
     }
 
@@ -25,19 +25,29 @@ class Login extends Component {
         });
     }
 
-/*     validateForm = () => {
+     validateForm = () => {
+        var flagUser = false;
+        var flagPsw = false;
         if (this.state.userID.trim() === "") {
             this.setState(() => ({ nameError: "Il campo non può essere vuoto"}));
         } else {
+            flagUser=true;
             this.setState(() => ({ nameError: ""}));
         }
 
         if(this.state.password.length < 8) {
             this.setState(() => ({ passwordError: "Il campo non può essere vuoto"}))
         } else {
+            flagPsw=true;
             this.setState(() => ({ passwordError: ""}));
         }
-      } */
+
+        if(flagUser && flagPsw) {
+            global.userType='UT';
+            global.user='XX';
+            this.props.navigation.navigate("Menu", { screen: "Home", params: { user: 'XX', userType: 'UT' } })
+        }
+      } 
 
     render() {
         return (
@@ -50,12 +60,12 @@ class Login extends Component {
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"
-                        //onChangeText={(text) => this.setState({userID:text})}
-                        //value={this.state.userID}
+                        onChangeText={(text) => this.setState({userID:text})}
+                        value={this.state.userID}
                     />
                 </View>
 
-                {/* <Text style={{color: 'red'}}>{this.state.nameError}</Text> */}
+                 <Text style={{color: 'red'}}>{this.state.nameError}</Text>
 
                 <Text style={[styles.textLogin, { marginTop: 35 }]}>Password</Text>
                 <View style={styles.action}>
@@ -66,8 +76,8 @@ class Login extends Component {
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"
-                        //onChangeText={(text) => this.setState({password:text})}
-                        //value={this.state.password}
+                        onChangeText={(text) => this.setState({password:text})}
+                        value={this.state.password}
                     />
 
                     <TouchableOpacity onPress={this.updateSecureTextEntry}>
@@ -79,15 +89,10 @@ class Login extends Component {
                     </TouchableOpacity>
                 </View>
 
-                {/* <Text style={{color: 'red'}}>{this.state.passwordError}</Text> */}
+                 <Text style={{color: 'red'}}>{this.state.passwordError}</Text> 
 
                 <View style={styles.button}>
-                    <TouchableOpacity style={styles.appButtonContainer} onPress={() => {
-                        global.userType='UT';
-                        global.user='XX';
-                        this.props.navigation.navigate("Menu", { screen: "Home", params: { user: 'XX', userType: 'UT' } })
-                    }
-                    } >
+                    <TouchableOpacity style={styles.appButtonContainer} onPress={this.validateForm} >
                         <Text style={styles.appButtonText}>Log In</Text>
                     </TouchableOpacity>
                 </View>
