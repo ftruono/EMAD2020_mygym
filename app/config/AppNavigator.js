@@ -9,6 +9,7 @@ import LiveCalendar from "../screens/LiveCalendar";
 import DatiPersonaliUser from "../screens/user/DatiPersonaliUser"
 
 import CreateWorkout from "../screens/personaltrainer/createWorkout";
+import Dieta from "../screens/nutritionist/Dieta";
 
 const Drawer = createDrawerNavigator();
 
@@ -68,7 +69,7 @@ const DrawerNavigator = () => {
                         ),
 
                     }} />
-                    <Drawer.Screen name="Dieta" component={HomeUser} options={{
+                    <Drawer.Screen name="Dieta" component={Dieta} options={{
                         title: 'Dieta',
                         drawerIcon: ({ }) => (
                             <Icon

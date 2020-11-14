@@ -3,6 +3,7 @@ import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, F
 import { Card, ListItem, Icon } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent";
 import WorkoutCard from '../../component/WorkoutCard';
+import Dieta from "../nutritionist/Dieta";
 
 
 // dimension permette di accedere alle dimensioni della schermata
@@ -66,7 +67,7 @@ class HomeUser extends React.Component {
 
             <SafeAreaView style={styles.home}>
                 <HeaderComponent {...this.props} title="Home" />
-                    {console.log(schedaDb)}
+                    
                     <FlatList style={{ margin: 10,flex:0.5 }}
                         data={schedaDb}
                         scrollEnabled={true} 
@@ -76,6 +77,8 @@ class HomeUser extends React.Component {
                             <WorkoutCard scheda={item} />
                         )}
                     />
+
+                    <Dieta {...this.props} isComponent={true} />
            
                 
 
