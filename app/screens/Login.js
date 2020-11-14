@@ -26,7 +26,7 @@ class Login extends Component {
     }
 
      validateForm = () => {
-        var flagUser = false;
+        /* var flagUser = false;
         var flagPsw = false;
         if (this.state.userID.trim() === "") {
             this.setState(() => ({ nameError: "Il campo non può essere vuoto"}));
@@ -36,17 +36,17 @@ class Login extends Component {
         }
 
         if(this.state.password.length < 8) {
-            this.setState(() => ({ passwordError: "Il campo non può essere vuoto"}))
+            this.setState(() => ({ passwordError: "Il campo deve avere più di 8 caratteri"}))
         } else {
             flagPsw=true;
             this.setState(() => ({ passwordError: ""}));
         }
-
-        if(flagUser && flagPsw) {
+ */
+        //if(flagUser && flagPsw) {
             global.userType='UT';
             global.user='XX';
             this.props.navigation.navigate("Menu", { screen: "Home", params: { user: 'XX', userType: 'UT' } })
-        }
+        //}
       } 
 
     render() {

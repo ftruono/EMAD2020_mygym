@@ -74,7 +74,7 @@ class HomeUser extends React.Component {
                         numColumns={2}
                         keyExtractor={(item, index) => item.day}
                         renderItem={({ item }) => (
-                            <WorkoutCard scheda={item} />
+                            <WorkoutCard scheda={item} {...this.props}/>
                         )}
                     />
 

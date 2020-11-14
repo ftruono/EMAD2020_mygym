@@ -6,6 +6,7 @@ import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Register from './app/screens/Register';
 import Login from './app/screens/Login';
+import ViewSingleDay from './app/screens/user/ViewSingleDay'
 import DrawerNavigator from './app/config/AppNavigator';
 import { AuthContex } from './app/config/GlobalConfig';
 
@@ -64,6 +65,7 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Tabs} options={{ headerTintColor: '#ff6c16', headerStyle: { backgroundColor: '#ff6c16' },title:'My Pocket Gym' }} />
         <Stack.Screen name="Menu" component={DrawerNavigator} options={{ headerShown: false }}></Stack.Screen>
+        <Stack.Screen name="ViewSingleDay" component={ViewSingleDay} options={{ headerShown: false }}></Stack.Screen>
       </Stack.Navigator>
 
     </NavigationContainer >
