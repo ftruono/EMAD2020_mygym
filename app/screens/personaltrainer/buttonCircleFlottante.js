@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FAB, Portal, Provider } from 'react-native-paper';
 import {StyleSheet} from 'react-native';
 
-const ButtonCircleFlottante = () => {
+const ButtonCircleFlottante = (props) => {
     const [state, setState] = React.useState({ open: false });
   
     const onStateChange = ({ open }) => setState({ open });
@@ -25,12 +25,13 @@ const ButtonCircleFlottante = () => {
               {
                 icon: 'email',
                 label: 'esercizio',
-                onPress: () => console.log('Pressed email'),
+                onPress: () => props.addEsercizio(),
               },
               {
                 icon: 'bell',
-                label: 'Day',
-                onPress: () => console.log('Pressed notifications'),
+                label: 'day',
+                onPress: () => props.addDay(),
+                
               },
             ]}
             onStateChange={onStateChange}

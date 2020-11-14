@@ -1,54 +1,89 @@
-import React, { Component } from 'react'
-import { Platform, StyleSchet, Text, View } from 'react-native'
-import { FlatList, TextInput, TouchableOpacity } from 'react-native-gesture-handler'
-import { Card, ListItem, Icon } from 'react-native-elements';
+import React from 'react'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import { Card } from 'react-native-elements';
 import { Modal } from 'react-native-paper';
-
-const scheda = () => {
-    return (<View style={styles.item}>
-        <Card style={{ flex: 1 }}>
-            <Card.Title>{scheda.day}</Card.Title>
-            <Card.Divider />
-            {scheda.esercizi.map((u, i) => {
-                return (
-                    <View style={styles.body}>
-                        <Text>esercizio: {i + 1}</Text>
-                        <Text>{u.esercizio1}</Text>
-                        <Text>{u.recupero}</Text>
-                        <Card.Divider />
-                    </View>
-                );
-            }
-
-            )}
-        </Card>
-    </View>);
-}
+import DropDown from "react-native-picker-select"
+const { width, height } = Dimensions.get('screen');
 
 
-export default class Scheda extends React.Component {
+
+class Scheda extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            selectedValue: '',
+            setSelectedValue: "java"
+        }
     }
-    state = {}
+
 
     render() {
         var schedaArray = this.props.scheda;
         return (
-            <Card style={{ flex: 1 }}>
-                <Card.Title></Card.Title>
-                <Card.Divider />
-                {/* {scheda.esercizi.map((u, i) => { */}
-                {/* return ( */}
-                <View >
-                    <Text>{schedaArray.day}</Text>
-                    <TextInput style={{ height: 60, width: 100, borderColor: 'gray', borderWidth: 1 }}>
-
-                    </TextInput>
-
+            <View style={styles.item}>
+                <Card style={{ flex: 1 }}>
+                    <Card.Title>{schedaArray.day}</Card.Title>
                     <Card.Divider />
-                </View>
-            </Card>
+                    {/* {scheda.esercizi.map((u, i) => { */}
+                    {/* return ( */}
+                    <View >
+                        <Card.Divider />
+                        {schedaArray.esercizi.map((u, i) => {
+                            return (
+                                <View>
+                                
+                            <Text>esercizio +{i}</Text>
+                                <Card.Divider />
+                                <DropDown
+                                    onValueChange={(value) => {
+                                        this.setState({
+                                            selectedValue: value
+                                        })
+                                    }}
+                                    onChange={this.handleChange}
+                                    value={this.state.selectedValue}
+                                    items={[
+                                        { label: 'Utente semplice', value: "form_user" },
+                                        { label: 'Personal Trainer', value: 'form_pt' },
+                                        { label: 'Nutrizionista', value: 'form_nutri' },
+                                    ]}
+                                />
+                                <DropDown
+                                    onValueChange={(value) => {
+                                        this.setState({
+                                            selectedValue: value
+                                        })
+                                    }}
+                                    onChange={this.handleChange}
+                                    value={this.state.selectedValue}
+                                    items={[
+                                        { label: 'Utente semplice', value: "form_user" },
+                                        { label: 'Personal Trainer', value: 'form_pt' },
+                                        { label: 'Nutrizionista', value: 'form_nutri' },
+                                    ]}
+                                />
+                                <DropDown
+                                    onValueChange={(value) => {
+                                        this.setState({
+                                            selectedValue: value
+                                        })
+                                    }}
+                                    onChange={this.handleChange}
+                                    value={this.state.selectedValue}
+                                    items={[
+                                        { label: 'Utente semplice', value: "form_user" },
+                                        { label: 'Personal Trainer', value: 'form_pt' },
+                                        { label: 'Nutrizionista', value: 'form_nutri' },
+                                    ]}
+                                />
+                                </View>
+                            );
+                        })}
+
+
+                    </View>
+                </Card>
+            </View>
 
             /* <TextInput
                     style={{ height: 60, borderColor: 'gray', borderWidth: 1 }}
@@ -64,17 +99,14 @@ export default class Scheda extends React.Component {
     }
 
 }
-
-// const styles=StyleSheet.create({
-//     note:{
-//         position:'relative',
-//         padding:20,
-//         paddingRight:100,
-//         borderBottomColor:'#ededed',
-//     },
-//     noteText:{
-//         paddingLeft:20,
-//         borderLeftWidtg:10,
-
-//     }
-// });
+export default Scheda;
+const styles = StyleSheet.create({
+    item: {
+        width: width / 2,
+        height: '30%'
+    },
+    body: {
+        alignItems: 'center',
+        flex: 0.8
+    }
+});

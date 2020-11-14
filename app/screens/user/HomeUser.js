@@ -80,12 +80,6 @@ class HomeUser extends React.Component {
 
                     <Dieta {...this.props} isComponent={true} />
            
-                
-
-
-
-
-
             </SafeAreaView>
         );
     }
