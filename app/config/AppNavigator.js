@@ -8,7 +8,7 @@ import { StyleSheet, Image, SafeAreaView } from "react-native";
 import LiveCalendar from "../screens/LiveCalendar";
 import DatiPersonaliUser from "../screens/user/DatiPersonaliUser"
 
-import CreateWorkout from "../screens/personaltrainer/createWorkout";
+import CreateWorkout from "../screens/personaltrainer/CreateWorkout";
 import Dieta from "../screens/nutritionist/Dieta";
 
 const Drawer = createDrawerNavigator();

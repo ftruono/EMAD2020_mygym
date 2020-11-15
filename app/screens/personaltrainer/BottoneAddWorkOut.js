@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FAB, Portal, Provider } from 'react-native-paper';
 import {StyleSheet} from 'react-native';
 
-const ButtonCircleFlottante = (props) => {
+const BottoneAddWorkOut = (props) => {
     const [state, setState] = React.useState({ open: false });
   
     const onStateChange = ({ open }) => setState({ open });
@@ -46,6 +46,6 @@ const ButtonCircleFlottante = (props) => {
     );
   };
   
-  export default ButtonCircleFlottante;
+  export default BottoneAddWorkOut;
 
   

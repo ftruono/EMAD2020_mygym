@@ -3,7 +3,7 @@ import { StyleSheet, View, TextInput, TouchableOpacity, Text, FlatList } from 'r
 import { Button, DataTable, FAB, Portal, Provider } from 'react-native-paper';
 import { RefreshControl, SafeAreaView } from 'react-navigation';
 import HeaderComponent from "../../component/HeaderComponent";
-import ButtonCircleFlottante from './buttonCircleFlottante';
+import BottoneAddWorkOut from './BottoneAddWorkOut';
 import Scheda from './Scheda';
 
 class CreateWorkout extends Component {
@@ -80,7 +80,7 @@ class CreateWorkout extends Component {
                         +
                     </Text>
                 </TouchableOpacity>  */}
-                <ButtonCircleFlottante addDay={this.addDay} addEsercizio={this.addEsercizio}/>
+                <BottoneAddWorkOut addDay={this.addDay} addEsercizio={this.addEsercizio}/>
             </SafeAreaView>
         );
     }
