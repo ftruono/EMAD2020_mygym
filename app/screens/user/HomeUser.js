@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from "react";
-import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, FlatList } from 'react-native';
-import { Card, ListItem, Icon } from 'react-native-elements';
+import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent";
 import WorkoutCard from '../../component/WorkoutCard';
 import Dieta from "../nutritionist/Dieta";
@@ -67,19 +67,26 @@ class HomeUser extends React.Component {
 
             <SafeAreaView style={styles.home}>
                 <HeaderComponent {...this.props} title="Home" />
-                    
-                    <FlatList style={{ margin: 10,flex:0.5 }}
-                        data={schedaDb}
-                        scrollEnabled={true} 
-                        numColumns={2}
-                        keyExtractor={(item, index) => item.day}
-                        renderItem={({ item }) => (
-                            <WorkoutCard scheda={item} {...this.props}/>
-                        )}
-                    />
 
-                    <Dieta {...this.props} isComponent={true} />
-           
+                <FlatList style={{ margin: 10, flex: 0.5 }}
+                    data={schedaDb}
+                    scrollEnabled={true}
+                    numColumns={2}
+                    keyExtractor={(item, index) => item.day}
+                    renderItem={({ item }) => (
+                        <WorkoutCard scheda={item} {...this.props} />
+                    )}
+                />
+
+                <Dieta {...this.props} isComponent={true} />
+                <View style={styles.iconMessagge}>
+                    <Icon
+                        raised
+                        name='comments'
+                        type='font-awesome'
+                        color='#f50'
+                        onPress={() => alert('La chat verrà implementata tra poco')} />
+                </View>
             </SafeAreaView>
         );
     }
@@ -114,6 +121,20 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 32,
-    }
+    },
+    iconMessagge: {
+        position: 'absolute',
+        zIndex: 11,
+        right: 20,
+        bottom: 20,
+        width: 45,
+        height: 45,
+        borderRadius: 50,
+        backgroundColor: 'black',
+        borderColor: 'black',
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 8,
+    },
 
 });
