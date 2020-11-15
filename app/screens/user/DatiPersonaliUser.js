@@ -2,7 +2,15 @@ import React, {Component} from 'react';
 import {View,Text,StyleSheet,TextInput,SafeAreaView,TouchableOpacity,ScrollView} from 'react-native';
 import { Card } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent"
+import ModalAddDati from './ModalAddDati';
 
+const misurazioniDb=[
+    {tipo:'bracciaDx',valore:''},
+    {tipo:'bracciaDx',valore:''},
+    {tipo:'gambaDx',valore:''},
+    {tipo:'gambaDx',valore:''},
+    {tipo:'Petto',valore:''},
+];
 export default class DatiPersonaliUser extends Component{
     constructor(props) {
         super(props);
@@ -61,41 +69,24 @@ export default class DatiPersonaliUser extends Component{
                     <Card style={{ flex: 1 }}>
                         <Card.Title>Set Palestra</Card.Title>
                         <Card.Divider />
-                        <View style={{flexDirection:'row'}}>
-                        <Text style={styles.textLogin}>Braccia:</Text>
-                            <TextInput
-                                    placeholder="Inserisci il valore"
-                                    placeholderTextColor="#666666"
-                                    style={styles.textInput}
-                                    autoCapitalize="none"
+                        {misurazioniDb.map((e,i)=>{
+                             return (
+                            <View style={{flexDirection:'row'}}>
+                            <Text style={styles.textLogin}>{e.tipo}:</Text>
+                                <TextInput
+                                        placeholder="Inserisci il valore"
+                                        placeholderTextColor="#666666"
+                                        style={styles.textInput}
+                                        autoCapitalize="none"
+    
+                                />
+                                <Text style={{color:'blue', textDecorationLine: "underline"}}>Vedi statistiche</Text>
+                            </View>
+                             );
+                    })}
+                        
 
-                            />
-                            <Text style={{color:'blue', textDecorationLine: "underline"}}>Vedi statistiche</Text>
-                        </View>
-
-                        <View style={{flexDirection:'row', marginTop:10}}>
-                        <Text style={styles.textLogin}>Gambe:</Text>
-                            <TextInput
-                                    placeholder="Inserisci il valore"
-                                    placeholderTextColor="#666666"
-                                    style={styles.textInput}
-                                    autoCapitalize="none"
-
-                            />
-                            <Text style={{color:'blue', textDecorationLine: "underline"}}>Vedi statistiche</Text>
-                        </View>
-
-                        <View style={{flexDirection:'row', marginTop:10}}>
-                        <Text style={styles.textLogin}>Spalle:</Text>
-                            <TextInput
-                                    placeholder="Inserisci il valore"
-                                    placeholderTextColor="#666666"
-                                    style={styles.textInput}
-                                    autoCapitalize="none"
-
-                            />
-                            <Text style={{color:'blue', textDecorationLine: "underline"}}>Vedi statistiche</Text>
-                        </View>
+            
 
                         {this.renderForm(this.state.addElement)}
                         
@@ -103,14 +94,15 @@ export default class DatiPersonaliUser extends Component{
                     </View>
             </View>
             </ScrollView>
-
-            <TouchableOpacity style={styles.appButtonContainer} onPress={this.addElements}>
+           
+            {/* <TouchableOpacity style={styles.appButtonContainer} onPress={this.addElements}>
                     <Text style={styles.appButtonText}>+</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity style={styles.appButtonSave}>
                     <Text style={styles.appButtonText}>Salva</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> 
+            <ModalAddDati></ModalAddDati>
             </SafeAreaView>
         )
     }
@@ -190,7 +182,7 @@ const styles = StyleSheet.create({
         width: 120,
         height: 45,
         borderRadius: 30,
-        backgroundColor: 'black',
+        backgroundColor: '#ff6c16',
         borderColor:'black',
         alignItems: 'center',
         justifyContent: 'center',
