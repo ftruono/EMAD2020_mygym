@@ -81,7 +81,7 @@ const ModalAddDati = () => {
 
 
 const style = StyleSheet.create({
-  modal: { backgroundColor: '#f20505', padding: 20, },
+  modal: { backgroundColor: 'transparent', padding: 20, },
   selectStyle: { backgroundColor: '#fafafa', },
   selectdropDownStyle: { backgroundColor: '#fafafa', },
   itemSelectStyle: { justifyContent: 'flex-start', },

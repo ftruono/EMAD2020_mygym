@@ -16,39 +16,46 @@ const schedaDb = [
     {
         day: 'day1',
         esercizi: [{
-            esercizio1: 'panca piana 5*10',
+            esercizio: 'panca piana',
+            ripetizioni:'5*10',
             recupero: '30sec',
         }, {
-            esercizio1: 'panca alta 5*10',
+            esercizio: 'panca alta 5*10',
             recupero: '30sec',
         }]
     }, {
         day: 'day2',
         esercizi: [{
-            esercizio1: 'squat 5*10',
+            esercizio: 'squat',
+            ripetizioni:'5*10',
             recupero: '30sec',
         }, {
-            esercizio1: 'affondi5*10',
+            esercizio: 'affondi',
+            ripetizioni:'5*10',
             recupero: '30sec',
         }
         ]
     }, {
         day: 'day3',
         esercizi: [{
-            esercizio1: 'bicipiti 5*10',
+            esercizio: 'bicipiti',
+            ripetizioni:'5*10',
             recupero: '30sec',
         }, {
-            esercizio1: 'tripiti 5*10',
+            esercizio: 'tripiti',
+            ripetizioni:'5*10',
             recupero: '30sec',
         }
         ]
     }, {
         day: 'day4',
         esercizi: [{
-            esercizio1: 'boh 5*10',
+            esercizio: 'boh',
+            ripetizioni:'5*10',
             recupero: '30sec',
         }, {
-            esercizio1: 'boh2 5*10',
+            esercizio: 'boh2',
+            ripetizioni:'5*10', 
             recupero: '30sec',
         }
         ]

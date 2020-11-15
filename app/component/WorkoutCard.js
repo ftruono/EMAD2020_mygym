@@ -25,7 +25,8 @@ class WorkoutCard extends React.Component {
                         return (
                             <View style={styles.body}>
                                 <Text>esercizio: {i + 1}</Text>
-                                <Text>{u.esercizio1}</Text>
+                                <Text>{u.esercizio}</Text>
+                                <Text>{u.ripetizioni}</Text>
                                 <Text>{u.recupero}</Text>
                                 <Card.Divider />
                             </View>
