@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Button, Text, Dimensions } from 'react-native';
-import { Card, ListItem, Icon } from 'react-native-elements';
+import { StyleSheet, View, Text, Dimensions,TouchableOpacity } from 'react-native';
+import { Card } from 'react-native-elements';
 
 const { width, h } = Dimensions.get('screen');
 
@@ -9,14 +9,15 @@ class WorkoutCard extends React.Component {
     constructor(props) {
         super(props);
     }
-    state = {}
+    state = {
+    }
 
     render() {
         
         var scheda = this.props.scheda;
-
-        return (
+        return ( 
             <View style={styles.item}>
+                <TouchableOpacity onPress={()=>{this.props.navigation.navigate("ViewSingleDay", {  scheda: scheda } )}}>
                 <Card style={{ flex: 1 }}>
                     <Card.Title>{scheda.day}</Card.Title>
                     <Card.Divider />
@@ -33,6 +34,7 @@ class WorkoutCard extends React.Component {
 
                     )}
                 </Card>
+                </TouchableOpacity>
             </View>
 
         )
