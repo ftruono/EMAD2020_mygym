@@ -7,6 +7,8 @@ import HomePT from "../screens/personaltrainer/HomePT";
 import { StyleSheet, Image, SafeAreaView } from "react-native";
 import LiveCalendar from "../screens/LiveCalendar";
 import DatiPersonaliUser from "../screens/user/DatiPersonaliUser"
+import ViewSingleDay from '../screens/user/ViewSingleDay'
+import IniziaAllenamento from '../screens/user/IniziaAllenamento'
 
 import CreateWorkout from "../screens/personaltrainer/CreateWorkout";
 import Dieta from "../screens/nutritionist/Dieta";
@@ -109,6 +111,14 @@ const DrawerNavigator = () => {
                             />
                         ),
                     }} />
+                    <Drawer.Screen name="ViewSingleDay" component={ViewSingleDay} options={{
+                        drawerLabel: () => null,title: null,
+                        drawerIcon: () => null       
+                    }}/>
+                    <Drawer.Screen name="IniziaAllenamento" component={IniziaAllenamento} options={{
+                        drawerLabel: () => null,title: null,
+                        drawerIcon: () => null       
+                    }}/>
                 </>) : (global.userType == 'NT' ? (
                     <>
                         <Drawer.Screen name="Home" component={HomeNT} options={{
@@ -202,6 +212,7 @@ const DrawerNavigator = () => {
 
 
                 )}
+
         </Drawer.Navigator>
     );
 };

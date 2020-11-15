@@ -17,7 +17,7 @@ class WorkoutCard extends React.Component {
         var scheda = this.props.scheda;
         return (
             <View style={styles.item}>
-                <TouchableOpacity onPress={() => { this.props.navigation.navigate("ViewSingleDay", { scheda: scheda }) }}>
+                <TouchableOpacity onPress={() => { this.props.navigation.navigate("ViewSingleDay", { scheda: scheda, routeProps: this.props }) }}>
                     <Card style={{ flex: 1 }}>
                         <Card.Title>{scheda.day}</Card.Title>
                         <Card.Divider />

@@ -6,7 +6,11 @@ import HeaderComponent from "../../component/HeaderComponent";
 export default class ViewSingleDay extends React.Component {
 
     constructor(props) {
-        super(props);
+        if(props.route.params.routeProps === null) {
+            super(props);
+        } else {
+            super(props.route.params.routeProps);
+        }
         this.state = {
             modify: false
         }
@@ -17,16 +21,20 @@ export default class ViewSingleDay extends React.Component {
     }
 
     render() {
+        console.log(this.props)
         const exercise = [];
         var schedaEsercizio = this.props.route.params;
         var scheda = schedaEsercizio.scheda;
-        var esercizio = scheda.esercizi.map((u) => u.esercizio1);
+        var esercizio = scheda.esercizi.map((u) => u.esercizio) ;
+        var ripetizioni = scheda.esercizi.map((u) => u.ripetizioni);
+        var colpi = scheda.esercizi.map((u) => u.colpi);
         var recupero = scheda.esercizi.map((u) => u.recupero);
         
         for(let i=0; i < esercizio.length; i++) {
             exercise.push({
                 eser: esercizio[i],
-                rec: ' Recupero: ' + recupero[i]
+                rec: '      Recupero: ' + recupero[i],
+                ripetizioni: ' ' + ripetizioni[i] + '*' + colpi[i]
             })
         }
 
@@ -46,6 +54,14 @@ export default class ViewSingleDay extends React.Component {
                                 editable={this.state.modify}
                                 value={u.eser}
                             />
+
+                            <TextInput
+                                placeholderTextColor="#666666"
+                                style={styles.text}
+                                autoCapitalize="none"
+                                editable={this.state.modify}
+                                value={u.ripetizioni}
+                            />
                             
                             <TextInput
                                 placeholderTextColor="#666666"
@@ -56,13 +72,9 @@ export default class ViewSingleDay extends React.Component {
                             />
                         </View>
                     ))}
-
-                        <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 200 }]} onPress={this.setModify}>
-                            <Text style={styles.appButtonText}>Modifica</Text>
-                        </TouchableOpacity>
                 </View>
                 </ScrollView>
-                <TouchableOpacity style={styles.appButtonSave}>
+                <TouchableOpacity style={styles.appButtonSave} onPress={() => { this.props.navigation.navigate("IniziaAllenamento", { scheda: scheda }) }}>
                         <Text style={styles.appButtonText}>Inizia Allenamento</Text>
                 </TouchableOpacity>
             </SafeAreaView>
