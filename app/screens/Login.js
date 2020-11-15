@@ -43,7 +43,7 @@ class Login extends Component {
         }
  */
         //if(flagUser && flagPsw) {
-            global.userType='UT';
+            global.userType=this.state.userID.trim();
             global.user='XX';
             this.props.navigation.navigate("Menu", { screen: "Home", params: { user: 'XX', userType: 'UT' } })
         //}
