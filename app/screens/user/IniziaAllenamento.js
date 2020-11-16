@@ -26,6 +26,7 @@ export default class IniziaAllenamento extends React.Component {
         var scheda = schedaArray.scheda;
         var esercizio = scheda.esercizi.map((u) => u.esercizio) ;
         var ripetizioni = scheda.esercizi.map((u) => u.ripetizioni);
+        var colpi = scheda.esercizi.map((u) => u.colpi)
         return(
             <SafeAreaView style={styles.viewDay}>
                 <HeaderComponent {...this.props} title="Esecuzione" />
@@ -39,6 +40,7 @@ export default class IniziaAllenamento extends React.Component {
                             <View style={styles.action}>
                                 <Text style={[styles.textTitle,{marginTop:35}]}>Peso utilizzato: </Text>
                                 <Text style={[styles.textTitle,{marginTop:35,marginLeft:45}]}>Ripetizioni: {ripetizioni[this.state.index]}</Text>
+                                <Text style={[styles.textTitle,{marginTop:35,marginLeft:45}]}>Colpi: {colpi[this.state.index]}</Text>
                             </View>
                             <View style={styles.action}>
                                 <DropDown
