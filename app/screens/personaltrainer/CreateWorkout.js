@@ -10,49 +10,58 @@ class CreateWorkout extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            schedaArray: []
+            schedaArray: [],
+            selecetDay: Number,
         };
     }
-    // {
-    //     day: 'day1',
-    //     esercizi: [{
-            // esercizio1: 'panca piana 5*10',
-            // recupero: '30sec',
-    //     }, {
-    //         esercizio1: 'panca alta 5*10',
-    //         recupero: '30sec',
-    //     }]
-    // }
+
+
 
     addDay = () => {
-        let lunghezza=this.state.schedaArray.length;
-        let newArray = [...this.state.schedaArray, {
-            day: "day "+lunghezza+1, esercizi: [{esercizio1: 'panca piana 5*10'},]
-        }];
-        console.log("new array day->"+newArray);
+        let lunghezza = this.state.schedaArray.length;
 
-        this.setState({ schedaArray: newArray });
-        console.log("new state day->"+this.state.schedaArray);
+        this.state.schedaArray.push({ day: lunghezza, esercizi: [] })
+        var support = this.state.schedaArray;
 
+        this.setState({ schedaArray: support });
 
     };
-    addEsercizio=()=>{
-        var newArray = [...this.state.schedaArray]
-        console.log(newArray)
-        var day=newArray.day;
-        // let l=newArray.esercizi.length();
-        let x=newArray.esercizi;
-        newArray.map((u, i) => {
-            console.log("esercizi->"+u.esercizi);
-        })
-        console.log("day->"+day+"esercizi->"+x);
 
-        var newArray2 = [...newArray.esercizi,{}]
-
-        console.log(newArray2)
+    addEsercizio = () => {
+        let lunghezza = this.state.schedaArray.length;
+        this.state.schedaArray[lunghezza - 1].esercizi.push({ esercizio: '', ripetizioni: '', colpi: '', recupero: '' })
+        var support = this.state.schedaArray;
+        this.setState({ schedaArray: support });
     }
-    
-    
+
+    aggiungiValori = (daySelect, num, eser, valori) => {
+        console.log("day ricevuti->" + daySelect);
+        console.log("valori ricevuti->" + valori);
+        switch (eser) {
+            case '0':
+                this.state.schedaArray[daySelect].esercizi[num].esercizio = valori;
+                break;
+            case '1':
+                this.state.schedaArray[daySelect].esercizi[num].ripetizioni = valori;
+                break;
+            case '2':
+                this.state.schedaArray[daySelect].esercizi[num].colpi = valori;
+                break;
+            case '3':
+                this.state.schedaArray[daySelect].esercizi[num].recupero = valori;
+                break;
+            default:
+            // code block
+        }
+
+        var support = this.state.schedaArray;
+        this.setState({ schedaArray: support });
+        console.log("index flat list->" + JSON.stringify(this.state.schedaArray))
+        this.setState({ selecetDay: daySelect });
+        // alert(daySelect)
+    }
+
+
     render() {
         const { schedaArray } = this.state;
         return (
@@ -60,27 +69,19 @@ class CreateWorkout extends Component {
                 <HeaderComponent {...this.props} title="Schede allenamento" />
 
 
-                    <FlatList style={{ margin: 10, flex: 0.5 }}
-                        data={schedaArray}
-                        scrollEnabled={true}
-                        numColumns={2}
-                        keyExtractor={(item, index) => item.day}
-                        onRefresh={this.state.isRefreshing}
-                        refreshing={this._onRefresh}
-                        renderItem={({ item }) => (
-                            <Scheda scheda={item} />
+                <FlatList style={{ margin: 10, flex: 1 }}
+                    data={schedaArray}
+                    scrollEnabled={true}
+                    numColumns={2}
+                    keyExtractor={(item) => item.day}
+                    onRefresh={this.state.isRefreshing}
+                    refreshing={this._onRefresh}
+                    renderItem={({ item, index }) => (
+                            <Scheda scheda={schedaArray[index]} aggiungiValori={this.aggiungiValori} />
+                    )}
 
-                        )}
-
-                    />
-
-
-                {/* <TouchableOpacity onPress={() => this.updateAge()} style={styles.addButton}>
-                    <Text style={styles.addButtonText}>
-                        +
-                    </Text>
-                </TouchableOpacity>  */}
-                <BottoneAddWorkOut addDay={this.addDay} addEsercizio={this.addEsercizio}/>
+                />
+                <BottoneAddWorkOut addDay={this.addDay} addEsercizio={this.addEsercizio} aggiungiValori={this.aggiungiValori} />
             </SafeAreaView>
         );
     }
