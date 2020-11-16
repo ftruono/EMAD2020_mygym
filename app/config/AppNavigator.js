@@ -15,18 +15,30 @@ import Dieta from "../screens/nutritionist/Dieta";
 
 const Drawer = createDrawerNavigator();
 
-const DrawerContent = ({ progress, ...props }) => (
+const hideScreen = ["ViewSingleDay", "IniziaAllenamento"]
 
-    <SafeAreaView style={styles.menu}>
+const DrawerContent = ({ progress, ...props }) => {
+
+    const filteredProps = {
+        ...props,
+        state: {
+            routes: props.state.routes.filter(route => !hideScreen.includes(route.name)),
+            routeNames: props.state.routeNames.filter(routeName => !hideScreen.includes(routeName))
+        }
+    }
+    return (< SafeAreaView style={styles.menu} >
         <Image
-            source={ require("../../assets/favicon.png")}
+            source={require("../../assets/favicon.png")}
             style={styles.sideMenuProfileIcon}
         />
-        <DrawerContentScrollView {...props}>
-            <DrawerItemList {...props} />
+        <DrawerContentScrollView {...filteredProps}>
+            <DrawerItemList {...filteredProps} />
         </DrawerContentScrollView>
-    </SafeAreaView>
-);
+    </SafeAreaView >);
+};
+
+
+
 
 const styles = StyleSheet.create({
     menu: {
@@ -38,7 +50,7 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 100 / 2,
         alignSelf: 'center',
-      }
+    }
 
 });
 
@@ -112,13 +124,13 @@ const DrawerNavigator = () => {
                         ),
                     }} />
                     <Drawer.Screen name="ViewSingleDay" component={ViewSingleDay} options={{
-                        drawerLabel: () => null,title: null,
-                        drawerIcon: () => null       
-                    }}/>
+                        drawerLabel: () => null, title: null,
+                        drawerIcon: () => null
+                    }} />
                     <Drawer.Screen name="IniziaAllenamento" component={IniziaAllenamento} options={{
-                        drawerLabel: () => null,title: null,
-                        drawerIcon: () => null       
-                    }}/>
+                        drawerLabel: () => null, title: null,
+                        drawerIcon: () => null
+                    }} />
                 </>) : (global.userType == 'NT' ? (
                     <>
                         <Drawer.Screen name="Home" component={HomeNT} options={{

@@ -6,11 +6,7 @@ import HeaderComponent from "../../component/HeaderComponent";
 export default class ViewSingleDay extends React.Component {
 
     constructor(props) {
-        if(props.route.params.routeProps === null) {
-            super(props);
-        } else {
-            super(props.route.params.routeProps);
-        }
+        super(props);
         this.state = {
             modify: false
         }
@@ -21,7 +17,7 @@ export default class ViewSingleDay extends React.Component {
     }
 
     render() {
-        console.log(this.props)
+        
         const exercise = [];
         var schedaEsercizio = this.props.route.params;
         var scheda = schedaEsercizio.scheda;
