@@ -1,58 +1,61 @@
 import * as React from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
-import Icon from 'react-native-vector-icons/Feather';
-
-import { Modal, Portal, Text, Button, Provider, TextInput } from 'react-native-paper';
+import { Icon } from 'react-native-elements';
+import { Modal, Portal, Text, View, Button, Provider, TextInput } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 
-const ModalAddDati = () => {
+
+
+
+
+
+const ModalAddDati = (props) => {
   const [visible, setVisible] = React.useState(false);
-  const [text, setText] = React.useState('');
+  const [misurazione, setMisurazione] = React.useState('');
   const [parteCorpo, setParteCorpo] = React.useState('');
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-
   return (
     <Provider>
-      <Portal styel={{padding: 20,}}>
+      <Portal styel={{ padding: 20, }}>
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={style.modal}>
           <DropDownPicker
             items={[
               {
-                label: 'braccia Dx', value: 'usa',
-                icon: () => <Icon name="arms" size={18} color="#900" />,
+                label: 'braccia Dx', value: 'braccia Dx',
+                // icon: () => <Icon name="arms" size={18} color="#900" />,
                 hidden: true,
               },
               {
-                label: 'braccia Sx', value: 'usa',
-                icon: () => <Icon name="arms" size={18} color="#900" />,
+                label: 'braccia Sx', value: 'braccia Sx',
+                // icon: () => <Icon name="arms" size={18} color="#900" />,
                 hidden: true
               },
               {
-                label: 'addome', value: 'uk',
-                icon: () => <Icon name="arms" size={18} color="#900" />
+                label: 'addome', value: 'addome',
+                // icon: () => <Icon name="arms" size={18} color="#900" />
               },
               {
-                label: 'vita', value: 'uk',
-                icon: () => <Icon name="arms" size={18} color="#900" />
+                label: 'vita', value: 'vita',
+                // icon: () => <Icon name="arms" size={18} color="#900" />
               },
               {
-                label: 'gamba Dx', value: 'uk',
-                icon: () => <Icon name="arms" size={18} color="#900" />
+                label: 'gamba Dx', value: 'gamba Dx',
+                // icon: () => <Icon name="arms" size={18} color="#900" />
               },
               {
-                label: 'gamba Sx', value: 'uk',
-                icon: () => <Icon name="arms" size={18} color="#900" />
+                label: 'gamba Sx', value: 'gamba Sx',
+                // icon: () => <Icon name="arms" size={18} color="#900" />
               },
               {
-                label: 'Petto', value: 'france',
-                icon: () => <Icon name="flag" size={18} color="#900" />
+                label: 'Petto', value: 'Petto',
+                // icon: () => <Icon name="flag" size={18} color="#900" />
               },
               {
-                label: 'Spalle', value: 'france',
-                icon: () => <Icon name="flag" size={18} color="#900" />
+                label: 'Spalle', value: 'Spalle',
+                // icon: () => <Icon name="flag" size={18} color="#900" />
               },
             ]}
             placeholder="Seleziona una parte del corpo"
@@ -66,10 +69,17 @@ const ModalAddDati = () => {
 
           <TextInput
             label="Inserisci la misurazione"
-            value={text}
+            value={misurazione}
             style={style.textInputSyle}
-            onChangeText={text => setText(text)}
+            onChangeText={text => setMisurazione(text)}
           />
+          <Icon
+            raised
+            name='check'
+            type='font-awesome'
+            color='#f50'
+            onPress={() =>(props.aggiungiValori(parteCorpo,misurazione), hideModal() ) }/>
+
         </Modal>
       </Portal>
       <Button style={style.button} onPress={showModal}>
@@ -85,7 +95,7 @@ const style = StyleSheet.create({
   selectStyle: { backgroundColor: '#fafafa', },
   selectdropDownStyle: { backgroundColor: '#fafafa', },
   itemSelectStyle: { justifyContent: 'flex-start', },
-  textInputSyle: { backgroundColor: '#fafafa', },
+  textInputSyle: { backgroundColor: '#000000', },
   button: {
     position: 'absolute',
     zIndex: 11,
