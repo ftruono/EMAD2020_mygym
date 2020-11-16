@@ -62,8 +62,8 @@ export default class DatiPersonaliUser extends Component {
                                 {this.state.arrayMisurazioni.map((e, i) => {
                                     return (
                                         <View style={{ flexDirection: 'row' }}>
-                                            <Text style={styles.textLogin}>{e.tipo}:</Text>
-                                            <Text style={styles.textLogin}>{e.valore}:</Text>
+                                            <Text style={styles.textLogin}>{e.tipo}: {e.valore} cm</Text>
+                                            <Text style={styles.textInput}></Text>
                                             <Text style={{ color: 'blue', textDecorationLine: "underline" }}>Vedi statistiche</Text>
                                         </View>
                                     );
