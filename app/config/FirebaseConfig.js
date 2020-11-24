@@ -1,0 +1,29 @@
+import * as firebase from 'firebase';
+
+
+
+const app = {
+  apiKey: "AIzaSyAOuGWBpS0ldvAR6JlPLw3Zq71zzlFvtWc",
+  authDomain: "mygym-bb579.firebaseapp.com",
+  databaseURL: "https://mygym-bb579.firebaseio.com",
+  projectId: "mygym-bb579",
+  storageBucket: "mygym-bb579.appspot.com",
+  messagingSenderId: "102312009132",
+  appId: "1:102312009132:web:144cbe01e84561e9df6e09",
+  measurementId: "G-PW3Y8H7MH5"
+};
+
+const FirebaseApp = () => {
+  // Initialize Firebase App
+  if (!firebase.apps.length) {
+    firebase.initializeApp(app);
+  }
+
+}
+
+FirebaseApp()
+
+
+const FirebaseDB=firebase.firestore();
+const FirebaseAutentication=firebase.auth();
+export const {FirebaseDB,FirebaseAutentication}

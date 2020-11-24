@@ -36,7 +36,7 @@ const Scheda = (props) => {
                 <Card.Title>Day {schedaArray.day}</Card.Title>
                 <View >
                     {schedaArray.esercizi.map((u, i) => {
-                        {setIniziale()}
+                        
                         return (
                             <View>
                                 {console.log(index)}
