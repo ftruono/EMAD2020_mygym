@@ -67,7 +67,8 @@ class CreateWorkout extends Component {
                 <FlatList style={{ margin: 10}}
                     data={schedaArray}
                     scrollEnabled={true}
-                    numColumns={ width<'375px' ? 1 : 2}
+                    numColumns={width>1000 ? 2 : 1 }
+                    keyExtractor={(item) => item.day}
                     refreshing={this._onRefresh}
                     renderItem={({ item, index }) => (
                         <Scheda scheda={schedaArray[index]} aggiungiValori={this.aggiungiValori} daySelected={this.daySelected} />
