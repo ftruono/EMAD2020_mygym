@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import HeaderComponent from "../../component/HeaderComponent";
-import DropDown from "react-native-dropdown-picker"
 import Icon from "react-native-vector-icons/Octicons"
 import Clock from '../../component/Clock';
+import { TextInput } from 'react-native-paper';
 
 
 export default class IniziaAllenamento extends React.Component {
@@ -12,13 +12,19 @@ export default class IniziaAllenamento extends React.Component {
         super(props);
         this.state = {
             selectedValue:'',
-            index: 0
+            index: 0,
+            peso:''
         }
     }
 
     incrementIndex = () =>{
         this.setState({ index: this.state.index + 1})
         console.log(this.state.index)
+    }
+
+    renderHome = () =>{
+        this.setState({ index: 0})
+        this.props.navigation.navigate("Menu", { screen: "Home", params: { user: 'XX', userType: 'UT' }})
     }
 
     render(){
@@ -39,29 +45,22 @@ export default class IniziaAllenamento extends React.Component {
                             <Text style={styles.textTitle}>Tipo Esercizio: {esercizio[this.state.index]}</Text>
                             <View style={styles.action}>
                                 <Text style={[styles.textTitle,{marginTop:35}]}>Peso utilizzato: </Text>
-                                <Text style={[styles.textTitle,{marginTop:35,marginLeft:45}]}>Ripetizioni: {ripetizioni[this.state.index]}</Text>
-                                <Text style={[styles.textTitle,{marginTop:35,marginLeft:45}]}>Colpi: {colpi[this.state.index]}</Text>
+                                <TextInput
+                                    label="Inserisci il peso"
+                                    value={this.state.peso}
+                                    onChangeText={(text) => (this.setState({peso:text}))}
+                                    style={{width:150}}
+                                    //onBlur={invio i dati al db}
+                                />
                             </View>
                             <View style={styles.action}>
-                                <DropDown
-                                    items={[
-                                        { label: 'Scegli un peso', value: '' },
-                                        { label: '10 Kg', value: '10' },
-                                        { label: '20 Kg', value: '20' },
-                                        { label: '30 Kg', value: '30' },
-                                    ]}
-                                    placeholder="Scegli un peso"
-                                    containerStyle={{height: 40,width:200}}
-                                    style={{backgroundColor: '#fafafa'}}
-                                    onChangeItem={item => this.setState({
-                                        selectedValue: item.value
-                                    })}
-                                />
+                                <Text style={[styles.textTitle,{marginTop:20}]}>Ripetizioni: {ripetizioni[this.state.index]}</Text>
+                                <Text style={[styles.textTitle,{marginTop:20,marginLeft:35}]}>Colpi: {colpi[this.state.index]}</Text>
                             </View>
                                 </>):(
                                     <>
                                         <View style={styles.alert}>
-                                            <TouchableOpacity style={{ marginTop: 15 }} onPress={()=>this.props.navigation.navigate("Menu", { screen: "Home", params: { user: 'XX', userType: 'UT' } })}>
+                                            <TouchableOpacity style={{ marginTop: 15 }} onPress={this.renderHome}>
                                                 <Icon name="alert" color="red" size={50}></Icon>
                                             </TouchableOpacity>
                                             <Text style={[styles.textHeader,{marginTop:15}]}> Allenamento Completato !!!!</Text>

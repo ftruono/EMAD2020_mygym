@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View, TextInput, Text, SafeAreaView, ScrollView, TouchableOpacity, SafeAreaViewBase } from 'react-native';
 import HeaderComponent from "../../component/HeaderComponent";
+import Icon from "react-native-vector-icons/FontAwesome"
 
 
 export default class ViewSingleDay extends React.Component {
@@ -14,6 +15,12 @@ export default class ViewSingleDay extends React.Component {
 
     setModify = () =>{
         this.setState({modify:true})
+    }
+
+
+    save = () =>{
+        this.setState({modify:false})
+        alert("Hai cliccato su salva")
     }
 
     render() {
@@ -40,7 +47,14 @@ export default class ViewSingleDay extends React.Component {
             <ScrollView>
                 <View style={styles.container}>
                     <Text style={styles.textHeader}>Visualizzazione</Text>
-                    <Text style={styles.textTitle}>{scheda.day}</Text>
+                    <View style={{flexDirection:"row"}}>
+                        <Text style={styles.textTitle}>{scheda.day}</Text>
+
+                        {/* Il bottone di modifica verrà reso dinamico quando a livello di db ci sarà l'informazione di possibiltà della modifica della scheda*/}
+                        <TouchableOpacity onPress={this.setModify} >
+                            <Icon name="pencil" color="#05375a" size={20} style={{marginTop:30, marginLeft:50}}></Icon>
+                        </TouchableOpacity>
+                    </View>
                     {exercise.map((u,index) =>(
                         <View style={styles.action}>
                             <TextInput
@@ -70,9 +84,19 @@ export default class ViewSingleDay extends React.Component {
                     ))}
                 </View>
                 </ScrollView>
+                {this.state.modify ?(
+                    <>
+                <TouchableOpacity style={styles.appButtonSave} onPress={this.save}>
+                        <Text style={styles.appButtonText}>Salva</Text>
+                </TouchableOpacity>
+                </>
+                ):(
+                    <>
                 <TouchableOpacity style={styles.appButtonSave} onPress={() => { this.props.navigation.navigate("IniziaAllenamento", { scheda: scheda }) }}>
                         <Text style={styles.appButtonText}>Inizia Allenamento</Text>
                 </TouchableOpacity>
+                </>
+                )}
             </SafeAreaView>
         )
     };
