@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/FontAwesome"
 import Feather from "react-native-vector-icons/Feather"
 import Entypo from "react-native-vector-icons/Entypo"
 import Fontisto from "react-native-vector-icons/Fontisto"
-import DropDown from "react-native-picker-select"
+import DropDownPicker from 'react-native-dropdown-picker';
 
 class Register extends Component {
     constructor() {
@@ -29,7 +29,8 @@ class Register extends Component {
             regioneError:'',
             provinciaError:'',
             cittaError:'',
-            categoriaError:''
+            categoriaError:'',
+            typeAbbonamento:''
            }
            this.handleChange = this.handleChange.bind(this);
       }
@@ -106,18 +107,24 @@ class Register extends Component {
             return (
                 <View name="form_user">
                 <Text style = {[styles.textLogin,{marginTop:35}]}>Piano Abbonamento</Text>
-                <View style={styles.action}>
-                <DropDown
-                    value={this.state.selectedValue}
+                <DropDownPicker
                     items={[
-                            { label: "Piano Standard", value: "standard" },
-                            { label: "Piano Premium", value: "premium" },
-                            { label: "Piano con Live", value: "live" },
+                            {label: 'Piano Standard', value: "standard"},
+                            {label: 'Piano Premium', value: 'premium'},
+                            {label: 'Piano con Live', value: 'live'},
                     ]}
+                    defaultValue={this.state.typeAbbonamento}
+                    placeholder="Scegli l'abbonamento"
+                    containerStyle={{height: 60,width:200}}
+                    style={{backgroundColor: '#fafafa',marginTop:10}}
+                    itemStyle={{
+                        justifyContent: 'flex-start'
+                    }}
+                    dropDownStyle={{backgroundColor: '#fafafa'}}
+                    onChangeItem={item => this.setState({
+                        typeAbbonamento: item.value
+                    })}
                 />
-                </View>
-
-
                         <View style={styles.button}>
                             <TouchableOpacity style={styles.appButtonContainer} onPress={this.validateFormUser}>
                                 <Text style={styles.appButtonText}>Registrati</Text>
@@ -281,7 +288,7 @@ class Register extends Component {
                 return null;
         }
     }
-    handleChange(event) { this.setState({ selectedValue: event.target.value }); }
+    handleChange(event) { this.setState({ selectedValue: event.target.onChangeItem }); }
     render() {
         return (
             <ScrollView>
@@ -365,22 +372,24 @@ class Register extends Component {
                     <Text style={{color: 'red'}}>{this.state.equalPswError}</Text>
 
                     <Text style={[styles.textLogin, { marginTop: 35 }]}>Che tipo di utente sei?</Text>
-                    <View style={styles.action}>
-                        <DropDown
-                            onValueChange={(value) => {
-                                this.setState({
-                                    selectedValue: value
-                                })
-                            }}
-                            onChange={this.handleChange}
-                            value={this.state.selectedValue}
-                            items={[
-                                { label: 'Utente semplice', value: "form_user" },
-                                { label: 'Personal Trainer', value: 'form_pt' },
-                                { label: 'Nutrizionista', value: 'form_nutri' },
-                            ]}
-                        />
-                    </View>
+                            <DropDownPicker
+                                items={[
+                                    {label: 'Utente semplice', value: "form_user"},
+                                    {label: 'Personal Trainer', value: 'form_pt'},
+                                    {label: 'Nutrizionista', value: 'form_nutri'},
+                                ]}
+                                defaultValue={this.state.selectedValue}
+                                placeholder="Scegli il tipo"
+                                containerStyle={{height: 60,width:150}}
+                                style={{backgroundColor: '#fafafa',marginTop:10}}
+                                itemStyle={{
+                                    justifyContent: 'flex-start'
+                                }}
+                                dropDownStyle={{backgroundColor: '#fafafa'}}
+                                onChangeItem={item => this.setState({
+                                    selectedValue: item.value
+                                })}
+                            />
                     {this.renderSelectedForm(this.state.selectedValue)}
                 </View>
             </ScrollView>
@@ -398,7 +407,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
-        paddingVertical: 30
+        paddingBottom:150
     },
     action: {
         flexDirection: 'row',
@@ -410,7 +419,8 @@ const styles = StyleSheet.create({
     textLogin: {
         color: '#05375a',
         fontSize: 18,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        marginTop:15
     },
     textInput: {
         flex: 1,
