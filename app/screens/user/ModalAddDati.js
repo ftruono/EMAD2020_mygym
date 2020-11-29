@@ -25,37 +25,30 @@ const ModalAddDati = (props) => {
             items={[
               {
                 label: 'braccia Dx', value: 'braccia Dx',
-                // icon: () => <Icon name="arms" size={18} color="#900" />,
                 hidden: true,
               },
               {
                 label: 'braccia Sx', value: 'braccia Sx',
-                // icon: () => <Icon name="arms" size={18} color="#900" />,
                 hidden: true
               },
               {
                 label: 'addome', value: 'addome',
-                // icon: () => <Icon name="arms" size={18} color="#900" />
               },
               {
                 label: 'vita', value: 'vita',
-                // icon: () => <Icon name="arms" size={18} color="#900" />
+
               },
               {
                 label: 'gamba Dx', value: 'gamba Dx',
-                // icon: () => <Icon name="arms" size={18} color="#900" />
               },
               {
                 label: 'gamba Sx', value: 'gamba Sx',
-                // icon: () => <Icon name="arms" size={18} color="#900" />
               },
               {
                 label: 'Petto', value: 'Petto',
-                // icon: () => <Icon name="flag" size={18} color="#900" />
               },
               {
                 label: 'Spalle', value: 'Spalle',
-                // icon: () => <Icon name="flag" size={18} color="#900" />
               },
             ]}
             placeholder="Seleziona una parte del corpo"
@@ -70,7 +63,6 @@ const ModalAddDati = (props) => {
           <TextInput
             label="Inserisci la misurazione"
             value={misurazione}
-            style={style.textInputSyle}
             onChangeText={text => setMisurazione(text)}
           />
           <Icon
@@ -78,7 +70,20 @@ const ModalAddDati = (props) => {
             name='check'
             type='font-awesome'
             color='#f50'
-            onPress={() =>(props.aggiungiValori(parteCorpo,misurazione), hideModal() ) }/>
+            onPress={() => {
+              if(parteCorpo==''){
+                alert("seleziona una parte del corpo")
+              }else{
+                if (misurazione == '') {
+                alert("ineserisci un valore per piacere")
+              } else {
+                props.aggiungiValori(parteCorpo, misurazione);
+                setParteCorpo('');
+                setMisurazione('');
+                 hideModal(); 
+              }}
+              
+            }} />
 
         </Modal>
       </Portal>
@@ -95,7 +100,6 @@ const style = StyleSheet.create({
   selectStyle: { backgroundColor: '#fafafa', },
   selectdropDownStyle: { backgroundColor: '#fafafa', },
   itemSelectStyle: { justifyContent: 'flex-start', },
-  textInputSyle: { backgroundColor: '#000000', },
   button: {
     position: 'absolute',
     zIndex: 11,
