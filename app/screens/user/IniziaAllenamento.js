@@ -45,16 +45,17 @@ export default class IniziaAllenamento extends React.Component {
                             <Text style={styles.textTitle}>Tipo Esercizio: {esercizio[this.state.index]}</Text>
                             <View style={styles.action}>
                                 <Text style={[styles.textTitle,{marginTop:35}]}>Peso utilizzato: </Text>
-                                <Text style={[styles.textTitle,{marginTop:35,marginLeft:45}]}>Ripetizioni: {ripetizioni[this.state.index]}</Text>
-                                <Text style={[styles.textTitle,{marginTop:35,marginLeft:45}]}>Colpi: {colpi[this.state.index]}</Text>
-                            </View>
-                            <View style={styles.action}>
                                 <TextInput
-                                    label="Inserisci i colpi"
+                                    label="Inserisci il peso"
                                     value={this.state.peso}
                                     onChangeText={(text) => (this.setState({peso:text}))}
+                                    style={{width:150}}
                                     //onBlur={invio i dati al db}
                                 />
+                            </View>
+                            <View style={styles.action}>
+                                <Text style={[styles.textTitle,{marginTop:20}]}>Ripetizioni: {ripetizioni[this.state.index]}</Text>
+                                <Text style={[styles.textTitle,{marginTop:20,marginLeft:35}]}>Colpi: {colpi[this.state.index]}</Text>
                             </View>
                                 </>):(
                                     <>
