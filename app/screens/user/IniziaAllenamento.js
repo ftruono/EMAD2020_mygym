@@ -21,6 +21,11 @@ export default class IniziaAllenamento extends React.Component {
         console.log(this.state.index)
     }
 
+    renderHome = () =>{
+        this.setState({ index: 0})
+        this.props.navigation.navigate("Menu", { screen: "Home", params: { user: 'XX', userType: 'UT' }})
+    }
+
     render(){
         var schedaArray = this.props.route.params;
         var scheda = schedaArray.scheda;
@@ -61,7 +66,7 @@ export default class IniziaAllenamento extends React.Component {
                                 </>):(
                                     <>
                                         <View style={styles.alert}>
-                                            <TouchableOpacity style={{ marginTop: 15 }} onPress={()=>this.props.navigation.navigate("Menu", { screen: "Home", params: { user: 'XX', userType: 'UT' } })}>
+                                            <TouchableOpacity style={{ marginTop: 15 }} onPress={this.renderHome}>
                                                 <Icon name="alert" color="red" size={50}></Icon>
                                             </TouchableOpacity>
                                             <Text style={[styles.textHeader,{marginTop:15}]}> Allenamento Completato !!!!</Text>
