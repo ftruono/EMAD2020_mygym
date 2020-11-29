@@ -49,7 +49,7 @@ export default WorkoutCard;
 
 const styles = StyleSheet.create({
     item: {
-        width: width / 2,
+        width: width / 2 -10,
         height: '30%'
     },
     body: {
