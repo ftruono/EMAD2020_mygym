@@ -5,7 +5,7 @@ import HomeUser from "../screens/user/HomeUser";
 import HomeNT from "../screens/nutritionist/HomeNT";
 import HomePT from "../screens/personaltrainer/HomePT";
 import { StyleSheet, Image, SafeAreaView } from "react-native";
-import LiveCalendar from "../screens/LiveCalendar";
+import LiveCalendar from "../screens/personaltrainer/LiveCalendar";
 import DatiPersonaliUser from "../screens/user/DatiPersonaliUser"
 import ViewSingleDay from '../screens/user/ViewSingleDay'
 import IniziaAllenamento from '../screens/user/IniziaAllenamento'

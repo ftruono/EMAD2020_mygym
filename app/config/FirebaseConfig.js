@@ -1,5 +1,6 @@
-import * as firebase from 'firebase';
-
+import { firebase } from '@firebase/app';
+import '@firebase/firestore';
+import '@firebase/auth';
 
 
 const app = {
@@ -13,17 +14,12 @@ const app = {
   measurementId: "G-PW3Y8H7MH5"
 };
 
-const FirebaseApp = () => {
-  // Initialize Firebase App
-  if (!firebase.apps.length) {
-    firebase.initializeApp(app);
-  }
-
+if (!firebase.apps.length) {
+  firebase.initializeApp(app);
 }
 
-FirebaseApp()
 
 
-const FirebaseDB=firebase.firestore();
-const FirebaseAutentication=firebase.auth();
-export const {FirebaseDB,FirebaseAutentication}
+export const FirebaseDB = firebase.firestore();
+export const FirebaseAutentication = firebase.auth();
+

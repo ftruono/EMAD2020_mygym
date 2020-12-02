@@ -2,30 +2,33 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome"
 import Feather from "react-native-vector-icons/Feather"
+import { AuthContext } from '../config/AutenticationConfig';
 
 
-class Login extends Component {
-    constructor() {
-        super();
-        this.state = {
-            secureTextEntry: true,
-            iconName: "eye-off",
-            userID:'',
-            password:'',
-            nameError:'',
-            passwordError:'',
-        }
+
+
+
+
+
+export function Login(props) {
+
+    const state = {
+        secureTextEntry: true,
+        iconName: "eye-off",
+        userID: '',
+        password: '',
+        nameError: '',
+        passwordError: '',
     }
 
-    updateSecureTextEntry = () => {
-        let iconName = (this.state.secureTextEntry) ? "eye" : "eye-off"
-        this.setState({
-            secureTextEntry: !this.state.secureTextEntry,
-            iconName: iconName
-        });
+   const updateSecureTextEntry = () => {
+        let iconName = (state.secureTextEntry) ? "eye" : "eye-off"
+        state.secureTextEntry=!state.secureTextEntry;
+        state.iconName=iconName;
+        
     }
 
-     validateForm = () => {
+    const validateForm = () => {
         /* var flagUser = false;
         var flagPsw = false;
         if (this.state.userID.trim() === "") {
@@ -34,74 +37,79 @@ class Login extends Component {
             flagUser=true;
             this.setState(() => ({ nameError: ""}));
         }
-
+    
         if(this.state.password.length < 8) {
             this.setState(() => ({ passwordError: "Il campo deve avere più di 8 caratteri"}))
         } else {
             flagPsw=true;
             this.setState(() => ({ passwordError: ""}));
         }
- */
+    
         //if(flagUser && flagPsw) {
-            global.userType=this.state.userID.trim();
-            global.user='XX';
-            this.props.navigation.navigate("Menu", { screen: "Home", params: { user: 'XX', userType: 'UT' } })
+        global.userType = this.state.userID.trim();
+        global.user = 'XX';
+        props.navigation.navigate("Menu", { screen: "Home", params: { user: 'XX', userType: 'UT' } })
         //}
-      } 
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.textLogin}>UserID</Text>
-                <View style={styles.action}>
-                    <Icon name="user-o" color="#05375a" size={20}></Icon>
-                    <TextInput
-                        placeholder="UserID"
-                        placeholderTextColor="#666666"
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(text) => this.setState({userID:text})}
-                        value={this.state.userID}
-                    />
-                </View>
-
-                 <Text style={{color: 'red'}}>{this.state.nameError}</Text>
-
-                <Text style={[styles.textLogin, { marginTop: 35 }]}>Password</Text>
-                <View style={styles.action}>
-                    <Icon name="lock" color="#05375a" size={20}></Icon>
-                    <TextInput
-                        placeholder="Password"
-                        secureTextEntry={this.state.secureTextEntry}
-                        placeholderTextColor="#666666"
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(text) => this.setState({password:text})}
-                        value={this.state.password}
-                    />
-
-                    <TouchableOpacity onPress={this.updateSecureTextEntry}>
-                        <Feather
-                            name={this.state.iconName}
-                            color="grey"
-                            size={20}
-                        />
-                    </TouchableOpacity>
-                </View>
-
-                 <Text style={{color: 'red'}}>{this.state.passwordError}</Text> 
-
-                <View style={styles.button}>
-                    <TouchableOpacity style={styles.appButtonContainer} onPress={this.validateForm} >
-                        <Text style={styles.appButtonText}>Log In</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        );
+        */
     }
+
+    
+    const [username, setUsername] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const { signIn } = React.useContext(AuthContext);
+
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.textLogin}>UserID</Text>
+            <View style={styles.action}>
+                <Icon name="user-o" color="#05375a" size={20}></Icon>
+                <TextInput
+                    placeholder="UserID"
+                    placeholderTextColor="#666666"
+                    style={styles.textInput}
+                    autoCapitalize="none"
+                    onChangeText={setUsername}
+                    value={username}
+                />
+            </View>
+
+            <Text style={{ color: 'red' }}>{state.nameError}</Text>
+
+            <Text style={[styles.textLogin, { marginTop: 35 }]}>Password</Text>
+            <View style={styles.action}>
+                <Icon name="lock" color="#05375a" size={20}></Icon>
+                <TextInput
+                    placeholder="Password"
+                    secureTextEntry={state.secureTextEntry}
+                    placeholderTextColor="#666666"
+                    style={styles.textInput}
+                    autoCapitalize="none"
+                    onChangeText={setPassword}
+                    value={password}
+                />
+
+                <TouchableOpacity onPress={updateSecureTextEntry()}>
+                    <Feather
+                        name={state.iconName}
+                        color="grey"
+                        size={20}
+                    />
+                </TouchableOpacity>
+            </View>
+
+            <Text style={{ color: 'red' }}>{state.passwordError}</Text>
+
+            <View style={styles.button}>
+                <TouchableOpacity style={styles.appButtonContainer} onPress={() =>signIn({username,password}) } >
+                    <Text style={styles.appButtonText}>Log In</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+
 }
 
-export default Login;
 
 
 const styles = StyleSheet.create({

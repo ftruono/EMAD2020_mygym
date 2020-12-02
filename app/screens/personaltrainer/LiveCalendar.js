@@ -3,8 +3,8 @@ import {View,Text,StyleSheet,SafeAreaView} from 'react-native';
 import Calendar from "react-native-customize-selected-date"
 import Icon from "react-native-vector-icons/FontAwesome"
 import _ from "lodash"
-import ModalEvent from '../component/ModalEvent'
-import HeaderComponent from "../component/HeaderComponent";
+import ModalEvent from '../../component/ModalEvent'
+import HeaderComponent from "../../component/HeaderComponent";
 
 
 const eventi = [
