@@ -80,6 +80,7 @@ export default function App() {
             user_data:""
           };
           //Call Firebase to get userdata.
+          global.userType='UT';
           console.log(user);
           dispatch({ type: 'SIGN_IN', token:user })
         }
