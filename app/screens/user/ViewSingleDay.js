@@ -145,23 +145,15 @@ const styles = StyleSheet.create({
         width: 300,
         height: 45,
         borderRadius: 30,
-        backgroundColor: 'black',
-        borderColor:'black',
+        backgroundColor: '#ff6c16',
+        borderColor:'#ff6c16',
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 8,
     },
-    appButtonContainer: {
-        elevation: 8,
-        backgroundColor: 'black',
-        borderColor:'black',
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 12
-    },
     appButtonText: {
         fontSize: 20,
-        color: "#ff1408",
+        color: "#fff",
         fontWeight: "bold",
         alignSelf: "center",
         textTransform: "uppercase"

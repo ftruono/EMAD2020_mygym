@@ -1,8 +1,8 @@
 import * as React from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Icon } from 'react-native-elements';
-import { Modal, Portal, Text, View, Button, Provider, TextInput } from 'react-native-paper';
-import { StyleSheet } from 'react-native';
+import { Modal, Portal, Text, Button, Provider, TextInput } from 'react-native-paper';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 
 
@@ -87,9 +87,9 @@ const ModalAddDati = (props) => {
 
         </Modal>
       </Portal>
-      <Button style={style.button} onPress={showModal}>
-        +
-      </Button>
+      <TouchableOpacity style={style.button} onPress={showModal}>
+        <Text style={style.appButtonText}>+</Text>
+      </TouchableOpacity>
     </Provider>
   );
 };
@@ -113,6 +113,13 @@ const style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 8,
+  },
+  appButtonText: {
+      fontSize: 20,
+      color: "#fff",
+      fontWeight: "bold",
+      alignSelf: "center",
+      textTransform: "uppercase"
   }
 })
 export default ModalAddDati;

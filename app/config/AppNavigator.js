@@ -1,6 +1,10 @@
 import React from "react";
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/Entypo";
+import Entypo from "react-native-vector-icons/Entypo"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Octicons from "react-native-vector-icons/Octicons"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 import HomeUser from "../screens/user/HomeUser";
 import HomeNT from "../screens/nutritionist/HomeNT";
 import HomePT from "../screens/personaltrainer/HomePT";
@@ -75,19 +79,18 @@ const DrawerNavigator = () => {
                     <Drawer.Screen name="Dati_Personali" component={DatiPersonaliUser} options={{
                         title: 'Dati Personali',
                         drawerIcon: ({ }) => (
-                            <Icon
-                                name="home"
+                            <Octicons
+                                name="person"
                                 size={20}
                                 color='black'
                             />
                         ),
-
                     }} />
                     <Drawer.Screen name="Dieta" component={Dieta} options={{
                         title: 'Dieta',
                         drawerIcon: ({ }) => (
-                            <Icon
-                                name="home"
+                            <FontAwesome
+                                name="newspaper-o"
                                 size={20}
                                 color='black'
                             />
@@ -96,8 +99,8 @@ const DrawerNavigator = () => {
                     <Drawer.Screen name="Statistiche" component={HomeUser} options={{
                         title: 'Statistiche',
                         drawerIcon: ({ }) => (
-                            <Icon
-                                name="home"
+                            <Octicons
+                                name="graph"
                                 size={20}
                                 color='black'
                             />
@@ -106,8 +109,8 @@ const DrawerNavigator = () => {
                     <Drawer.Screen name="Calendario" component={LiveCalendar} options={{
                         title: 'Calendario Live',
                         drawerIcon: ({ }) => (
-                            <Icon
-                                name="home"
+                            <FontAwesome
+                                name="calendar"
                                 size={20}
                                 color='black'
                             />
@@ -116,8 +119,18 @@ const DrawerNavigator = () => {
                     <Drawer.Screen name="Cambio PT" component={HomeUser} options={{
                         title: 'Cambio PT',
                         drawerIcon: ({ }) => (
-                            <Icon
-                                name="home"
+                            <FontAwesome
+                                name="exchange"
+                                size={20}
+                                color='black'
+                            />
+                        ),
+                    }} />
+                    <Drawer.Screen name="Sign out" component={HomeUser} options={{
+                        title: 'Sign out',
+                        drawerIcon: ({ }) => (
+                            <Octicons
+                                name="sign-out"
                                 size={20}
                                 color='black'
                             />
@@ -146,8 +159,8 @@ const DrawerNavigator = () => {
                         <Drawer.Screen name="Piani" component={HomeNT} options={{
                             title: 'Piani Alimentari',
                             drawerIcon: ({ }) => (
-                                <Icon
-                                    name="home"
+                                <Entypo
+                                    name="news"
                                     size={20}
                                     color='black'
                                 />
@@ -156,8 +169,8 @@ const DrawerNavigator = () => {
                         <Drawer.Screen name="Dati_Personali" component={HomeNT} options={{
                             title: 'Dati Personali',
                             drawerIcon: ({ }) => (
-                                <Icon
-                                    name="home"
+                                <Octicons
+                                    name="person"
                                     size={20}
                                     color='black'
                                 />
@@ -166,8 +179,8 @@ const DrawerNavigator = () => {
                         <Drawer.Screen name="Vedi_Clienti" component={HomeNT} options={{
                             title: 'Vedi Clienti',
                             drawerIcon: ({ }) => (
-                                <Icon
-                                    name="home"
+                                <MaterialIcons
+                                    name="person-search"
                                     size={20}
                                     color='black'
                                 />
@@ -189,8 +202,8 @@ const DrawerNavigator = () => {
                             <Drawer.Screen name="Scheda_Allenamento" component={CreateWorkout} options={{
                                 title: 'Scheda Allenamento',
                                 drawerIcon: ({ }) => (
-                                    <Icon
-                                        name="home"
+                                    <Entypo
+                                        name="news"
                                         size={20}
                                         color='black'
                                     />
@@ -199,8 +212,8 @@ const DrawerNavigator = () => {
                             <Drawer.Screen name="Vedi Clienti" component={HomePT} options={{
                                 title: 'Vedi Clienti',
                                 drawerIcon: ({ }) => (
-                                    <Icon
-                                        name="home"
+                                    <MaterialIcons
+                                        name="person-search"
                                         size={20}
                                         color='black'
                                     />
@@ -209,8 +222,8 @@ const DrawerNavigator = () => {
                             <Drawer.Screen name="Calendario_Live" component={LiveCalendar} options={{
                                 title: 'Calendario Live',
                                 drawerIcon: ({ }) => (
-                                    <Icon
-                                        name="home"
+                                    <FontAwesome
+                                        name="calendar"
                                         size={20}
                                         color='black'
                                     />

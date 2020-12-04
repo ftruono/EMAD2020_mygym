@@ -60,18 +60,24 @@ export default class IniziaAllenamento extends React.Component {
                                 </>):(
                                     <>
                                         <View style={styles.alert}>
-                                            <TouchableOpacity style={{ marginTop: 15 }} onPress={this.renderHome}>
-                                                <Icon name="alert" color="red" size={50}></Icon>
-                                            </TouchableOpacity>
-                                            <Text style={[styles.textHeader,{marginTop:15}]}> Allenamento Completato !!!!</Text>
+                                            <Icon name="alert" color="red" size={35}></Icon>
+                                            <Text style={[styles.textAlert]}> Allenamento Completato !!!!</Text>
                                         </View>
                                     </>
                                 )}
                     </View>
                 </ScrollView>
+                {this.state.index < esercizio.length ? (
+                    <>
                 <TouchableOpacity style={styles.appButtonSave} onPress={this.incrementIndex}>
-                        <Text style={styles.appButtonText}>Prossimo esercizio</Text>
+                    <Text style={styles.appButtonText}>Prossimo esercizio</Text>
                 </TouchableOpacity>
+                    </>):(
+
+                <TouchableOpacity style={styles.appButtonSave} onPress={this.renderHome}>
+                    <Text style={styles.appButtonText}>Torna alla home</Text>
+                </TouchableOpacity>
+                    )}
             </SafeAreaView>
         )
     }
@@ -96,6 +102,7 @@ const styles = StyleSheet.create({
     },
     alert: {
         flexDirection: 'row',
+        marginTop:70,
     },
     textTitle: {
         color: '#05375a',
@@ -115,6 +122,11 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginTop: 15,
     },
+    textAlert: {
+        color: '#05375a',
+        fontSize: 30,
+        fontWeight: "bold",
+    },
     appButtonSave: {
         position: 'absolute',
         zIndex: 11,
@@ -123,23 +135,15 @@ const styles = StyleSheet.create({
         width: 250,
         height: 45,
         borderRadius: 30,
-        backgroundColor: 'black',
-        borderColor:'black',
+        backgroundColor: '#ff6c16',
+        borderColor:'#ff6c16',
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 8,
     },
-    appButtonContainer: {
-        elevation: 8,
-        backgroundColor: 'black',
-        borderColor:'black',
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 12
-    },
     appButtonText: {
         fontSize: 20,
-        color: "#ff1408",
+        color: "#fff",
         fontWeight: "bold",
         alignSelf: "center",
         textTransform: "uppercase"

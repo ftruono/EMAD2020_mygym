@@ -72,15 +72,9 @@ export default class DatiPersonaliUser extends Component {
                         </View>
                     </View>
                 </ScrollView>
-
-                {/* <TouchableOpacity style={styles.appButtonContainer} onPress={this.addElements}>
-                    <Text style={styles.appButtonText}>+</Text>
-            </TouchableOpacity> */}
-
                 <TouchableOpacity style={styles.appButtonSave}>
                     <Text style={styles.appButtonText}>Salva</Text>
                 </TouchableOpacity>
-                {/* {this.props.prova="ciao2"} */}
                 <ModalAddDati aggiungiValori={this.aggiungiValori}></ModalAddDati>
             </SafeAreaView>
         )
@@ -169,7 +163,7 @@ const styles = StyleSheet.create({
     },
     appButtonText: {
         fontSize: 20,
-        color: "#ff1408",
+        color: "#fff",
         fontWeight: "bold",
         alignSelf: "center",
         textTransform: "uppercase"
