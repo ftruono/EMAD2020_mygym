@@ -1,8 +1,10 @@
+import { firestore } from "firebase";
 import React, { Component, useState, useEffect } from "react";
 import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent";
 import WorkoutCard from '../../component/WorkoutCard';
+import { Firestore } from "../../config/FirebaseConfig";
 import Dieta from "../nutritionist/Dieta";
 
 
@@ -75,8 +77,13 @@ const schedaDb = [
 class HomeUser extends React.Component {
     constructor(props) {
         super(props);
+        this.getUser();
     }
 
+    getUser = async () => {
+         const user= (await Firestore.collection('UTENTI').doc('Admin').get()).data();
+         console.log(user);
+    }
     state = {}
     render() {
         return (

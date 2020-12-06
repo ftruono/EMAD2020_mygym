@@ -1,63 +1,85 @@
-import React, { Component } from 'react';
+import React, { Component, useReducer } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome"
 import Feather from "react-native-vector-icons/Feather"
 import { AuthContext } from '../config/AutenticationConfig';
+import { FirebaseAutentication } from '../config/FirebaseConfig';
 
 
 
 
 
+export const Login = () => {
 
 
-export function Login(props) {
+    
+    
 
-    const state = {
-        secureTextEntry: true,
-        iconName: "eye-off",
-        userID: '',
-        password: '',
-        nameError: '',
-        passwordError: '',
-    }
+    const [iconName, setIconName] = React.useState("eye-off");
+    const [username, setUsername] = React.useState("fra@fra.it");
+    const [password, setPassword] = React.useState("frafra");
+    const [secureTextEntry, setSecureTextEntry] = React.useState(false)
+    const [nameErrror, setNameError] = React.useState('');
+    const [passwordError, setPasswordError] = React.useState('');
+    const [loginError, setLoginError] = React.useState('');
 
-   const updateSecureTextEntry = () => {
-        let iconName = (state.secureTextEntry) ? "eye" : "eye-off"
-        state.secureTextEntry=!state.secureTextEntry;
-        state.iconName=iconName;
-        
+
+    function updateSecureTextEntry() {
+        console.log("called"); 
+        setSecureTextEntry(!secureTextEntry);
+        setIconName((secureTextEntry) ? "eye" : "eye-off");
+
     }
 
     const validateForm = () => {
-        /* var flagUser = false;
-        var flagPsw = false;
-        if (this.state.userID.trim() === "") {
-            this.setState(() => ({ nameError: "Il campo non può essere vuoto"}));
+        var preValidation = true;
+        var login = true;
+        setLoginError('');
+        if (username.length == 0) {
+            preValidation = false;
+            setNameError("Il campo non può essere vuoto");
         } else {
-            flagUser=true;
-            this.setState(() => ({ nameError: ""}));
+            setNameError('');
         }
-    
-        if(this.state.password.length < 8) {
-            this.setState(() => ({ passwordError: "Il campo deve avere più di 8 caratteri"}))
+
+        if (password.length < 6) {
+            preValidation = false;
+            setPasswordError('La password ha una lunghezza minimo di 6 caratteri');
         } else {
-            flagPsw=true;
-            this.setState(() => ({ passwordError: ""}));
+            setPasswordError('');
         }
-    
-        //if(flagUser && flagPsw) {
-        global.userType = this.state.userID.trim();
-        global.user = 'XX';
-        props.navigation.navigate("Menu", { screen: "Home", params: { user: 'XX', userType: 'UT' } })
-        //}
-        */
+
+        if (preValidation) {
+            tryLogin(login);
+        }
+        return (login && preValidation);
     }
 
-    
-    const [username, setUsername] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const { signIn } = React.useContext(AuthContext);
 
+    async function tryLogin(login) {
+        try {
+            await FirebaseAutentication.signInWithEmailAndPassword(username, password);
+            login = true;
+        } catch (e) {
+            login = false;
+            console.log(e.code);
+            getErrorByCode(e.code);
+        }
+
+    }
+
+    function getErrorByCode(code) {
+        if (code == 'auth/wrong-password') {
+            setLoginError('Password o username non valido');
+        }else if(code== 'auth/user-not-found' || code=='auth/invalid-email'){
+            setLoginError('Utente non presente, verificare i dati inseriti');
+        }else if(code== 'auth/network-request-failed'){
+            setLoginError('Connessione non rilevata, verifica la connessione di rete');
+        }
+    }
+
+
+    const { signIn } = React.useContext(AuthContext);
 
     return (
         <View style={styles.container}>
@@ -74,14 +96,14 @@ export function Login(props) {
                 />
             </View>
 
-            <Text style={{ color: 'red' }}>{state.nameError}</Text>
+            <Text style={styles.error}>{nameErrror}</Text>
 
             <Text style={[styles.textLogin, { marginTop: 35 }]}>Password</Text>
             <View style={styles.action}>
                 <Icon name="lock" color="#05375a" size={20}></Icon>
                 <TextInput
                     placeholder="Password"
-                    secureTextEntry={state.secureTextEntry}
+                    secureTextEntry={secureTextEntry}
                     placeholderTextColor="#666666"
                     style={styles.textInput}
                     autoCapitalize="none"
@@ -89,22 +111,33 @@ export function Login(props) {
                     value={password}
                 />
 
-                <TouchableOpacity onPress={updateSecureTextEntry()}>
+                <TouchableOpacity onPress={() => { updateSecureTextEntry() }}>
                     <Feather
-                        name={state.iconName}
+                        name={iconName}
                         color="grey"
                         size={20}
                     />
                 </TouchableOpacity>
             </View>
 
-            <Text style={{ color: 'red' }}>{state.passwordError}</Text>
+            <Text style={styles.error}>{passwordError}</Text>
 
             <View style={styles.button}>
-                <TouchableOpacity style={styles.appButtonContainer} onPress={() =>signIn({username,password}) } >
+                <TouchableOpacity
+                    style={styles.appButtonContainer}
+                    onPress={() => {
+                        if (validateForm()) {
+                            signIn({ username, password })
+                        }
+                    }
+                    } >
                     <Text style={styles.appButtonText}>Log In</Text>
                 </TouchableOpacity>
             </View>
+
+            <Text style={styles.errorLogin}>{loginError}</Text>
+
+
         </View>
     );
 
@@ -168,5 +201,15 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         alignSelf: "center",
         textTransform: "uppercase"
+    },
+    error: {
+     color:'red',
+    },
+    errorLogin:{
+      color:'red',
+      textAlign:'center',
+      fontSize:18,
+      fontWeight:'bold',
+      padding:25,
     }
 });

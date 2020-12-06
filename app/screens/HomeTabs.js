@@ -12,9 +12,9 @@ import { Login } from './Login';
 const Tab = createMaterialTopTabNavigator();
 
 
-export function Tabs() {
-   
-   
+export function Tabs({ props }) {
+
+
     return (<Tab.Navigator swipeEnabled="true" tabBarOptions={optionsTab}>
         <Tab.Screen name="Login" component={Login} options={({ navigation }) => ({
             tabBarLabel: ({ }) => (

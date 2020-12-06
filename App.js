@@ -7,7 +7,7 @@ import DrawerNavigator from './app/config/AppNavigator';
 import { AuthContext } from './app/config/AutenticationConfig';
 import { Tabs } from './app/screens/HomeTabs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FirebaseAutentication } from './app/config/FirebaseConfig';
+import { FirebaseAutentication, Firestore } from './app/config/FirebaseConfig';
 import SplashScreen from './app/screens/SplashScreen';
 
 
@@ -38,6 +38,7 @@ export default function App() {
             ...prevState,
             isSignIn: false,
             userToken: null,
+            errorCode:null,
           };
       }
     },
@@ -49,7 +50,7 @@ export default function App() {
   );
 
   React.useEffect(() => {
-    
+
     const bootstrapAsync = async () => {
       let userToken;
 
@@ -68,26 +69,25 @@ export default function App() {
     bootstrapAsync();
   }, []);
 
+
+
+
+
   const authContext = React.useMemo(
     () => ({
+
       signIn: async data => {
 
 
-        FirebaseAutentication.signInWithEmailAndPassword(data.username, data.password).then(( usr ) => {
-          console.log("Collegato" +  usr.user.uid );
-          const user={
-            id: usr.user.uid,
-            user_data:""
-          };
-          //Call Firebase to get userdata.
-          global.userType='UT';
-          console.log(user);
-          dispatch({ type: 'SIGN_IN', token:user })
-        }
-        ).catch(error => {
-          console.log(error.code + error.message);
-        });
+        try {
+          const response = await FirebaseAutentication.signInWithEmailAndPassword(data.username, data.password);
+          console.log("Collegato" + response.user.uid);
+          const user = (await Firestore.collection('UTENTI').doc(response.user.uid).get()).data();
 
+          dispatch({ type: 'SIGN_IN', token: {type: user.type,id: response.user.id} })
+        } catch (error) {
+         
+        }
 
       },
       signOut: () => dispatch({ type: 'SIGN_OUT' }),
@@ -99,6 +99,7 @@ export default function App() {
 
         dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
       },
+
     }),
     []
   );
@@ -120,10 +121,14 @@ export default function App() {
                     animationTypeForReplace: state.isSignout ? 'pop' : 'push'
                   }
                 }
+
               />
 
             ) : (
-                  <Stack.Screen name="Menu" component={DrawerNavigator} options={{ headerShown: false }} ></Stack.Screen>
+                  <Stack.Screen name="Menu"
+                    component={DrawerNavigator}
+                    options={{ headerShown: false }}
+                    initialParams={{ user: state.userToken }} ></Stack.Screen>
 
                 )
 
@@ -135,16 +140,3 @@ export default function App() {
   )
 };
 
-
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  iconContainer: {
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center'
-  }
-});

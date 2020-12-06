@@ -1,5 +1,5 @@
 import React from "react";
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, } from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList, } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/Entypo";
 import Entypo from "react-native-vector-icons/Entypo"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -16,6 +16,7 @@ import IniziaAllenamento from '../screens/user/IniziaAllenamento'
 
 import CreateWorkout from "../screens/personaltrainer/CreateWorkout";
 import Dieta from "../screens/nutritionist/Dieta";
+import { AuthContext } from "./AutenticationConfig";
 
 const Drawer = createDrawerNavigator();
 
@@ -23,6 +24,7 @@ const hideScreen = ["ViewSingleDay", "IniziaAllenamento"]
 
 const DrawerContent = ({ progress, ...props }) => {
 
+    const { signOut } = React.useContext(AuthContext);
     const filteredProps = {
         ...props,
         state: {
@@ -37,6 +39,18 @@ const DrawerContent = ({ progress, ...props }) => {
         />
         <DrawerContentScrollView {...filteredProps}>
             <DrawerItemList {...filteredProps} />
+            <DrawerItem
+                label="Sign out"
+                onPress={() => signOut()}
+                icon={({ }) =>
+                    <Octicons
+                        name="sign-out"
+                        size={20}
+                        color='black' />
+                }
+            />
+
+
         </DrawerContentScrollView>
     </SafeAreaView >);
 };
@@ -59,12 +73,15 @@ const styles = StyleSheet.create({
 });
 
 
-const DrawerNavigator = () => {
+const DrawerNavigator = ({ navigation, route }) => {
+
+
+
 
     return (
 
         <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-            {global.userType == 'UT' ? (
+            {route.params.user.type == 'UT' ? (
                 <>
                     <Drawer.Screen name="Home" component={HomeUser} options={{
                         title: 'Home',
@@ -126,16 +143,6 @@ const DrawerNavigator = () => {
                             />
                         ),
                     }} />
-                    <Drawer.Screen name="Sign out" component={HomeUser} options={{
-                        title: 'Sign out',
-                        drawerIcon: ({ }) => (
-                            <Octicons
-                                name="sign-out"
-                                size={20}
-                                color='black'
-                            />
-                        ),
-                    }} />
                     <Drawer.Screen name="ViewSingleDay" component={ViewSingleDay} options={{
                         drawerLabel: () => null, title: null,
                         drawerIcon: () => null
@@ -144,7 +151,7 @@ const DrawerNavigator = () => {
                         drawerLabel: () => null, title: null,
                         drawerIcon: () => null
                     }} />
-                </>) : (global.userType == 'NT' ? (
+                </>) : (route.params.user.type == 'NT' ? (
                     <>
                         <Drawer.Screen name="Home" component={HomeNT} options={{
                             title: 'Home',
