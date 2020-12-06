@@ -1,148 +1,137 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View,TextInput, Text,StyleSheet,Modal } from 'react-native';
+import { TouchableOpacity, View, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { Modal, Portal, Text, Button, Provider, TextInput } from 'react-native-paper';
+
+const { width, height } = Dimensions.get('screen');
+
+const ModalEvent = (props) => {
+
+    const [descrizione, setDescrizione] = React.useState('');
+    const [errore_descrizione, setErroreDescrizione] = React.useState('');
+    const [durata, setDurata] = React.useState('');
+    const [errore_durata, setErroreDurata] = React.useState('');
+    const [titolo, setTitolo] = React.useState('');
+    const [errore_titolo, setErroreTitolo] = React.useState('');
+
+    var evento = props.day_event;
+    return (
+        <Provider>
+            <Portal styel={{ padding: 20, }}>
+                <Modal visible={props.isModalVisible} transparent={false} onDismiss={props.handleClose} contentContainerStyle={styles.modal}>
+                    <ScrollView>
+                        <View style={styles.selectStyle}>
+                            <View style={{ margin: 5 }}>
+                                <Text style={styles.textTitle}>Inserisci un nuovo evento</Text>
+                                <Text style={styles.textTitle}>Data: {evento.day}</Text>
 
 
-class ModalEvent extends Component {
-    constructor(props) {
-        super(props);
-    }
-    state = {}
-
-     renderLock = () => {
-        alert("Click save")
-      } 
-    
-      render(){
-
-        var eventiX = JSON.parse(this.props.event);
-        var eventoSelected =[];
-        eventoSelected.push(eventiX.find(item=>item.day==='2020-11-04'));
-        console.log(this.props.date)
-            return (
-                
-                eventoSelected.map((u)=> u.evento.map((u)=>
-                    <Modal
-                        animationType = {"slideInUp"}
-                        transparent={false}
-                        visible={this.props.isModalVisible}>
-                            <View style={styles.containerModal}>
-                            <Text style={styles.textLogin}>Inserisci un nuovo evento</Text>
-                            <Text style={styles.textLogin}>Data: {this.props.date}</Text>
                                 <Text style={styles.text}>Titolo evento:</Text>
-                                    
-                                    {global.userType == 'PT' ? (
-                                        <>
-                                            <View style={styles.action}>
-                                            <TextInput
-                                                placeholder="Inserisci titolo evento"
-                                                placeholderTextColor="#666666"
-                                                style={styles.textInput}
-                                                autoCapitalize="none"
-                                                onChange={(event) => this.setState({eventTitol:event.nativeEvent.text})}
-                                                value={u.titolo}
-                                            />
-                                            </View>
+                                <TextInput
+                                    label="Inserisci titolo evento"
+                                    value={titolo}
+                                    editable={global.userType == 'UT' ? true : false}
+                                    onChangeText={text => setTitolo(text)}
+                                />
+                                <Text style={{color: 'red'}}>{errore_titolo}</Text>
 
-                                            <Text style={[styles.text]}>Durata</Text>
-                                            <View style={styles.action}>
-                                                <TextInput
-                                                    placeholder="Inserisci la sua durata"
-                                                    placeholderTextColor="#666666"
-                                                    style={styles.textInput}
-                                                    autoCapitalize="none"
-                                                    onChange={(event) => this.setState({duration:event.nativeEvent.text})}
-                                                    value={u.durata}
-                                                />
-                                            </View>
 
-                                            <Text style={[styles.text]}>Descrizione</Text>
-                                            <View style={styles.action}>
-                                                <TextInput
-                                                    placeholder="Inserisci decrizione/link alla stanza"
-                                                    placeholderTextColor="#666666"
-                                                    style={styles.textInput}
-                                                    autoCapitalize="none"
-                                                    onChange={(event) => this.setState({description:event.nativeEvent.text})}
-                                                    value={u.descrizione}
-                                                />
-                                            </View>
+                                <Text style={styles.text}>Durata</Text>
+                                <TextInput
+                                    label="Inserisci durata evento"
+                                    value={durata}
+                                    editable={global.userType == 'UT' ? true : false}
+                                    onChangeText={text => setDurata(text)}
+                                />
+                                <Text style={{color: 'red'}}>{errore_durata}</Text>
 
-                                        </>):(
-                                            <>
-                                                <View style={styles.action}>
-                                                <TextInput
-                                                    placeholderTextColor="#666666"
-                                                    style={styles.textInput}
-                                                    autoCapitalize="none"
-                                                    editable={false}
-                                                    value={u.titolo}
-                                                />
-                                                </View>
 
-                                                <Text style={[styles.text]}>Durata</Text>
-                                                <View style={styles.action}>
-                                                    <TextInput
-                                                        placeholderTextColor="#666666"
-                                                        style={styles.textInput}
-                                                        autoCapitalize="none"
-                                                        editable={false}
-                                                        value={u.durata}
-                                                    />
-                                                </View>
+                                <Text style={[styles.text]}>Descrizione</Text>
+                                <TextInput
+                                    label="Inserisci descrizione/link evento"
+                                    value={descrizione}
+                                    editable={global.userType == 'UT' ? true : false}
+                                    onChangeText={text => setDescrizione(text)}
+                                />
+                                <Text style={{color: 'red'}}>{errore_descrizione}</Text>
 
-                                                <Text style={[styles.text]}>Descrizione</Text>
-                                                <View style={styles.action}>
-                                                    <TextInput
-                                                        placeholderTextColor="#666666"
-                                                        style={styles.textInput}
-                                                        autoCapitalize="none"
-                                                        editable={false}
-                                                        value={u.descrizione}
-                                                    />
-                                                </View>
-                                            </>
-                                        )}
-                                    
+
                                 <View style={styles.action}>
-                                    <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 150 }]} onPress={this.props.handleClose}>
+                                    <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 150, }]} onPress={props.handleClose}>
                                         <Text style={styles.appButtonText}>Chiudi</Text>
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 150,marginLeft:75 }]} onPress={this.renderLock}>
+                                    <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 150, marginLeft: 16 }]}
+                                        onPress={() => {
+                                            if (descrizione == '') {
+                                                setErroreDescrizione("inserisci una descrizione")
+                                            }  
+                                            if (titolo == '') {
+                                                setErroreTitolo("inserisci un titolo")
+                                            }  
+                                            if (durata == '') {
+                                                setE('inserisci una durata')
+                                            } 
+                                            if(descrizione != ''&& titolo != ''&& durata != '' ){
+                                                evento = [{
+                                                    day: props.day_event.day,
+                                                    descrizione: descrizione,
+                                                    durata: durata,
+                                                    id_creatore: 'NELLO',
+                                                    titolo: titolo
+                                                }]
+                                                props.getAdd(evento)
+                                                props.handleClose
+                                            }
+                                        }
+                                        }
+                                    >
                                         <Text style={styles.appButtonText}>Salva</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                    </Modal>
-                    ))
-            );
-    };
-}
-export default ModalEvent;
 
+                        </View>
+                    </ScrollView>
+
+                </Modal >
+            </Portal>
+
+        </Provider>
+    );
+};
 
 const styles = StyleSheet.create({
-      containerModal: {
-        flex: 3,
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        paddingHorizontal: 20,
-        paddingVertical: 30
+
+    modal: { backgroundColor: 'transparent', padding: 20, },
+    selectStyle: { backgroundColor: '#fafafa', margin: width > 500 ? 20 : 5 },
+    selectdropDownStyle: { backgroundColor: '#fafafa', },
+    appButtonText: {
+        fontSize: 20,
+        color: "#fff",
+        fontWeight: "bold",
+        alignSelf: "center",
+        textTransform: "uppercase"
     },
-    textLogin: {
+    action: {
+        flexDirection: 'row',
+        // marginTop: 25,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f2f2f2',
+        paddingBottom: 7
+    },
+    textTitle: {
         color: '#05375a',
         fontSize: 30,
         fontWeight: "bold",
-        marginTop:30
+        marginTop: 30
     },
-      text: {
+    text: {
         color: '#05375a',
         fontWeight: "bold",
         fontSize: 24,
         marginTop: 35
-      },
-      action: {
+    },
+    action: {
         flexDirection: 'row',
         marginTop: 25,
         borderBottomWidth: 1,
@@ -162,5 +151,9 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         alignSelf: "center",
         textTransform: "uppercase"
-    }
+    },
 });
+export default ModalEvent;
+// alignItems: 'center',
+// justifyContent: 'center',
+
