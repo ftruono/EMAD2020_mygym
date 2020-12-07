@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View, StyleSheet, Dimensions, ScrollView } from 'react-native';
-import { Modal, Portal, Text, Button, Provider, TextInput } from 'react-native-paper';
+import { TouchableOpacity, Text, View, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { Modal, Portal, Button, Provider, TextInput } from 'react-native-paper';
+import { Icon } from 'react-native-elements';
+
 
 const { width, height } = Dimensions.get('screen');
 
@@ -12,81 +14,136 @@ const ModalEvent = (props) => {
     const [errore_durata, setErroreDurata] = React.useState('');
     const [titolo, setTitolo] = React.useState('');
     const [errore_titolo, setErroreTitolo] = React.useState('');
+    const [ora, setOra] = React.useState(false);
+    const [errore_ora, setErroreOra] = React.useState('');
+    var eventi = props.day_event;
+    console.log(props.data)
 
-    var evento = props.day_event;
+
+
     return (
         <Provider>
             <Portal styel={{ padding: 20, }}>
                 <Modal visible={props.isModalVisible} transparent={false} onDismiss={props.handleClose} contentContainerStyle={styles.modal}>
                     <ScrollView>
+
                         <View style={styles.selectStyle}>
                             <View style={{ margin: 5 }}>
                                 <Text style={styles.textTitle}>Inserisci un nuovo evento</Text>
-                                <Text style={styles.textTitle}>Data: {evento.day}</Text>
+                                <Text style={styles.textTitle}>Data: {eventi.day}</Text>
 
+                                <Text style={styles.text}>Ora</Text>
+                                <TextInput
+                                    label="Inserisci titolo evento"
+                                    value={eventi.ora == '' ? titolo : eventi.ora}
+                                    editable={global.userType == 'UT' ? true : false}
+                                    onChangeText={text => setOra(text)}
+                                />
+
+                                <Text style={{ color: 'red' }}>{errore_ora}</Text>
 
                                 <Text style={styles.text}>Titolo evento:</Text>
                                 <TextInput
                                     label="Inserisci titolo evento"
-                                    value={titolo}
+                                    value={eventi.titolo == '' ? titolo : eventi.titolo}
                                     editable={global.userType == 'UT' ? true : false}
                                     onChangeText={text => setTitolo(text)}
                                 />
-                                <Text style={{color: 'red'}}>{errore_titolo}</Text>
-
+                                <Text style={{ color: 'red' }}>{errore_titolo}</Text>
 
                                 <Text style={styles.text}>Durata</Text>
                                 <TextInput
                                     label="Inserisci durata evento"
-                                    value={durata}
+                                    value={eventi.durata == '' ? durata : eventi.durata}
                                     editable={global.userType == 'UT' ? true : false}
                                     onChangeText={text => setDurata(text)}
                                 />
-                                <Text style={{color: 'red'}}>{errore_durata}</Text>
+                                <Text style={{ color: 'red' }}>{errore_durata}</Text>
 
 
                                 <Text style={[styles.text]}>Descrizione</Text>
                                 <TextInput
                                     label="Inserisci descrizione/link evento"
-                                    value={descrizione}
+                                    value={eventi.descrizione == '' ? descrizione : eventi.descrizione}
                                     editable={global.userType == 'UT' ? true : false}
                                     onChangeText={text => setDescrizione(text)}
                                 />
-                                <Text style={{color: 'red'}}>{errore_descrizione}</Text>
+                                <Text style={{ color: 'red' }}>{errore_descrizione}</Text>
 
 
                                 <View style={styles.action}>
-                                    <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 150, }]} onPress={props.handleClose}>
-                                        <Text style={styles.appButtonText}>Chiudi</Text>
-                                    </TouchableOpacity>
-
-                                    <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 150, marginLeft: 16 }]}
+                                    <Icon raised
+                                        name='times-circle'
+                                        type='font-awesome'
+                                        color='#f50'
                                         onPress={() => {
+                                            props.handleClose()
+
+                                        }} />
+                                        
+                                    {eventi.titolo != '' ? (<>
+                                        <Icon
+                                            raised
+                                            name='arrow-left'
+                                            type='font-awesome'
+                                            color='#f50'
+                                            onPress={() => {
+                                                props.selectEvento(-1)
+                                            }} />
+                                        <Icon
+                                            raised
+                                            name='arrow-right'
+                                            type='font-awesome'
+                                            color='#f50'
+                                            onPress={() => {
+                                                props.selectEvento(+1)
+                                            }} />
+                                    </>) : (<></>)}
+                                    {global.userType == 'PT' ? (<>
+                                        <Icon
+                                            visible={false}
+                                            hide={true}
+                                            raised
+                                            name={eventi.titolo == '' ? 'plus' : 'trash'}
+                                            type='font-awesome'
+                                            color='#f50'
+                                            onPress={() => {
+                                                eventi.titolo == '' ? props.addDay(eventi.day) : alert("lo cancelleremo mi serve del tempo ")
+
+                                            }} />
+                                    </>) : (<></>)}
+                                    <Icon
+                                        visible={false}
+                                        hide={true}
+                                        raised
+                                        name='check'
+                                        type='font-awesome'
+                                        color='#f50'
+                                        onPress={() => {
+
                                             if (descrizione == '') {
                                                 setErroreDescrizione("inserisci una descrizione")
-                                            }  
+                                            }
                                             if (titolo == '') {
                                                 setErroreTitolo("inserisci un titolo")
-                                            }  
+                                            }
                                             if (durata == '') {
-                                                setE('inserisci una durata')
-                                            } 
-                                            if(descrizione != ''&& titolo != ''&& durata != '' ){
-                                                evento = [{
+                                                setErroreDurata('inserisci una durata')
+                                            }
+                                            if (descrizione != '' && titolo != '' && durata != '') {
+                                                var evento = {
                                                     day: props.day_event.day,
                                                     descrizione: descrizione,
                                                     durata: durata,
                                                     id_creatore: 'NELLO',
                                                     titolo: titolo
-                                                }]
+                                                }
                                                 props.getAdd(evento)
-                                                props.handleClose
+                                                props.handleClose()
                                             }
-                                        }
-                                        }
-                                    >
-                                        <Text style={styles.appButtonText}>Salva</Text>
-                                    </TouchableOpacity>
+
+
+                                        }} />
                                 </View>
                             </View>
 
