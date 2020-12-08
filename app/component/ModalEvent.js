@@ -14,10 +14,10 @@ const ModalEvent = (props) => {
     const [errore_durata, setErroreDurata] = React.useState('');
     const [titolo, setTitolo] = React.useState('');
     const [errore_titolo, setErroreTitolo] = React.useState('');
-    const [ora, setOra] = React.useState(false);
+    const [ora, setOra] = React.useState('');
     const [errore_ora, setErroreOra] = React.useState('');
     var eventi = props.day_event;
-    console.log(props.data)
+    // console.log(props.data)
 
 
 
@@ -34,9 +34,9 @@ const ModalEvent = (props) => {
 
                                 <Text style={styles.text}>Ora</Text>
                                 <TextInput
-                                    label="Inserisci titolo evento"
-                                    value={eventi.ora == '' ? titolo : eventi.ora}
-                                    editable={global.userType == 'UT' ? true : false}
+                                    label="Inserisci un orario"
+                                    value={eventi.ora == '' ? ora : eventi.ora}
+                                    editable={global.userType != 'PT' ? true : false}
                                     onChangeText={text => setOra(text)}
                                 />
 
@@ -46,7 +46,7 @@ const ModalEvent = (props) => {
                                 <TextInput
                                     label="Inserisci titolo evento"
                                     value={eventi.titolo == '' ? titolo : eventi.titolo}
-                                    editable={global.userType == 'UT' ? true : false}
+                                    editable={global.userType != 'PT' ? true : false}
                                     onChangeText={text => setTitolo(text)}
                                 />
                                 <Text style={{ color: 'red' }}>{errore_titolo}</Text>
@@ -55,7 +55,7 @@ const ModalEvent = (props) => {
                                 <TextInput
                                     label="Inserisci durata evento"
                                     value={eventi.durata == '' ? durata : eventi.durata}
-                                    editable={global.userType == 'UT' ? true : false}
+                                    editable={global.userType != 'PT' ? true : false}
                                     onChangeText={text => setDurata(text)}
                                 />
                                 <Text style={{ color: 'red' }}>{errore_durata}</Text>
@@ -65,7 +65,7 @@ const ModalEvent = (props) => {
                                 <TextInput
                                     label="Inserisci descrizione/link evento"
                                     value={eventi.descrizione == '' ? descrizione : eventi.descrizione}
-                                    editable={global.userType == 'UT' ? true : false}
+                                    editable={global.userType != 'PT' ? true : false}
                                     onChangeText={text => setDescrizione(text)}
                                 />
                                 <Text style={{ color: 'red' }}>{errore_descrizione}</Text>
@@ -80,7 +80,7 @@ const ModalEvent = (props) => {
                                             props.handleClose()
 
                                         }} />
-                                        
+
                                     {eventi.titolo != '' ? (<>
                                         <Icon
                                             raised
@@ -88,7 +88,7 @@ const ModalEvent = (props) => {
                                             type='font-awesome'
                                             color='#f50'
                                             onPress={() => {
-                                                props.selectEvento(-1)
+                                                props.selectEvento("m")
                                             }} />
                                         <Icon
                                             raised
@@ -96,54 +96,73 @@ const ModalEvent = (props) => {
                                             type='font-awesome'
                                             color='#f50'
                                             onPress={() => {
-                                                props.selectEvento(+1)
+                                                props.selectEvento("p")
                                             }} />
                                     </>) : (<></>)}
-                                    {global.userType == 'PT' ? (<>
+                                    {eventi.titolo != '' ? (<>
                                         <Icon
                                             visible={false}
                                             hide={true}
                                             raised
-                                            name={eventi.titolo == '' ? 'plus' : 'trash'}
+                                            name='plus'
+                                            //name={eventi.titolo == '' ? 'plus' : 'trash'}
                                             type='font-awesome'
                                             color='#f50'
                                             onPress={() => {
-                                                eventi.titolo == '' ? props.addDay(eventi.day) : alert("lo cancelleremo mi serve del tempo ")
+                                                props.addDay(eventi.day)
+                                                //eventi.titolo == '' ? props.addDay(eventi.day) : alert("lo cancelleremo a breve ")
 
                                             }} />
                                     </>) : (<></>)}
-                                    <Icon
-                                        visible={false}
-                                        hide={true}
-                                        raised
-                                        name='check'
-                                        type='font-awesome'
-                                        color='#f50'
-                                        onPress={() => {
-
-                                            if (descrizione == '') {
-                                                setErroreDescrizione("inserisci una descrizione")
-                                            }
-                                            if (titolo == '') {
-                                                setErroreTitolo("inserisci un titolo")
-                                            }
-                                            if (durata == '') {
-                                                setErroreDurata('inserisci una durata')
-                                            }
-                                            if (descrizione != '' && titolo != '' && durata != '') {
-                                                var evento = {
-                                                    day: props.day_event.day,
-                                                    descrizione: descrizione,
-                                                    durata: durata,
-                                                    id_creatore: 'NELLO',
-                                                    titolo: titolo
+                                    {eventi.titolo != '' ? (<>
+                                        <Icon
+                                            visible={false}
+                                            hide={true}
+                                            raised
+                                            name='trash'
+                                            type='font-awesome'
+                                            color='#f50'
+                                            onPress={() => {
+                                                alert("sarà eliminato a breve ")
+                                            }} />
+                                    </>) : (<></>)}
+                                    {eventi.titolo == '' ? (<>
+                                        <Icon
+                                            visible={false}
+                                            hide={true}
+                                            raised
+                                            name='check'
+                                            type='font-awesome'
+                                            color='#f50'
+                                            onPress={() => {
+                                                if (ora == '') {
+                                                    setErroreOra("inserisci una ora")
                                                 }
-                                                props.getAdd(evento)
-                                                props.handleClose()
-                                            }
+                                                if (descrizione == '') {
+                                                    setErroreDescrizione("inserisci una descrizione")
+                                                }
+                                                if (titolo == '') {
+                                                    setErroreTitolo("inserisci un titolo")
+                                                }
+                                                if (durata == '') {
+                                                    setErroreDurata('inserisci una durata')
+                                                }
+                                                if (descrizione != '' && titolo != '' && durata != '') {
+                                                    var evento = {
+                                                        day: props.day_event.day,
+                                                        descrizione: descrizione,
+                                                        durata: durata,
+                                                        id_creatore: 'NELLO',
+                                                        titolo: titolo,
+                                                        ora: ora
+                                                    }
+                                                    props.getAdd(evento)
+                                                    props.handleClose()
+                                                }
 
 
-                                        }} />
+                                            }} />
+                                    </>) : (<></>)}
                                 </View>
                             </View>
 

@@ -6,7 +6,9 @@ import _ from "lodash"
 import ModalEvent from '../../component/ModalEvent'
 import HeaderComponent from "../../component/HeaderComponent";
 import { Firestore } from '../../config/FirebaseConfig';
-
+// import {
+//     LineChart
+// } from "react-native-chart-kit";
 
 
 const { width, height } = Dimensions.get('window')
@@ -24,7 +26,6 @@ export default class LiveCalendar extends Component {
             indice: 0,
         }
         this.getAllDay();
-        this.updateEvento();
     }
 
     onSelectDate = (date) => {
@@ -37,7 +38,7 @@ export default class LiveCalendar extends Component {
         if (support.length == 0) {
             support = [{
                 day: date,
-                ora:'',
+                ora: '',
                 descrizione: '',
                 durata: '',
                 id_creatore: '',
@@ -46,7 +47,7 @@ export default class LiveCalendar extends Component {
         }
         console.log(date)
         console.log(support[0])
-        this.setState({ isModalVisible: true, data: date, day_event: support[0] })
+        this.setState({ isModalVisible: true, data: date, day_event: support[0],indice: 0, })
     }
 
     renderChildDay = (day) => {
@@ -61,23 +62,33 @@ export default class LiveCalendar extends Component {
         }
     }
     selectEvento = (i) => {
-        if (this.state.indice + i >= 0) {
-            if (this.state.indice + i < this.state.lista_eventi.length) {
-                this.setState({ isModalVisible: true, data: this.state.data, day_event: this.state.lista_eventi[this.state.indice + i], indice: this.state.indice + i })
+        if (i === "p") {
+            console.log(this.state.indice + 1 )
+            if (this.state.indice + 1 <= this.state.day_event.length) {
+
+                this.setState({ isModalVisible: true, data: this.state.data, day_event: this.state.day_event[this.state.indice + i], indice: this.state.indice + i })
+            }
+        } else {
+            console.log("m" + this.state.indice - 1)
+
+            if (this.state.indice - 1 >= 0) {
+
+                this.setState({ isModalVisible: true, data: this.state.data, day_event: this.state.day_event[this.state.indice + i], indice: this.state.indice + i })
             }
         }
+
+
+
 
     }
 
     getEvento = async () => {
-        const user = (await Firestore.collection('EVENTI'));
-        // var myTimestamp = firebase.firestore.Timestamp.fromDate(user);
-        
-        // console.log(user.day.toDate());
-        console.log(user);
+        const user = (await Firestore.collection('EVENTI').where("titolo", "==", "p").where("day", "==", "12-12-2020").get());
+
+        console.log(user.data())
     }
     getAllDay = async () => {
-        this.setState({ day_event: [],lista_eventi:[] });
+        this.setState({ day_event: [], lista_eventi: [] });
         var support;
         const eventi = Firestore.collection('EVENTI').get()
             .then(querySnapshot => {
@@ -90,53 +101,62 @@ export default class LiveCalendar extends Component {
     }
 
     getAdd = async (evento) => {
-        this.setState({ isModalVisible: false })
-
         Firestore.collection('EVENTI').add(
             evento
         ).then(() => {
             this.setState({ lista_eventi: [] });
             this.getAllDay()
+            this.setState({ isModalVisible: false, data: '', day_event: [], indice: 0 })
         });
     }
+
     addDay = (data) => {
         var support = {
             day: data,
-            ora:'',
+            ora: '',
             descrizione: '',
             durata: '',
             id_creatore: '',
             titolo: '',
         }
-
         console.log(support)
-        this.setState({ isModalVisible: true,data: this.state.data, day_event: support })
+        this.setState({ isModalVisible: true, data: this.state.data, day_event: support })
 
     }
-    updateEvento=(evento)=>{
-     
-        // var ref = Firestore.collection('EVENTI')
-        Firestore.orderByChild("day").equalTo('p').on("titolo", function(snapshot) {
-          console.log(snapshot);
-        });
-        //   .update({
-        //   day: '31-10-1100',
+    updateEvento = async (evento) => {
+
+        // var washingtonRef1 = Firestore.collection("EVENTI");
+        var washingtonRef2 = Firestore.collection('EVENTI').where("titolo", "==", "p").get().then(oggetto => {
+            oggetto.forEach(element => {
+                console.log(element.id)
+                console.log(this.props.params.user)
+            });
+        })
+        // console.log(washingtonRef1)
+
+        // var ref = Firestore.collection("EVENTI").where("titolo", "==", "p").where("day", "==", "12-12-2020")
+        // return washingtonRef2.update({
+        //     descrizione: "valore aggiornato nella query",
         // })
-        // .then(() => {
-        //   console.log('User updated!');
-        // });
-        
-        // collection('EVENTI').get()
-        // .then(querySnapshot => {
-        //     querySnapshot.forEach(element => {
-        //         this.state.lista_eventi.push(element.data());
-        //         var support = this.state.lista_eventi;
-        //         this.setState({ lista_eventi: support });
+        //     .then(function (error) {
+        //         if (error.day === "12-12-2020")
+        //             console.log("Document successfully updated!");
+        //     }).catch(function (error) {
+        //         // The document probably doesn't exist.
+        //         console.error("Error updating document: ", error);
         //     });
-        // })
+
+        // Firestore.collection("EVENTI").where("titolo", "==", "p").where("day","==","12-12-2020")
+        //     .onSnapshot(function (querySnapshot) {
+        //         var cities = [];
+        //         querySnapshot.forEach(function (doc) {
+        //             cities.push(doc.data().name);
+        //         });
+        //         console.log("Current cities in CA: ", cities.join(", "));
+        //     });
     }
     handleModalClose = () => {
-        this.setState({ isModalVisible: false,data: this.state.data, indice:0 })
+        this.setState({ isModalVisible: false, data: this.state.data, indice: 0 })
     }
 
     render() {
@@ -154,9 +174,55 @@ export default class LiveCalendar extends Component {
                         renderChildDay={(day) => this.renderChildDay(day)}
                     />
                     <ModalEvent isModalVisible={this.state.isModalVisible} getAdd={this.getAdd}
-                        day_event={this.state.day_event} handleClose={this.handleModalClose} 
-                        selectEvento={this.selectEvento} addDay={this.addDay}/>
+                        day_event={this.state.day_event} handleClose={this.handleModalClose}
+                        selectEvento={this.selectEvento} addDay={this.addDay} />
                 </View>
+                {/* <View>
+                    <Text>Bezier Line Chart</Text>
+                    <LineChart
+                        data={{
+                            labels: ["January", "February", "March", "April", "May", "June"],
+                            datasets: [
+                                {
+                                    data: [
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100
+                                    ]
+                                }
+                            ]
+                        }}
+                        width={Dimensions.get("window").width} // from react-native
+                        height={220}
+                        yAxisLabel="$"
+                        yAxisSuffix="k"
+                        yAxisInterval={1} // optional, defaults to 1
+                        chartConfig={{
+                            backgroundColor: "#e26a00",
+                            backgroundGradientFrom: "#fb8c00",
+                            backgroundGradientTo: "#ffa726",
+                            decimalPlaces: 2, // optional, defaults to 2dp
+                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            style: {
+                                borderRadius: 16
+                            },
+                            propsForDots: {
+                                r: "6",
+                                strokeWidth: "2",
+                                stroke: "#ffa726"
+                            }
+                        }}
+                        bezier
+                        style={{
+                            marginVertical: 8,
+                            borderRadius: 16
+                        }}
+                    />
+                </View> */}
             </SafeAreaView>
         )
     };
