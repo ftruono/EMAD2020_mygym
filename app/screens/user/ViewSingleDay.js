@@ -27,19 +27,19 @@ export default class ViewSingleDay extends React.Component {
         
         const exercise = [];
         var schedaEsercizio = this.props.route.params;
-        var scheda = schedaEsercizio.scheda;
-        var esercizio = scheda.esercizi.map((u) => u.esercizio) ;
-        var ripetizioni = scheda.esercizi.map((u) => u.ripetizioni);
-        var colpi = scheda.esercizi.map((u) => u.colpi);
-        var recupero = scheda.esercizi.map((u) => u.recupero);
+        var esercizi = schedaEsercizio.esercizi;
+        var nomeEsercizio = esercizi.map((u) => u.nome) ;
+        var ripetizioni = esercizi.map((u) => u.ripetizioni);
+        var colpi = esercizi.map((u) => u.colpi);
+        var recupero = esercizi.map((u) => u.recupero);
         
-        for(let i=0; i < esercizio.length; i++) {
+         for(let i=0; i < nomeEsercizio.length; i++) {
             exercise.push({
-                eser: esercizio[i],
+                eser: nomeEsercizio[i],
                 rec: '      Recupero: ' + recupero[i],
                 ripetizioni: ' ' + ripetizioni[i] + '*' + colpi[i]
             })
-        }
+        } 
 
         return(
             <SafeAreaView style={styles.viewDay}>
@@ -48,14 +48,14 @@ export default class ViewSingleDay extends React.Component {
                 <View style={styles.container}>
                     <Text style={styles.textHeader}>Visualizzazione</Text>
                     <View style={{flexDirection:"row"}}>
-                        <Text style={styles.textTitle}>{scheda.day}</Text>
+                        <Text style={styles.textTitle}>{esercizi[0].day}</Text>
 
                         {/* Il bottone di modifica verrà reso dinamico quando a livello di db ci sarà l'informazione di possibiltà della modifica della scheda*/}
                         <TouchableOpacity onPress={this.setModify} >
                             <Icon name="pencil" color="#05375a" size={20} style={{marginTop:30, marginLeft:50}}></Icon>
                         </TouchableOpacity>
                     </View>
-                    {exercise.map((u,index) =>(
+                    {exercise.map((u) =>(
                         <View style={styles.action}>
                             <TextInput
                                 placeholderTextColor="#666666"
@@ -92,7 +92,7 @@ export default class ViewSingleDay extends React.Component {
                 </>
                 ):(
                     <>
-                <TouchableOpacity style={styles.appButtonSave} onPress={() => { this.props.navigation.navigate("IniziaAllenamento", { scheda: scheda }) }}>
+                <TouchableOpacity style={styles.appButtonSave} onPress={() => { this.props.navigation.navigate("IniziaAllenamento", { schedaEsercizio: schedaEsercizio }) }}>
                         <Text style={styles.appButtonText}>Inizia Allenamento</Text>
                 </TouchableOpacity>
                 </>

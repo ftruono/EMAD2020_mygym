@@ -28,11 +28,12 @@ export default class IniziaAllenamento extends React.Component {
     }
 
     render(){
-        var schedaArray = this.props.route.params;
-        var scheda = schedaArray.scheda;
-        var esercizio = scheda.esercizi.map((u) => u.esercizio) ;
-        var ripetizioni = scheda.esercizi.map((u) => u.ripetizioni);
-        var colpi = scheda.esercizi.map((u) => u.colpi)
+        var esercizioArray = this.props.route.params.schedaEsercizio;
+        var esercizio = esercizioArray.esercizi;
+        console.log(esercizio)
+        var nomeEsercizio = esercizio.map((u) => u.nome) ;
+        var ripetizioni = esercizio.map((u) => u.ripetizioni);
+        var colpi = esercizio.map((u) => u.colpi)
         return(
             <SafeAreaView style={styles.viewDay}>
                 <HeaderComponent {...this.props} title="Esecuzione" />
@@ -40,9 +41,9 @@ export default class IniziaAllenamento extends React.Component {
                     <View style={styles.container}>
                         <Text style={styles.textHeader}>Esecuzione</Text>
                         <Clock/>
-                        {this.state.index < esercizio.length ? (
-                           <>
-                            <Text style={styles.textTitle}>Tipo Esercizio: {esercizio[this.state.index]}</Text>
+                         {this.state.index < esercizio.length ? (
+                           <> 
+                            <Text style={styles.textTitle}>Tipo Esercizio: {nomeEsercizio[this.state.index]}</Text>
                             <View style={styles.action}>
                                 <Text style={[styles.textTitle,{marginTop:35}]}>Peso utilizzato: </Text>
                                 <TextInput
@@ -57,8 +58,8 @@ export default class IniziaAllenamento extends React.Component {
                                 <Text style={[styles.textTitle,{marginTop:20}]}>Ripetizioni: {ripetizioni[this.state.index]}</Text>
                                 <Text style={[styles.textTitle,{marginTop:20,marginLeft:35}]}>Colpi: {colpi[this.state.index]}</Text>
                             </View>
-                                </>):(
-                                    <>
+                                 </>):( 
+                                     <>
                                         <View style={styles.alert}>
                                             <Icon name="alert" color="red" size={35}></Icon>
                                             <Text style={[styles.textAlert]}> Allenamento Completato !!!!</Text>

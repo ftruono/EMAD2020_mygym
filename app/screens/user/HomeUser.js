@@ -8,99 +8,42 @@ import { Firestore } from "../../config/FirebaseConfig";
 import Dieta from "../nutritionist/Dieta";
 
 
+
 // dimension permette di accedere alle dimensioni della schermata
 // su di essa si possono anche implementare dei metodi basta cercarli
 
 const { width, height } = Dimensions.get('screen');
 
-
-const schedaDb = [
-    {
-        day: 'day1',
-        esercizi: [{
-            esercizio: 'panca piana',
-            ripetizioni: '5',
-            colpi: '10',
-            recupero: '30sec',
-        }, {
-            esercizio: 'panca alta',
-            ripetizioni: '5',
-            colpi: '10',
-            recupero: '30sec',
-        }]
-    }, {
-        day: 'day2',
-        esercizi: [{
-            esercizio: 'squat',
-            ripetizioni: '5',
-            colpi: '10',
-            recupero: '30sec',
-        }, {
-            esercizio: 'affondi',
-            ripetizioni: '5',
-            colpi: '10',
-            recupero: '30sec',
-        }
-        ]
-    }, {
-        day: 'day3',
-        esercizi: [{
-            esercizio: 'bicipiti',
-            ripetizioni: '5',
-            colpi: '10',
-            recupero: '30sec',
-        }, {
-            esercizio: 'tripiti',
-            ripetizioni: '5',
-            colpi: '10',
-            recupero: '30sec',
-        }
-        ]
-    }, {
-        day: 'day4',
-        esercizi: [{
-            esercizio: 'boh',
-            ripetizioni: '5',
-            colpi: '10',
-            recupero: '30sec',
-        }, {
-            esercizio: 'boh2',
-            ripetizioni: '5',
-            colpi: '10',
-            recupero: '30sec',
-        }
-        ]
-    },
-
-];
-
 class HomeUser extends React.Component {
     constructor(props) {
         super(props);
-        this.getUser();
+        this.getUser()
+    }
+    state = {
+        data:''
     }
 
     getUser = async () => {
-         const user= (await Firestore.collection('UTENTI').doc('Admin').get()).data();
-         console.log(user);
+            const user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
+            const scheda = (await Firestore.collection('SCHEDE').doc(user.schede[0]).get()).data();
+
+            this.setState({data:scheda.days})
     }
-    state = {}
+
     render() {
         return (
 
             <SafeAreaView style={styles.home}>
                 <HeaderComponent {...this.props} title="Home" />
-
-                <FlatList style={{ margin: 10, flex: 0.5 }}
-                    data={schedaDb}
-                    scrollEnabled={true}
-                    numColumns={2}
-                    keyExtractor={(item, index) => item.day}
-                    renderItem={({ item }) => (
-                        <WorkoutCard scheda={item} {...this.props} />
-                    )}
-                />
-
+                    <FlatList style={{ margin: 10, flex: 0.5 }}
+                        data={Object.keys(this.state.data).map((key) =>this.state.data[key])}
+                        scrollEnabled={true}
+                        numColumns={2}
+                        renderItem={({ item }) => (
+                            <WorkoutCard exercise={item} {...this.props} />
+                        )}
+                    /> 
+                
                 <Dieta {...this.props} isComponent={true} />
                 <View style={styles.iconMessagge}>
                     <Icon

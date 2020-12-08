@@ -1,55 +1,70 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import { Card } from 'react-native-elements';
+import { Firestore } from "../config/FirebaseConfig";
 
 const { width, h } = Dimensions.get('screen');
+
 
 class WorkoutCard extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            eserciziScheda: [],
+            index: 0
+        }
+        this.getExercise();
     }
-    state = {
+
+
+    getExercise = () => {
+        for (let i = 0; i < this.props.exercise.length; i++) {
+            Firestore.collection('ESERCIZI').doc(this.props.exercise[i]).get()
+                .then((esercizi) => {
+                    this.state.eserciziScheda.push(esercizi.data())
+                    var support = this.state.eserciziScheda;
+                    this.setState({ eserciziScheda: support})
+                });
+        }
     }
 
     render() {
 
-        var scheda = this.props.scheda;
+        if (this.state.eserciziScheda.length == 0) {
+            return null
+        } else {
         return (
             <View style={styles.item}>
-                <TouchableOpacity onPress={() => { this.props.navigation.navigate("ViewSingleDay", { scheda: scheda, routeProps: this.props }) }}>
+                <TouchableOpacity onPress={() => { this.props.navigation.navigate("ViewSingleDay", { esercizi: this.state.eserciziScheda, routeProps: this.props }) }}>
                     <Card style={{ flex: 1 }}>
-                        <Card.Title>{scheda.day}</Card.Title>
+                        <Card.Title>{this.state.eserciziScheda[0].day}</Card.Title>
                         <Card.Divider />
-                        {scheda.esercizi.map((u, i) => {
-                            return (
-                                <View style={styles.body}>
-                                    <Text>esercizio: {i + 1}</Text>
-                                    <Text>{u.esercizio}</Text>
-                                    <Text>{u.ripetizioni}*{u.colpi}</Text>
-                                    <Text>{u.recupero}</Text>
-                                    <Card.Divider />
-                                </View>
-                            );
-                        }
-
-                        )}
+                            {this.state.eserciziScheda.map((item,i) => {
+                                return (
+                                    <View style={styles.body}>
+                                        <Text>Esercizio {i+1}: </Text> 
+                                        <Text>{item.nome}</Text>
+                                        <Text> {item.ripetizioni}*{item.colpi} </Text>
+                                        <Text>{item.recupero}</Text>
+                                        <Card.Divider />
+                                    </View>
+                                );
+                            }
+                            )}
                     </Card>
                 </TouchableOpacity>
             </View>
-
         )
     }
-
-
-
+}
 }
 export default WorkoutCard;
 
 
 const styles = StyleSheet.create({
     item: {
-        width: width / 2 -10,
+        width: width / 2 - 10,
         height: '30%'
     },
     body: {
