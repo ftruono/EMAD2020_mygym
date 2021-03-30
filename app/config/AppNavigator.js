@@ -17,6 +17,7 @@ import IniziaAllenamento from '../screens/user/IniziaAllenamento'
 import CreateWorkout from "../screens/personaltrainer/CreateWorkout";
 import Dieta from "../screens/nutritionist/Dieta";
 import { AuthContext } from "./AutenticationConfig";
+import Statistiche from "../screens/user/Statistiche";
 
 const Drawer = createDrawerNavigator();
 
@@ -113,7 +114,7 @@ const DrawerNavigator = ({ navigation, route }) => {
                             />
                         ),
                     }} />
-                    <Drawer.Screen name="Statistiche" component={HomeUser} options={{
+                    <Drawer.Screen name="Statistiche" component={Statistiche} options={{
                         title: 'Statistiche',
                         drawerIcon: ({ }) => (
                             <Octicons

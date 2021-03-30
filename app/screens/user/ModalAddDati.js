@@ -17,6 +17,21 @@ const ModalAddDati = (props) => {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
+  const onlyNumber = (text) => {
+    let newText = '';
+    let numbers = '0123456789';
+
+    for (var i = 0; i < text.length; i++) {
+      if (numbers.indexOf(text[i]) > -1) {
+        newText = newText + text[i];
+      }
+      else {
+        alert("si prega di inserire solo numeri");
+      }
+    }
+    setMisurazione(newText);
+  }
+
   return (
     <Provider>
       <Portal styel={{ padding: 20, }}>
@@ -24,19 +39,21 @@ const ModalAddDati = (props) => {
           <DropDownPicker
             items={[
               {
+                label: 'Peso', value: 'peso',
+              },
+              {
                 label: 'braccia Dx', value: 'braccia Dx',
-                hidden: true,
+                // hidden: true,
               },
               {
                 label: 'braccia Sx', value: 'braccia Sx',
-                hidden: true
+                // hidden: true
               },
               {
                 label: 'addome', value: 'addome',
               },
               {
                 label: 'vita', value: 'vita',
-
               },
               {
                 label: 'gamba Dx', value: 'gamba Dx',
@@ -63,7 +80,8 @@ const ModalAddDati = (props) => {
           <TextInput
             label="Inserisci la misurazione"
             value={misurazione}
-            onChangeText={text => setMisurazione(text)}
+            keyboardType='numeric'
+            onChangeText={text => onlyNumber(text)}
           />
           <Icon
             raised
@@ -71,18 +89,19 @@ const ModalAddDati = (props) => {
             type='font-awesome'
             color='#f50'
             onPress={() => {
-              if(parteCorpo==''){
+              if (parteCorpo == '') {
                 alert("seleziona una parte del corpo")
-              }else{
-                if (misurazione == '') {
-                alert("ineserisci un valore per piacere")
               } else {
-                props.aggiungiValori(parteCorpo, misurazione);
-                setParteCorpo('');
-                setMisurazione('');
-                 hideModal(); 
-              }}
-              
+                if (misurazione == '') {
+                  alert("ineserisci un valore per piacere")
+                } else {
+                  props.aggiungiValori(parteCorpo, misurazione);
+                  // setParteCorpo('');
+                  setMisurazione('');
+                  hideModal();
+                }
+              }
+
             }} />
 
         </Modal>
@@ -115,11 +134,11 @@ const style = StyleSheet.create({
     elevation: 8,
   },
   appButtonText: {
-      fontSize: 20,
-      color: "#fff",
-      fontWeight: "bold",
-      alignSelf: "center",
-      textTransform: "uppercase"
+    fontSize: 20,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase"
   }
 })
 export default ModalAddDati;

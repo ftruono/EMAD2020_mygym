@@ -1,30 +1,92 @@
-import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
+import React, { Component } from 'react';
 import { Card } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent"
 import ModalAddDati from './ModalAddDati';
+import { Firestore } from "../../config/FirebaseConfig";
+import { Icon } from 'react-native-elements';
 
-// const misurazioniDb=[
-//     {tipo:'bracciaDx',valore:''},
-//     {tipo:'bracciaDx',valore:''},
-//     {tipo:'gambaDx',valore:''},
-//     {tipo:'gambaDx',valore:''},
-//     {tipo:'Petto',valore:''},
-// ];
+// import nextId from 'react-id-generator';
+
+
+
 export default class DatiPersonaliUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            arrayMisurazioni: []
+            misure: [],
+            arrayMisurazioni: [],
+            editable: false
         }
+    }
+
+    makeid = (length) => {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
     }
 
 
     aggiungiValori = (nome, val) => {
 
         this.state.arrayMisurazioni.push({ tipo: nome, valore: val })
-        var support = this.state.schedaArray;
-        this.setState({ schedaArray: support });
+        var support = this.state.arrayMisurazioni;
+        this.setState({ arrayMisurazioni: support });
+
+    }
+
+    addValori = async (evento) => {
+
+        let user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
+        const key = this.makeid(25);
+        user.misure.push(key);
+
+        Firestore.collection(
+            'UTENTI'
+        ).doc(
+            '3hVSFBjPhuUUD9RWuNckZKVxpuz1'
+        ).update({
+            'misure': user.misure,
+        }).then(() => {
+            console.log('User updated!');
+        });
+
+        Firestore.collection(
+            'MISURAZIONI'
+        ).doc(
+            key
+        ).set({
+            valori: this.state.arrayMisurazioni,
+            data: new Date()
+        });
+
+
+        this.state.arrayMisurazioni.push({})
+        var support = this.state.arrayMisurazioni;
+        this.setState({ arrayMisurazioni: support });
+    }
+
+    getValori = async () => {
+        const user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
+        console.log("user-> ", user);
+        const misure1 = (await Firestore.collection('MISURE').doc(user.misurazioni).get()).data();
+        console.log("misure->", misure);
+        this.setState({ misure: Object.keys(misure1.misurazioni).map((key) => misure1.misurazioni[key]) });
+
+        for (let i = 0; i < this.state.misure.length; i++) {
+            var support = this.state.misure[i];
+            Firestore.collection('MISURAZIONI').doc(support[0]).get()
+                .then((misure) => {
+                    console.log("miurazioni->", misurazioni);
+                    this.state.arrayMisurazioni.push(misure.data())
+                    var support = this.state.arrayMisurazioni;
+                    this.setState({ arrayMisurazioni: support })
+                });
+        }
     }
 
     addElements = () => {
@@ -43,7 +105,7 @@ export default class DatiPersonaliUser extends Component {
                 <ScrollView>
                     <View style={styles.container}>
                         <Text style={styles.textHeader}>Dati personali</Text>
-                        <View style={styles.action}>
+                        {/* <View style={styles.action}>
                             <Text style={styles.textLogin}>Peso:</Text>
                             <TextInput
                                 placeholder="Inserisci il peso"
@@ -53,7 +115,7 @@ export default class DatiPersonaliUser extends Component {
 
                             />
                             <Text style={{ color: 'blue', textDecorationLine: "underline" }}>Vedi statistiche</Text>
-                        </View>
+                        </View> */}
 
                         <View style={{ marginTop: 15 }}>
                             <Card style={{ flex: 1 }}>
@@ -64,7 +126,16 @@ export default class DatiPersonaliUser extends Component {
                                         <View style={{ flexDirection: 'row' }}>
                                             <Text style={styles.textLogin}>{e.tipo}: {e.valore} cm</Text>
                                             <Text style={styles.textInput}></Text>
-                                            <Text style={{ color: 'blue', textDecorationLine: "underline" }}>Vedi statistiche</Text>
+                                            <Icon
+                                                size="24"
+                                                name='trash'
+                                                type='font-awesome'
+                                                color='#f50'
+                                                onPress={() => {
+                                                    this.state.arrayMisurazioni.splice(i, 1);
+                                                    var support = this.state.arrayMisurazioni;
+                                                    this.setState({ arrayMisurazioni: support })
+                                                }} />
                                         </View>
                                     );
                                 })}
@@ -72,7 +143,7 @@ export default class DatiPersonaliUser extends Component {
                         </View>
                     </View>
                 </ScrollView>
-                <TouchableOpacity style={styles.appButtonSave}>
+                <TouchableOpacity style={styles.appButtonSave} onPress={() => { this.addValori() }}>
                     <Text style={styles.appButtonText}>Salva</Text>
                 </TouchableOpacity>
                 <ModalAddDati aggiungiValori={this.aggiungiValori}></ModalAddDati>

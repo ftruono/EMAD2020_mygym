@@ -1,7 +1,7 @@
 import { firestore } from "firebase";
 import React, { Component, useState, useEffect } from "react";
 import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, ThemeConsumer } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent";
 import WorkoutCard from '../../component/WorkoutCard';
 import { Firestore } from "../../config/FirebaseConfig";
@@ -26,25 +26,34 @@ class HomeUser extends React.Component {
     getUser = async () => {
             const user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
             const scheda = (await Firestore.collection('SCHEDE').doc(user.schede[0]).get()).data();
+            
+            this.setState({data:scheda.days});
 
-            this.setState({data:scheda.days})
+            const data= Object.keys(this.state.data).map((key) =>this.state.data[key])
+            // console.log("scheda1->",data)
+            const data1= Object.keys(scheda.days).map((key) =>scheda.days[key])
+            // console.log("scheda2->",data1)
+
     }
 
     render() {
+       
         return (
 
             <SafeAreaView style={styles.home}>
                 <HeaderComponent {...this.props} title="Home" />
-                    <FlatList style={{ margin: 10, flex: 0.5 }}
-                        data={Object.keys(this.state.data).map((key) =>this.state.data[key])}
-                        scrollEnabled={true}
-                        numColumns={2}
-                        renderItem={({ item }) => (
-                            <WorkoutCard exercise={item} {...this.props} />
-                        )}
-                    /> 
                 
-                <Dieta {...this.props} isComponent={true} />
+                <FlatList style={{ margin: 10, flex: 0.5 }}
+                    data={Object.keys(this.state.data).map((key) =>this.state.data[key])}
+                    scrollEnabled={true}
+                    numColumns={2}
+                    renderItem={({ item }) => (
+                        <WorkoutCard exercise={item} {...this.props} />
+                    )}
+                /> 
+                
+                <Dieta dieta={this.state.dieta} {...this.props} isComponent={true} />
+
                 <View style={styles.iconMessagge}>
                     <Icon
                         raised
