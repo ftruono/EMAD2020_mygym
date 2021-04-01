@@ -3,16 +3,17 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 
 import Icon from "react-native-vector-icons/FontAwesome"
 import Feather from "react-native-vector-icons/Feather"
 import Entypo from "react-native-vector-icons/Entypo"
-import Fontisto from "react-native-vector-icons/Fontisto"
 import DropDownPicker from 'react-native-dropdown-picker';
 import { AuthContext } from '../config/AutenticationConfig';
 import * as DocumentPicker from 'expo-document-picker';
+import { FirebaseAutentication } from '../config/FirebaseConfig';
 
 
 
 export default function Register(props) {
 
     const MANDATORY_FIELD = "Campo Obbligatorio";
+    const CATEGORY_ERROR = "Inserisci una categoria corretta"
 
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -21,17 +22,10 @@ export default function Register(props) {
     const [confirmPsw, setConfirmPsw] = useState('');
     const [equalPswError, setEqualPswError] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
-    const [typeAbbonamento, setTypeAbbonamento] = useState('');
-    const [regione, setRegione] = useState('');
-    const [regioneError, setRegioneError] = useState('');
-    const [provincia, setProvincia] = useState('');
-    const [provinciaError, setProvinciaError] = useState('');
-    const [citta, setCitta] = useState('');
-    const [cittaError, setCittaError] = useState('');
-    const [categoria, setCategoria] = useState('');
-    const [categoriaError, setCategoriaError] = useState('');
-    const [secureTextEntryPass, setSecureTextEntryPass] = useState(false);
-    const [secureTextEntry, setSecureTextEntry] = useState(false);
+    const [tipo, setTipoUser] = useState('');
+    const [tipoError, setTipoError] = useState('');
+    const [secureTextEntryPass, setSecureTextEntryPass] = useState(true);
+    const [secureTextEntry, setSecureTextEntry] = useState(true);
     const [iconNamePass, setIconNamePass] = useState("eye-off");
     const [iconName, setIconName] = useState("eye-off");
     const [fileContentDocument, setfileContentDocument] = useState('');
@@ -40,64 +34,99 @@ export default function Register(props) {
     const [fileNameCertificate, setfileNameCertificate] = useState('');
 
 
-
-
-
-
-
     function updateSecureTextEntryPass() {
-        setIconNamePass((secureTextEntryPass) ? "eye" : "eye-off");
         setSecureTextEntryPass(!secureTextEntryPass);
+        setIconNamePass((secureTextEntryPass) ? "eye" : "eye-off");
+        
     }
 
     function updateSecureTextEntry() {
-        setIconName((secureTextEntry) ? "eye" : "eye-off");
         setSecureTextEntry(!secureTextEntry);
+        setIconName((secureTextEntry) ? "eye" : "eye-off");
+        
     }
 
-    function validateFormUser() {
+    const validateFormUser = () => {
+        var validate = true;
         setEmailError('');
         setPasswordError('');
         setEqualPswError('');
 
 
         if (email.length == 0) {
+            validate = false;
             setEmailError(MANDATORY_FIELD);
         }
 
         if (password.length < 6) {
+            validate = false;
             setPasswordError(MANDATORY_FIELD);
         }
 
         if (confirmPsw != password) {
+            validate = false;
             setEqualPswError("Le password non coincidono")
+        }
+
+        return validate;
+
+    }
+
+    function cleanFormUser() {
+        setEmail('');
+        setPassword('');
+        setConfirmPsw('');
+    }
+
+    function cleanFormPT() {
+        cleanFormUser();
+        setTipoUser('');
+    }
+
+    async function register() {
+        try {
+            await FirebaseAutentication.createUserWithEmailAndPassword(email, password);
+        } catch (e) {
+            alert("Register Failed")
         }
 
     }
 
 
-    function validateFormPT() {
-        setRegioneError('');
-        setProvinciaError('');
-        setCategoriaError('');
-        setCittaError('');
+    const validateFormPT = () => {
+        var validate = true;
+        setTipoError('');
+        setEmailError('');
+        setPasswordError('');
+        setEqualPswError('');
 
 
-        if (regione.length == 0) {
-            setRegioneError(MANDATORY_FIELD);
+        if (email.length == 0) {
+            validate = false;
+            setEmailError(MANDATORY_FIELD);
         }
 
-        if (provincia.length == 0) {
-            setProvinciaError(MANDATORY_FIELD);
+        if (password.length < 6) {
+            validate = false;
+            setPasswordError(MANDATORY_FIELD);
         }
 
-        if (citta.length == 0) {
-            setCittaError(MANDATORY_FIELD);
+        if (confirmPsw != password) {
+            validate = false;
+            setEqualPswError("Le password non coincidono")
         }
 
-        if (categoria.length == 0) {
-            setCategoriaError(MANDATORY_FIELD);
+        if (tipo.length == 0) {
+            validate = false;
+            setTipoError(MANDATORY_FIELD);
         }
+
+        if(tipo !== 'Nutrizionista' && tipo !== 'Personal Trainer') {
+            validate = false;
+            setTipoError(CATEGORY_ERROR);
+        }
+
+        return validate;
     }
 
 
@@ -133,97 +162,37 @@ export default function Register(props) {
 
     function renderSelectedForm(param) {
         switch (param) {
-            case 'form_user':
+            case 'No':
                 return (
                     <View name="form_user">
-                        <Text style={[styles.textLogin, { marginTop: 35 }]}>Piano Abbonamento</Text>
-                        <DropDownPicker
-                            items={[
-                                { label: 'Piano Standard', value: "standard" },
-                                { label: 'Piano Premium', value: 'premium' },
-                                { label: 'Piano con Live', value: 'live' },
-                            ]}
-                            placeholder="Scegli l'abbonamento"
-                            defaultValue={typeAbbonamento}
-                            containerStyle={{ height: 60, width: 200 }}
-                            style={{ backgroundColor: '#fafafa', marginTop: 10 }}
-                            itemStyle={{
-                                justifyContent: 'flex-start'
-                            }}
-                            dropDownStyle={{ backgroundColor: '#fafafa' }}
-                            onChangeItem={(item) => setTypeAbbonamento(item.value)}
-                        />
-                        <View style={styles.button}>
-                            <TouchableOpacity style={styles.appButtonContainer} onPress={validateFormUser}>
+                        <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 200 }]}                     
+                        onPress={() => {
+                                if (validateFormUser()) {
+                                    alert("Puoi fare la registrazione")
+                                    cleanFormUser()
+                                    register()
+                                }
+                            }}>
                                 <Text style={styles.appButtonText}>Registrati</Text>
-                            </TouchableOpacity>
-                        </View>
-
+                        </TouchableOpacity>
                     </View>);
-            case 'form_pt':
-            case 'form_nutri':
+            case 'Si':
                 return (
                     <View name="form_pt">
-                        <Text style={[styles.textLogin, { marginTop: 35 }]}>Regione</Text>
+                        <Text style={[styles.textLogin, { marginTop: 35 }]}>Tipo di utente:</Text>
                         <View style={styles.action}>
-                            <Fontisto name="world" color="#05375a" size={20}></Fontisto>
+                        <Feather name="user" color="#05375a" size={20}></Feather>
                             <TextInput
                                 style={styles.textInput}
-                                placeholder='Regione'
+                                placeholder='Tipo utente'
                                 autoCapitalize="none"
                                 placeholderTextColor="#666666"
-                                onChangeText={setRegione}
-                                value={regione}
+                                onChangeText={setTipoUser}
+                                value={tipo}
                             />
                         </View>
 
-                        <Text style={{ color: 'red' }}>{regioneError}</Text>
-
-                        <Text style={[styles.textLogin, { marginTop: 35 }]}>Provincia</Text>
-                        <View style={styles.action}>
-                            <Fontisto name="world" color="#05375a" size={20}></Fontisto>
-                            <TextInput
-                                style={styles.textInput}
-                                placeholder='Provincia'
-                                autoCapitalize="none"
-                                placeholderTextColor="#666666"
-                                onChangeText={setProvincia}
-                                value={provincia}
-                            />
-                        </View>
-
-                        <Text style={{ color: 'red' }}>{provinciaError}</Text>
-
-                        <Text style={[styles.textLogin, { marginTop: 35 }]}>Città</Text>
-                        <View style={styles.action}>
-                            <Fontisto name="world" color="#05375a" size={20}></Fontisto>
-                            <TextInput
-                                style={styles.textInput}
-                                placeholder="Città"
-                                autoCapitalize="none"
-                                placeholderTextColor="#666666"
-                                onChangeText={setCitta}
-                                value={citta}
-                            />
-                        </View>
-
-                        <Text style={{ color: 'red' }}>{cittaError}</Text>
-
-                        {param == 'form_pt' ?
-                            <View>
-                                <Text style={[styles.textLogin, { marginTop: 35 }]}>Categoria</Text>
-                                <View style={styles.action}>
-                                    <TextInput
-                                        style={styles.textInput}
-                                        placeholder="Categoria"
-                                        autoCapitalize="none"
-                                        placeholderTextColor="#666666"
-                                        onChangeText={setCategoria}
-                                        value={categoria}
-                                    />
-                                </View>
-                            </View> : null}
-                        <Text style={{ color: 'red' }}>{categoriaError}</Text>
+                        <Text style={{ color: 'red' }}>{tipoError}</Text>
 
                         <Text style={[styles.textLogin, { marginTop: 35 }]}>Allega il tuo certificato</Text>
                         <TouchableOpacity style={{ marginTop: 15 }}
@@ -240,22 +209,19 @@ export default function Register(props) {
 
 
                         <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 200 }]}
-                            onPress={validateFormPT}>
+                            onPress={() => {
+                                if (validateFormPT()) {
+                                    cleanFormPT()
+                                    register()
+                                }
+                            }}>
                             <Text style={styles.appButtonText}>Registrati</Text>
                         </TouchableOpacity>
                     </View>);
-
-
             default:
                 return null;
         }
     }
-
-
-
-
-
-
 
     return (
         <ScrollView>
@@ -281,7 +247,7 @@ export default function Register(props) {
                     <Icon name="lock" color="#05375a" size={20}></Icon>
                     <TextInput
                         placeholder="Password"
-                        secureTextEntry={setSecureTextEntryPass}
+                        secureTextEntry={secureTextEntryPass}
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"
@@ -289,7 +255,7 @@ export default function Register(props) {
                         value={password}
                     />
 
-                    <TouchableOpacity onPress={updateSecureTextEntryPass}>
+                        <TouchableOpacity onPress={() => { updateSecureTextEntryPass() }}>
                         <Feather
                             name={iconNamePass}
                             color="grey"
@@ -313,7 +279,7 @@ export default function Register(props) {
                         value={confirmPsw}
                     />
 
-                    <TouchableOpacity onPress={updateSecureTextEntry}>
+                        <TouchableOpacity onPress={() => { updateSecureTextEntry() }}>
                         <Feather
                             name={iconName}
                             color="grey"
@@ -324,15 +290,14 @@ export default function Register(props) {
 
                 <Text style={{ color: 'red' }}>{equalPswError}</Text>
 
-                <Text style={[styles.textLogin, { marginTop: 35 }]}>Che tipo di utente sei?</Text>
+                <Text style={[styles.textLogin, { marginTop: 35 }]}>Sei un Nutrizionista o Personal Trainer?</Text>
                 <DropDownPicker
                     items={[
-                        { label: 'Utente semplice', value: "form_user" },
-                        { label: 'Personal Trainer', value: 'form_pt' },
-                        { label: 'Nutrizionista', value: 'form_nutri' },
+                        { label: 'Si', value: 'Si' },
+                        { label: 'No', value: 'No' }
                     ]}
                     defaultValue={selectedValue}
-                    placeholder="Scegli il tipo"
+                    placeholder="Scegli..."
                     containerStyle={{ height: 60, width: 150 }}
                     style={{ backgroundColor: '#fafafa', marginTop: 10 }}
                     itemStyle={{

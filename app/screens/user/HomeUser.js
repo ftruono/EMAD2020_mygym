@@ -42,18 +42,18 @@ class HomeUser extends React.Component {
 
             <SafeAreaView style={styles.home}>
                 <HeaderComponent {...this.props} title="Home" />
+                <Text style={styles.titleParagraph}>Schede di Allenamento</Text>
+                    <FlatList style={{ margin: 10, flex: 0.5 }}
+                        data={Object.keys(this.state.data).map((key) =>this.state.data[key])}
+                        scrollEnabled={true}
+                        numColumns={2}
+                        renderItem={({ item }) => (
+                            <WorkoutCard exercise={item} {...this.props} />
+                        )}
+                    /> 
                 
-                <FlatList style={{ margin: 10, flex: 0.5 }}
-                    data={Object.keys(this.state.data).map((key) =>this.state.data[key])}
-                    scrollEnabled={true}
-                    numColumns={2}
-                    renderItem={({ item }) => (
-                        <WorkoutCard exercise={item} {...this.props} />
-                    )}
-                /> 
-                
-                <Dieta dieta={this.state.dieta} {...this.props} isComponent={true} />
-
+                <Text style={styles.titleParagraph}>Dieta</Text>
+                <Dieta {...this.props} isComponent={true} />
                 <View style={styles.iconMessagge}>
                     <Icon
                         raised
@@ -111,5 +111,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         elevation: 8,
     },
+    titleParagraph: {
+       fontSize:30,
+       fontWeight:'bold',
+       textAlign:'center',
+       marginTop:25
+    }
 
 });

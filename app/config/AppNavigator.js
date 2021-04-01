@@ -134,16 +134,6 @@ const DrawerNavigator = ({ navigation, route }) => {
                             />
                         ),
                     }} />
-                    <Drawer.Screen name="Cambio PT" component={HomeUser} options={{
-                        title: 'Cambio PT',
-                        drawerIcon: ({ }) => (
-                            <FontAwesome
-                                name="exchange"
-                                size={20}
-                                color='black'
-                            />
-                        ),
-                    }} />
                     <Drawer.Screen name="ViewSingleDay" component={ViewSingleDay} options={{
                         drawerLabel: () => null, title: null,
                         drawerIcon: () => null

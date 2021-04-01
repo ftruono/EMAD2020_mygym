@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { Header, withTheme } from 'react-native-elements';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Card, withTheme } from 'react-native-elements';
 import { TextInput } from 'react-native-paper';
 import Icon from "react-native-vector-icons/Entypo";
 import { SafeAreaView } from 'react-navigation';
@@ -15,8 +15,21 @@ class DietaComponent extends React.Component {
         const state=(global.userType == 'NT') ? true : false;
         return (
                <SafeAreaView style={{flex:1}}>
-                   <Text style={styles.title}>{this.props.item.nome}</Text>
-                   <TextInput multiline={true} numberOfLines={5} editable={state} defaultValue={this.props.item.content} />
+                    <TouchableOpacity onPress={() => { this.props.navigation.navigate("Dieta")}}>
+                    <Card style={{ flex: 1 }}>
+                        <Card.Title>{this.props.item.nome}</Card.Title>
+                        <Card.Divider />
+                        {this.props.item.contenuto.map((item,i) => {
+                            console.log(item)
+                                return (
+                            <View style={styles.body}>
+                                <Text>{item}</Text>
+                            </View>
+                               );
+                            }
+                            )}
+                    </Card>
+                    </TouchableOpacity>
                </SafeAreaView>
 
             
@@ -34,5 +47,21 @@ const styles = StyleSheet.create({
        fontWeight:'bold',
        textAlign:'center',
        
+    },
+    inputs:{
+        padding:10
+    },
+      inputContainer: {
+        borderColor:'#000000',
+        borderWidth:0.5, 
+        borderRadius:20,  
+        backgroundColor:'#FFFFFF',
+        height:45,
+        width:'80%',
+        marginVertical:10
+    },
+    body: {
+        alignItems: 'center',
+        flex: 0.8
     }
 });

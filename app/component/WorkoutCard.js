@@ -65,7 +65,7 @@ export default WorkoutCard;
 const styles = StyleSheet.create({
     item: {
         width: width / 2 - 10,
-        height: '30%'
+        height: '50%'
     },
     body: {
         alignItems: 'center',
