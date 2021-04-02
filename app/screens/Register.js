@@ -7,12 +7,14 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { AuthContext } from '../config/AutenticationConfig';
 import * as DocumentPicker from 'expo-document-picker';
 import { FirebaseAutentication } from '../config/FirebaseConfig';
+import { HelperText } from 'react-native-paper';
 
 
 
 export default function Register(props) {
 
     const MANDATORY_FIELD = "Campo Obbligatorio";
+    const EMAIL_ERROR = "Email non presente oppure invalida"
     const CATEGORY_ERROR = "Inserisci una categoria corretta"
 
     const [email, setEmail] = useState('');
@@ -53,9 +55,9 @@ export default function Register(props) {
         setEqualPswError('');
 
 
-        if (email.length == 0) {
+        if (email.length == 0 && !email.includes('@')) {
             validate = false;
-            setEmailError(MANDATORY_FIELD);
+            setEmailError(EMAIL_ERROR);
         }
 
         if (password.length < 6) {
@@ -101,9 +103,9 @@ export default function Register(props) {
         setEqualPswError('');
 
 
-        if (email.length == 0) {
+        if (email.length == 0 && !email.includes('@')) {
             validate = false;
-            setEmailError(MANDATORY_FIELD);
+            setEmailError(EMAIL_ERROR);
         }
 
         if (password.length < 6) {
