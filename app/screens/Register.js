@@ -8,6 +8,8 @@ import { AuthContext } from '../config/AutenticationConfig';
 import * as DocumentPicker from 'expo-document-picker';
 import { FirebaseAutentication } from '../config/FirebaseConfig';
 import { HelperText } from 'react-native-paper';
+import sendEmail, {Email} from 'react-native-email';
+
 
 
 
@@ -161,6 +163,16 @@ export default function Register(props) {
 
     }
 
+    const handleEmail = () => {
+      const to = ['liguorinovincenzo0@gmail.com'] // string or array of email addresses
+        sendEmail(to, {
+            //cc: ['bazzy@moo.com', 'doooo@daaa.com'], // string or array of email addresses
+            
+            subject: 'Certificati/Documenti per My Gym',
+            body: 'Ciao sono  ' + email + ' questi sono i miei documenti. Saluti'
+
+        }).catch(console.error)
+    }
 
     function renderSelectedForm(param) {
         switch (param) {
@@ -196,19 +208,11 @@ export default function Register(props) {
 
                         <Text style={{ color: 'red' }}>{tipoError}</Text>
 
-                        <Text style={[styles.textLogin, { marginTop: 35 }]}>Allega il tuo certificato</Text>
+                        <Text style={[styles.textLogin, { marginTop: 35 }]}>Per completare la registrazione inviaci i tuoi certificati e il tuo documento d'identità</Text>
                         <TouchableOpacity style={{ marginTop: 15 }}
-                            onPress={() => getUploadFile("CER")}>
-                            <Entypo name="attachment" color="grey" size={30}><Text style={{ fontSize: 16, marginLeft: 5 }}>{fileNameCertificate}</Text></Entypo>
+                            onPress={() => handleEmail()}>
+                            <Feather name="mail" color="#05375a" size={40}></Feather>
                         </TouchableOpacity>
-
-                        <Text style={[styles.textLogin, { marginTop: 35 }]}>Allega il tuo documento d'identità</Text>
-                        <TouchableOpacity style={{ marginTop: 15 }}
-                            onPress={() => getUploadFile("DOC")} >
-                            <Entypo name="attachment" color="grey" size={30}><Text style={{ fontSize: 16, marginLeft: 5 }}>{fileNameDocument}</Text></Entypo>
-
-                        </TouchableOpacity>
-
 
                         <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 200 }]}
                             onPress={() => {
