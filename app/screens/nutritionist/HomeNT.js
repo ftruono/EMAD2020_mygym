@@ -1,160 +1,82 @@
-// import React, { Component } from 'react';
-// import { View, Text, Button } from 'react-native';
-
-// class HomeNT extends React.Component {
-//       constructor(props){
-//           super(props);
-//       }
-//     state = {}
-//     render() {
-//         return (
-//             <View>
-//                 <Text>Sono nutrizionista</Text>
-//                 <Button title="Open drawer" onPress={() => this.props.navigation.openDrawer()} />
-//             </View>
-//         );
-//     }
-// }
-
-// export default HomeNT;
-// import * as Permissions from 'expo-permissions';
-
-import React, { useState } from 'react';
-// Import core components
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity
-} from 'react-native';
-
-// Import Document Picker
-// import DocumentPicker from 'react-native-document-picker';
-
-const HomeNT = () => {
-//   const [singleFile, setSingleFile] = useState(null);
-//   const [permission, askPermission, getPermission] = usePermissions(Permissions.CAMERA, { ask: true });
+import { firestore } from "firebase";
+import React, { Component, useState, useEffect } from "react";
+import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
+import { Icon, ThemeConsumer } from 'react-native-elements';
+import HeaderComponent from "../../component/HeaderComponent";
+import WorkoutCard from '../../component/WorkoutCard';
+import { Firestore } from "../../config/FirebaseConfig";
+import Dieta from "../nutritionist/Dieta";
 
 
-    // if (!permission || permission.status !== 'granted') {
-    //     return (
-    //       <View>
-    //         <Text>Permission is not granted</Text>
-    //         <Button title="Grant permission" onPress={askForPermission} />
-    //       </View>
-    //     );
-    //   }
-    
-      return (
-        <View>
-          {/* <Camera /> */}
-        </View>
-      );
-//   const uploadImage = async () => {
-//     // Check if any file is selected or not
-//     if (singleFile != null) {
-//       // If file selected then create FormData
-//       const fileToUpload = singleFile;
-//       const data = new FormData();
-//       data.append('name', 'Image Upload');
-//       data.append('file_attachment', fileToUpload);
-//       // Please change file upload URL
-//       let res = await fetch(
-//         'http://localhost/upload.php',
-//         {
-//           method: 'post',
-//           body: data,
-//           headers: {
-//             'Content-Type': 'multipart/form-data; ',
-//           },
-//         }
-//       );
-//       let responseJson = await res.json();
-//       if (responseJson.status == 1) {
-//         alert('Upload Successful');
-//       }
-//     } else {
-//       // If no file selected the show alert
-//       alert('Please Select File first');
-//     }
-//   };
+export default class HomeNT extends React.Component {
+  constructor(props) {
+    super(props);
+    this.getUser()
+  }
+  state = {
+    clienti: [],
+    diete: [],
+    data: ''
+  }
 
-//   const selectFile = async () => {
-//     // Opening Document Picker to select one file
-//     try {
-//       const res = await DocumentPicker.pick({
-//         // Provide which type of file you want user to pick
-//         type: [DocumentPicker.types.allFiles],
-//         // There can me more options as well
-//         // DocumentPicker.types.allFiles
-//         // DocumentPicker.types.images
-//         // DocumentPicker.types.plainText
-//         // DocumentPicker.types.audio
-//         // DocumentPicker.types.pdf
-//       });
-//       // Printing the log realted to the file
-//       console.log('res : ' + JSON.stringify(res));
-//       // Setting the state to show single file attributes
-//       setSingleFile(res);
-//     } catch (err) {
-//       setSingleFile(null);
-//       // Handling any exception (If any)
-//       if (DocumentPicker.isCancel(err)) {
-//         // If user canceled the document selection
-//         alert('Canceled');
-//       } else {
-//         // For Unknown Error
-//         alert('Unknown Error: ' + JSON.stringify(err));
-//         throw err;
-//       }
-//     }
-//   };
-//   return (
-//     <View style={styles.mainBody}>
-//       <View style={{ alignItems: 'center' }}>
-//         <Text style={{ fontSize: 30, textAlign: 'center' }}>
-//           React Native File Upload Example
-//         </Text>
-//         <Text
-//           style={{
-//             fontSize: 25,
-//             marginTop: 20,
-//             marginBottom: 30,
-//             textAlign: 'center',
-//           }}>
-//           www.aboutreact.com
-//         </Text>
-//       </View>
-//       {/*Showing the data of selected Single file*/}
-//       {singleFile != null ? (
-//         <Text style={styles.textStyle}>
-//           File Name: {singleFile.name ? singleFile.name : ''}
-//           {'\n'}
-//           Type: {singleFile.type ? singleFile.type : ''}
-//           {'\n'}
-//           File Size: {singleFile.size ? singleFile.size : ''}
-//           {'\n'}
-//           URI: {singleFile.uri ? singleFile.uri : ''}
-//           {'\n'}
-//         </Text>
-//       ) : null}
-//       <TouchableOpacity
-//         style={styles.buttonStyle}
-//         activeOpacity={0.5}
-//         onPress={selectFile}>
-//         <Text style={styles.buttonTextStyle}>Select File</Text>
-//       </TouchableOpacity>
-//       <TouchableOpacity
-//         style={styles.buttonStyle}
-//         activeOpacity={0.5}
-//         onPress={uploadImage}>
-//         <Text style={styles.buttonTextStyle}>Upload File</Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-};
+  getUser = async () => {
+    const nt = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
+    nt.clienti.map((e, i) => {
+      this.getClienti(e)
+    })
+  }
 
+  getClienti = async (idCliente) => {
+    const utente = (await Firestore.collection('UTENTI').doc(idCliente).get()).data();
+
+    utente.dieta.map((e, i) => {
+      this.getDiete(idCliente, e)
+    })
+  }
+
+  getDiete = async (idCliente, id) => {
+    var valori = (await Firestore.collection('DIETE').doc(id).get()).data()
+
+
+    this.state.diete.push({ 'cliente': idCliente, 'valori': valori })
+    var support = this.state.diete;
+    this.setState({ diete: support });
+
+  }
+
+  render() {
+    var support=this.state.diete[0];
+    // console.log(Object.values(support))
+    // var support = [];
+    // this.state.diete.map((e, i) => {
+      // var data = (Object.values(e.valori));
+      // data.map((e, i) => {
+        // if(e[1]= new Date()){
+          // console.log
+        // }
+      // })
+    // });
+    return (
+
+      <SafeAreaView style={styles.home}>
+        <HeaderComponent {...this.props} title="Home" />
+        <Text>Gli utenti a cui dei aggiornare la dieta sono</Text>
+
+        {/* <FlatList style={{ margin: 10, flex: 0.8, alignContent: 'center' }}
+          data={support}
+          scrollEnabled={true}
+          numColumns={2}
+          keyExtractor={(item) => item.nome}
+          renderItem={({ item }) => (
+            <DietaComponent {...this.props} item={item} key={item.nome} />
+          )}
+        /> */}
+      </SafeAreaView>
+    );
+  }
+}
 const styles = StyleSheet.create({
+
   mainBody: {
     flex: 1,
     justifyContent: 'center',
@@ -187,4 +109,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeNT;

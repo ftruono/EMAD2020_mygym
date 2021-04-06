@@ -7,6 +7,7 @@ import Octicons from "react-native-vector-icons/Octicons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import HomeUser from "../screens/user/HomeUser";
 import HomeNT from "../screens/nutritionist/HomeNT";
+import PianiAlimentari from "../screens/nutritionist/PianiAlimentari";
 import HomePT from "../screens/personaltrainer/HomePT";
 import { StyleSheet, Image, SafeAreaView } from "react-native";
 import LiveCalendar from "../screens/personaltrainer/LiveCalendar";
@@ -154,7 +155,7 @@ const DrawerNavigator = ({ navigation, route }) => {
                                 />
                             ),
                         }} />
-                        <Drawer.Screen name="Piani" component={HomeNT} options={{
+                        <Drawer.Screen name="Piani" component={PianiAlimentari} options={{
                             title: 'Piani Alimentari',
                             drawerIcon: ({ }) => (
                                 <Entypo
