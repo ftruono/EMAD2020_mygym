@@ -55,12 +55,13 @@ class HomeUser extends React.Component {
                 <Text style={styles.titleParagraph}>Dieta</Text>
                 <Dieta {...this.props} isComponent={true} />
                 <View style={styles.iconMessagge}>
-                    <Icon
+                    <Text>©Copyright MyGym </Text>
+                    {/* <Icon
                         raised
                         name='comments'
                         type='font-awesome'
                         color='#f50'
-                        onPress={() => alert('La chat verrà implementata tra poco')} />
+                        onPress={() => alert('La chat verrà implementata tra poco')} /> */}
                 </View>
             </SafeAreaView>
         );
@@ -98,18 +99,10 @@ const styles = StyleSheet.create({
         fontSize: 32,
     },
     iconMessagge: {
-        position: 'absolute',
-        zIndex: 11,
-        right: 20,
-        bottom: 20,
-        width: 45,
-        height: 45,
-        borderRadius: 50,
-        backgroundColor: 'black',
-        borderColor: 'black',
-        alignItems: 'center',
-        justifyContent: 'center',
-        elevation: 8,
+        paddingBottom:'10',
+        textAlign: 'right',
+        fontCo: 'grey',
+        fontFamily: "Cochin"
     },
     titleParagraph: {
        fontSize:30,

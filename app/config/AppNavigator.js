@@ -36,7 +36,7 @@ const DrawerContent = ({ progress, ...props }) => {
     }
     return (< SafeAreaView style={styles.menu} >
         <Image
-            source={require("../../assets/favicon.png")}
+            source={require("../../assets/logo2.png")}
             style={styles.sideMenuProfileIcon}
         />
         <DrawerContentScrollView {...filteredProps}>
