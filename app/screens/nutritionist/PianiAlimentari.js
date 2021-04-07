@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, TextInput, SafeAreaView, TouchableOpacity, Scro
 import React, { Component } from 'react';
 import { Card } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent"
-import ModalAddPranzi from './ModalAddPranzi';
 import { Firestore } from "../../config/FirebaseConfig";
 import { Icon } from 'react-native-elements';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -97,10 +96,9 @@ export default class DatiPersonaliUser extends Component {
 
     //serve
     addTextInput = (key) => {
-        var support = '';
         let formInput = this.state.formInput;
         let arrayPasti = this.state.arrayPasti;
-        arrayPasti.push({ tipo: "", valore: 'strunz' })
+        arrayPasti.push({ tipo: "", valore: null })
         formInput.push(
             <View style={{ flexDirection: 'row' }}>
                 <DropDownPicker
@@ -124,12 +122,10 @@ export default class DatiPersonaliUser extends Component {
                 <TextInput
                     label="Inserisci la misurazione"
                     style={styles.textInput}
-                    value={this.state.arrayPasti[key].valore}
+                    value={arrayPasti[key].valore}
                     placeholder="inserisci gli alimenti"
                     onChangeText={text => {
-                        support+= text
-                        arrayPasti[key].valore+= text
-                        console.log(arrayPasti[key].valore)
+                        arrayPasti[key].valore= text
                         this.setState({ arrayPasti: arrayPasti })
                         console.log(this.state.arrayPasti)
                     }}
@@ -192,7 +188,7 @@ export default class DatiPersonaliUser extends Component {
                 <TouchableOpacity style={styles.appButtonSave} onPress={() => { this.addValori() }}>
                     <Text style={styles.appButtonText}>Salva</Text>
                 </TouchableOpacity>
-                <ModalAddPranzi aggiungiValori={this.aggiungiValori}></ModalAddPranzi>
+                {/* <ModalAddPranzi aggiungiValori={this.aggiungiValori}></ModalAddPranzi> */}
             </SafeAreaView>
         )
     }
