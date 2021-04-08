@@ -7,23 +7,16 @@ import { Icon } from 'react-native-elements';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 
-// import nextId from 'react-id-generator';
-
-
 const { width, height } = Dimensions.get('screen');
 
-export default class DatiPersonaliUser extends Component {
+class PianiAlimentari extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            editable: false,
             formInput: [],
             arrayPasti: []
         }
-        console.log("larghezza->", width)
-        console.log("larghezza->", width / 5)
-        console.log("larghezza2->", ((width / 5) * 3))
-        console.log("larghezza3->", ((width / 5) * 3) + ((width / 5) - 30))
+        console.log("piani alimentari", this.props)
     }
     //serve
     makeid = (length) => {
@@ -100,7 +93,7 @@ export default class DatiPersonaliUser extends Component {
         let arrayPasti = this.state.arrayPasti;
         arrayPasti.push({ tipo: "", valore: null })
         formInput.push(
-            <View style={{ flexDirection: 'row' }}>
+            <SafeAreaView style={{ flexDirection: 'row' }}>
                 <DropDownPicker
                     items={[
                         { label: 'Colazione', value: 'colazione' },
@@ -121,18 +114,17 @@ export default class DatiPersonaliUser extends Component {
                 />
                 <TextInput
                     label="Inserisci la misurazione"
-                    style={styles.textInput}
+
                     value={arrayPasti[key].valore}
                     placeholder="inserisci gli alimenti"
                     onChangeText={text => {
-                        arrayPasti[key].valore= text
+                        arrayPasti[key].valore = text
                         this.setState({ arrayPasti: arrayPasti })
                         console.log(this.state.arrayPasti)
                     }}
                 />
-
                 <Icon
-                    size="24"
+                    size='24'
                     name='trash'
                     type='font-awesome'
                     color='#f50'
@@ -140,8 +132,9 @@ export default class DatiPersonaliUser extends Component {
                         // this.state.arrayPasti.splice(i, 1);
                         // var support = this.state.arrayPasti;
                         // this.setState({ arrayMisurazioni: support })
-                    }} />
-            </View>
+                    }}
+                />
+            </SafeAreaView>
         );
         this.setState({ formInput })
     }
@@ -162,7 +155,7 @@ export default class DatiPersonaliUser extends Component {
                 <HeaderComponent {...this.props} title="Dati Personali" />
                 <ScrollView>
                     <View style={styles.container}>
-                        <Text style={styles.textHeader}>Dati personali</Text>
+                        <Text style={styles.textHeader}>Crea il piano alimentare</Text>
 
                         <View style={{ marginTop: 15 }}>
                             <Card style={{ flex: 1 }}>
@@ -194,6 +187,7 @@ export default class DatiPersonaliUser extends Component {
     }
 }
 
+export default PianiAlimentari;
 
 const styles = StyleSheet.create({
     datiPersonali: {
@@ -213,8 +207,8 @@ const styles = StyleSheet.create({
     },
     //fa riferimento a quello che è il modal
     // modal: { backgroundColor: 'transparent', padding: 20, },
-    selectStyle: { backgroundColor: '#ff6c16', width: width / 5 },
-    selectdropDownStyle: { backgroundColor: '#ff6c16', width: width / 5 },
+    selectStyle: { backgroundColor: '#ff6c16', },
+    selectdropDownStyle: { backgroundColor: '#ff6c16', },
     itemSelectStyle: { backgroundColor: '#ff6c16', },
     button: {
         position: 'absolute',
@@ -272,7 +266,7 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         color: '#05375a',
         alignItems: 'flex-start',
-        width: ((width / 5) * 3)
+
     },
     // button: {
     //     alignItems: 'center',

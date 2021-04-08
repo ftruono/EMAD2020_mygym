@@ -5,8 +5,7 @@ import { Icon, ThemeConsumer } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent";
 import WorkoutCard from '../../component/WorkoutCard';
 import { Firestore } from "../../config/FirebaseConfig";
-import Dieta from "../nutritionist/Dieta";
-
+import PianiAlimentari from "../nutritionist/PianiAlimentari";
 
 export default class HomeNT extends React.Component {
   constructor(props) {
@@ -16,27 +15,43 @@ export default class HomeNT extends React.Component {
   state = {
     clienti: [],
     diete: [],
-    data: ''
+    misure: [],
   }
-
+  makeid = (length) => {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+  //1
   getUser = async () => {
     const nt = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
     nt.clienti.map((e, i) => {
       this.getClienti(e)
+      this.state.clienti.push({ id: this.makeid(5), title: e })
     })
   }
 
+  //2
   getClienti = async (idCliente) => {
     const utente = (await Firestore.collection('UTENTI').doc(idCliente).get()).data();
 
     utente.dieta.map((e, i) => {
-      this.getDiete(idCliente, e)
+      this.getDiete(idCliente, e);
     })
+    utente.misure.map((e, i) => {
+      this.getMisure(e)
+    })
+
+
   }
 
+  //3
   getDiete = async (idCliente, id) => {
     var valori = (await Firestore.collection('DIETE').doc(id).get()).data()
-
 
     this.state.diete.push({ 'cliente': idCliente, 'valori': valori })
     var support = this.state.diete;
@@ -44,39 +59,52 @@ export default class HomeNT extends React.Component {
 
   }
 
+  getMisure = async (id) => {
+    const valori = (await Firestore.collection('MISURAZIONI').doc(id).get()).data();
+
+    this.state.misure.push(valori)
+    var support = this.state.misure;
+    this.setState({ misure: support });
+
+  }
+
+  renderItem = ({ item }) => (
+    <View style={styles.item}>
+      <TouchableOpacity onPress={() => { this.props.navigation.navigate("PianiAlimentari", { esercizi: "prova", routeProps: this.props }) }}>
+        <Text style={styles.title}>{item.title}</Text>
+      </TouchableOpacity>
+
+    </View>
+  );
   render() {
-    var support=this.state.diete[0];
-    // console.log(Object.values(support))
-    // var support = [];
-    // this.state.diete.map((e, i) => {
-      // var data = (Object.values(e.valori));
-      // data.map((e, i) => {
-        // if(e[1]= new Date()){
-          // console.log
-        // }
-      // })
-    // });
+
     return (
 
       <SafeAreaView style={styles.home}>
         <HeaderComponent {...this.props} title="Home" />
         <Text>Gli utenti a cui dei aggiornare la dieta sono</Text>
 
-        {/* <FlatList style={{ margin: 10, flex: 0.8, alignContent: 'center' }}
-          data={support}
+        <FlatList style={{ margin: 10 }}
+          data={this.state.clienti}
           scrollEnabled={true}
-          numColumns={2}
-          keyExtractor={(item) => item.nome}
-          renderItem={({ item }) => (
-            <DietaComponent {...this.props} item={item} key={item.nome} />
-          )}
-        /> */}
+          keyExtractor={(item) => item.id}
+          refreshing={this._onRefresh}
+          renderItem={this.renderItem}
+        />
       </SafeAreaView>
     );
   }
 }
 const styles = StyleSheet.create({
-
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
   mainBody: {
     flex: 1,
     justifyContent: 'center',
@@ -108,4 +136,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-

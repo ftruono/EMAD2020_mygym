@@ -155,7 +155,7 @@ const DrawerNavigator = ({ navigation, route }) => {
                                 />
                             ),
                         }} />
-                        <Drawer.Screen name="Piani" component={PianiAlimentari} options={{
+                        <Drawer.Screen name="PianiAlimentari" component={PianiAlimentari} options={{
                             title: 'Piani Alimentari',
                             drawerIcon: ({ }) => (
                                 <Entypo

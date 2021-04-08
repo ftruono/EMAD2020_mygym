@@ -1,5 +1,5 @@
 import React, { Component, useReducer } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome"
 import Feather from "react-native-vector-icons/Feather"
 import { AuthContext } from '../config/AutenticationConfig';
@@ -16,8 +16,8 @@ export const Login = () => {
     
 
     const [iconName, setIconName] = React.useState("eye-off");
-    const [username, setUsername] = React.useState("fra@fra.it");
-    const [password, setPassword] = React.useState("frafra");
+    const [username, setUsername] = React.useState("nt@nt.it");
+    const [password, setPassword] = React.useState("enzo97");
     const [secureTextEntry, setSecureTextEntry] = React.useState(false)
     const [nameErrror, setNameError] = React.useState('');
     const [passwordError, setPasswordError] = React.useState('');
@@ -83,12 +83,6 @@ export const Login = () => {
 
     return (
         <View style={styles.container}>
-            <View>
-                <Image
-                    source={require("../../assets/logo1.png")}
-                    style={styles.sideMenuProfileIcon}
-                />
-            </View>
             <Text style={styles.textLogin}>UserID</Text>
             <View style={styles.action}>
                 <Icon name="user-o" color="#05375a" size={20}></Icon>
@@ -217,12 +211,5 @@ const styles = StyleSheet.create({
       fontSize:18,
       fontWeight:'bold',
       padding:25,
-    },
-    sideMenuProfileIcon: {
-        resizeMode: 'center',
-        width: 300,
-        height: 300,
-        borderRadius: 100 / 2,
-        alignSelf: 'center',
     }
 });
