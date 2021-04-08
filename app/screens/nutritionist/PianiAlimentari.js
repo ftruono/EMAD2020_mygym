@@ -148,30 +148,52 @@ class PianiAlimentari extends Component {
             />
         )
     }
+    renderItem = () => (
+        <View style={{ flexDirection: 'row' }}  >
+            <Text style={styles.textInput}> L'atleta scelto è {this.props.route.params.username}</Text>
+            <Icon
+                raised
+                name='times'
+                type='font-awesome'
+                color='#f50'
+                onPress={() => {
+                    this.props.route.params.username=''
+                    this.setState({ username: 'null' })
+                    alert("Si prega di selezionare un utente")
+                    this.props.navigation.navigate("ListaUtenti", { routeProps: this.prop})
+                }} />
+        </View>
+    );
+
 
     render() {
+
         return (
             <SafeAreaView style={styles.datiPersonali}>
                 <HeaderComponent {...this.props} title="Dati Personali" />
-                <ScrollView>
-                    <View style={styles.container}>
-                        <Text style={styles.textHeader}>Crea il piano alimentare</Text>
 
-                        <View style={{ marginTop: 15 }}>
-                            <Card style={{ flex: 1 }}>
-                                <Card.Title>Set Palestra</Card.Title>
-                                <Card.Divider />
-                                <View style={{ flexDirection: 'row' }}>
-                                    <View>
-                                        {this.state.formInput.map((value, index) => {
-                                            return value
-                                        })}
-                                    </View>
+
+
+                <View style={styles.container}>
+                    <Text style={styles.textHeader}>Crea il piano alimentare</Text>
+                    <Card.Divider />
+                    { this.renderItem()} 
+
+                    <View style={{ marginTop: 15 }}>
+                        <Card style={{ flex: 1 }}>
+                            <Card.Title>Set Palestra</Card.Title>
+                            <Card.Divider />
+                            <View style={{ flexDirection: 'row' }}>
+                                <View>
+                                    {this.state.formInput.map((value, index) => {
+                                        return value
+                                    })}
                                 </View>
-                            </Card>
-                        </View>
+                            </View>
+                        </Card>
                     </View>
-                </ScrollView>
+                </View>
+
 
 
                 <TouchableOpacity style={styles.button} onPress={() => this.addTextInput(this.state.formInput.length)}>
@@ -263,6 +285,7 @@ const styles = StyleSheet.create({
     textInput: {
         flex: 1,
         marginTop: 4,
+        fontSize: 18,
         paddingLeft: 15,
         color: '#05375a',
         alignItems: 'flex-start',

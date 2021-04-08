@@ -19,6 +19,7 @@ import CreateWorkout from "../screens/personaltrainer/CreateWorkout";
 import Dieta from "../screens/nutritionist/Dieta";
 import { AuthContext } from "./AutenticationConfig";
 import Statistiche from "../screens/user/Statistiche";
+import ListaUtenti from "../screens/nutritionist/ListaUtenti";
 
 const Drawer = createDrawerNavigator();
 
@@ -175,7 +176,7 @@ const DrawerNavigator = ({ navigation, route }) => {
                                 />
                             ),
                         }} />
-                        <Drawer.Screen name="Vedi_Clienti" component={HomeNT} options={{
+                        <Drawer.Screen name="ListaUtenti" component={ListaUtenti} options={{
                             title: 'Vedi Clienti',
                             drawerIcon: ({ }) => (
                                 <MaterialIcons

@@ -5,9 +5,9 @@ import { Icon, ThemeConsumer } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent";
 import WorkoutCard from '../../component/WorkoutCard';
 import { Firestore } from "../../config/FirebaseConfig";
-import PianiAlimentari from "../nutritionist/PianiAlimentari";
+import PianiAlimentari from "./PianiAlimentari";
 
-export default class HomeNT extends React.Component {
+export default class ListaUtenti extends React.Component {
   constructor(props) {
     super(props);
     this.getUser()
