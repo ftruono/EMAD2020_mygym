@@ -1,20 +1,29 @@
-import { View, Text, StyleSheet, TextInput, SafeAreaView, TouchableOpacity, ScrollView, Button, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TextInput, SafeAreaView, TouchableOpacity, ScrollView, Button, Dimensions, Platform } from 'react-native';
 import React, { Component } from 'react';
 import { Card } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent"
 import { Firestore } from "../../config/FirebaseConfig";
 import { Icon } from 'react-native-elements';
 import DropDownPicker from 'react-native-dropdown-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { TextInputMask } from 'react-native-masked-text'
+import moment from 'moment';
+
+
 
 
 const { width, height } = Dimensions.get('screen');
+
 
 class PianiAlimentari extends Component {
     constructor(props) {
         super(props);
         this.state = {
             formInput: [],
-            arrayPasti: []
+            arrayPasti: [],
+            date: Platform.OS === 'web' ? '' : new Date(),
+            mode: 'date',
+            show: true,
         }
         console.log("piani alimentari", this.props)
     }
@@ -31,34 +40,43 @@ class PianiAlimentari extends Component {
 
     //serve
     addValori = async () => {
+        const today = moment().format("MMM Do YY");
 
-        let user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
-        const key = this.makeid(25);
-        user.misure.push(key);
+        if (today === moment(this.state.date, true).format("MMM Do YY")) {
+            alert("si prega di selezionare una data diversa da quella odierna");
+        } else if (0 === this.state.arrayPasti.length) {
+            alert("scrivere prima i pasti")
+        } else {
+            let user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
+            const key = this.makeid(25);
+            user.misure.push(key);
 
-        Firestore.collection(
-            'UTENTI'
-        ).doc(
-            '3hVSFBjPhuUUD9RWuNckZKVxpuz1'
-        ).update({
-            'diete': user.misure,
-        }).then(() => {
-            console.log('User updated!');
-        });
+            Firestore.collection(
+                'UTENTI'
+            ).doc(
+                '3hVSFBjPhuUUD9RWuNckZKVxpuz1'
+            ).update({
+                'diete': user.misure,
+            }).then(() => {
+                console.log('User updated!');
+            });
 
-        Firestore.collection(
-            'DIETE'
-        ).doc(
-            key
-        ).set({
-            valori: this.state.arrayPasti,
-            data: new Date()
-        });
+            Firestore.collection(
+                'DIETE'
+            ).doc(
+                key
+            ).set({
+                valori: this.state.arrayPasti,
+                datainizio: new Date(),
+                datafine: this.state.date
+            });
 
 
-        this.state.arrayPasti.push({})
-        var support = this.state.arrayPasti;
-        this.setState({ arrayMisurazioni: support });
+            this.state.arrayPasti = [];
+            var support = this.state.arrayPasti;
+            this.setState({ arrayMisurazioni: [] });
+        }
+
     }
     //forse non serve
     getValori = async () => {
@@ -153,17 +171,37 @@ class PianiAlimentari extends Component {
             <Text style={styles.textInput}> L'atleta scelto è {this.props.route.params.username}</Text>
             <Icon
                 raised
+                size={15}
                 name='times'
                 type='font-awesome'
                 color='#f50'
                 onPress={() => {
-                    this.props.route.params.username=''
+                    this.props.route.params.username = ''
                     this.setState({ username: 'null' })
                     alert("Si prega di selezionare un utente")
-                    this.props.navigation.navigate("ListaUtenti", { routeProps: this.prop})
+                    this.props.navigation.navigate("ListaUtenti", { routeProps: this.prop })
                 }} />
         </View>
     );
+
+    onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        this.state.show = false;
+        this.setState({ show: false })
+        this.setState({ date: currentDate })
+
+        const today = moment().format("MMM Do YY");
+
+        if (today === moment(currentDate, true).format("MMM Do YY")) {
+            alert("si prega di selezionare una data diversa da quella odierna");
+        }
+    };
+
+    showMode = (currentMode) => {
+        this.setState({ show: true })
+        this.setState({ mode: currentMode })
+    };
+
 
 
     render() {
@@ -176,9 +214,59 @@ class PianiAlimentari extends Component {
 
                 <View style={styles.container}>
                     <Text style={styles.textHeader}>Crea il piano alimentare</Text>
-                    <Card.Divider />
-                    { this.renderItem()} 
 
+                    <Card.Divider />
+                    {this.renderItem()}
+                    <Card.Divider />
+                    {Platform.OS === 'web' && <>
+                        <View style={{ flexDirection: 'row' }}  >
+
+                            <Text>Si prega di inserire una data per lo scadere della dieta</Text>
+                            <TextInputMask
+                                type={'datetime'}
+                                options={{
+                                    format: 'DD/MM/YYYY'
+                                }}
+                                value={this.state.date}
+                                onChangeText={(text) => {
+
+                                    var data = new Intl.DateTimeFormat('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+
+                                    this.state.date = text
+                                    this.setState({ date: text })
+                                    if (text === data) {
+                                        alert("si prega di selezionare una data diversa da quella odierna");
+                                        this.setState({ date: '' })
+                                    }
+
+
+                                    console.log(this.state.date)
+
+                                }}
+                                style={styles.textInputStype}
+                            />
+                        </View>
+                    </>}
+
+                    {Platform.OS !== 'web' && <>
+
+                        <Text>Si prega di inserire una data per lo scadere della dieta</Text>
+
+                        {/* <Button onPress={() => this.showDatepicker()} title="Show date picker!" /> */}
+                        {/* <Button onPress={() => this.showTimepicker()} title="Show time picker!" /> */}
+
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={this.state.date}
+                            mode={this.state.mode}
+                            dateFormat="longdate"
+                            RNDateTimePicker locale="it-IT"
+                            is24Hour={true}
+                            display="default"
+                            onChange={this.onChange}
+                        />
+
+                    </>}
                     <View style={{ marginTop: 15 }}>
                         <Card style={{ flex: 1 }}>
                             <Card.Title>Set Palestra</Card.Title>
@@ -212,6 +300,12 @@ class PianiAlimentari extends Component {
 export default PianiAlimentari;
 
 const styles = StyleSheet.create({
+    textInputStype: {
+        // height: '6%',
+        width: '50%',
+        borderColor: 'gray',
+        borderWidth: 1
+    },
     datiPersonali: {
         flex: 1,
         alignItems: 'stretch'
