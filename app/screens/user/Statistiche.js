@@ -107,8 +107,8 @@ class Statistiche extends React.Component {
                             dropDownStyle={styles.selectdropDownStyle}
                             onChangeItem={item => { this.selectValori(item.value, data) }}
                         />
-                        <Text>Grafico</Text>
-                        <Text>Bezier Line Chart</Text>
+                        
+                        <Text style={styles.titleParagraph}>Grafico</Text>
                         <LineChart
                             data={{
                                 labels: label,
@@ -118,7 +118,7 @@ class Statistiche extends React.Component {
                                     }
                                 ]
                             }}
-                            width={Dimensions.get("window").width} // from react-native
+                            width={Dimensions.get("window").width-40} // from react-native
                             height={220}
                             yAxisLabel=""
                             yAxisSuffix="cm"
@@ -147,7 +147,6 @@ class Statistiche extends React.Component {
                                 borderRadius: 16
                             }}
                         />
-                        <Button title="Open drawer" onPress={() => { this.prova(), this.props.navigation.openDrawer() }} />
                     </View>
                 </SafeAreaView>
 
@@ -176,6 +175,12 @@ const styles = StyleSheet.create({
         marginTop: 50,
         marginLeft: 5,
     },
+    titleParagraph: {
+        fontSize:30,
+        fontWeight:'bold',
+        textAlign:'left',
+        marginTop:25
+     },
     icLockRed: {
         width: 13 / 2,
         height: 9,

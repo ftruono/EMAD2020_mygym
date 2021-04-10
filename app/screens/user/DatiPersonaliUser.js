@@ -5,6 +5,8 @@ import HeaderComponent from "../../component/HeaderComponent"
 import ModalAddDati from './ModalAddDati';
 import { Firestore } from "../../config/FirebaseConfig";
 import { Icon } from 'react-native-elements';
+import Feather from "react-native-vector-icons/Feather"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 
 // import nextId from 'react-id-generator';
 
@@ -16,8 +18,14 @@ export default class DatiPersonaliUser extends Component {
         this.state = {
             misure: [],
             arrayMisurazioni: [],
-            editable: false
+            modify: false,
+            username:''
         }
+        this.getValori();
+    }
+
+    setModify = () =>{
+        this.setState({modify:true})
     }
 
     makeid = (length) => {
@@ -70,10 +78,24 @@ export default class DatiPersonaliUser extends Component {
         this.setState({ arrayMisurazioni: support });
     }
 
+    modifyUsername = async () =>{
+        this.setState({modify:false})
+        Firestore.collection(
+            'UTENTI'
+        ).doc(
+            '3hVSFBjPhuUUD9RWuNckZKVxpuz1'
+        ).update({
+            'username': this.state.username,
+        }).then(() => {
+            alert('Username updated!');
+        }); 
+    }
+
     getValori = async () => {
         const user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
-        console.log("user-> ", user);
-        const misure1 = (await Firestore.collection('MISURE').doc(user.misurazioni).get()).data();
+        console.log("user-> ", user.username);
+        this.setState({username: user.username});
+/*         const misure1 = (await Firestore.collection('MISURE').doc(user.misurazioni).get()).data();
         console.log("misure->", misure);
         this.setState({ misure: Object.keys(misure1.misurazioni).map((key) => misure1.misurazioni[key]) });
 
@@ -86,7 +108,7 @@ export default class DatiPersonaliUser extends Component {
                     var support = this.state.arrayMisurazioni;
                     this.setState({ arrayMisurazioni: support })
                 });
-        }
+        } */
     }
 
     addElements = () => {
@@ -104,6 +126,36 @@ export default class DatiPersonaliUser extends Component {
                 <HeaderComponent {...this.props} title="Dati Personali" />
                 <ScrollView>
                     <View style={styles.container}>
+                    <View style={styles.action}>
+                        <Text style={styles.textUsername}>Username</Text>
+                            <TouchableOpacity onPress={this.setModify} >
+                                <FontAwesome name="pencil" color="#05375a" size={20} style={{marginTop:42, marginLeft:40}}></FontAwesome>
+                            </TouchableOpacity>
+                        {this.state.modify ? (
+                            <>
+                            <TouchableOpacity onPress={() => this.modifyUsername()}>
+                                <Feather name="save" color="#05375a" size={20} style={{marginTop:42, marginLeft:50}}></Feather>
+                            </TouchableOpacity>
+                            </>
+                        ):(
+                            <>
+                            
+                            </>
+                        )}
+                        
+                    </View>
+                    <View style={styles.action}>
+                        <Feather name="user" color="#05375a" size={30}></Feather>
+                        <TextInput
+                                placeholder="Username"
+                                placeholderTextColor="#666666"
+                                style={styles.textInput}
+                                autoCapitalize="none"
+                                editable={this.state.modify}
+                                onChangeText={text => {this.setState({ username: text })}}
+                                value={this.state.username}
+                        />
+                    </View>
                         <Text style={styles.textHeader}>Dati personali</Text>
                         {/* <View style={styles.action}>
                             <Text style={styles.textLogin}>Peso:</Text>
@@ -124,7 +176,10 @@ export default class DatiPersonaliUser extends Component {
                                 {this.state.arrayMisurazioni.map((e, i) => {
                                     return (
                                         <View style={{ flexDirection: 'row' }}>
-                                            <Text style={styles.textLogin}>{e.tipo}: {e.valore} cm</Text>
+                                            { 
+                                            e.tipo == 'peso' ? <Text style={styles.textLogin}>{e.tipo}: {e.valore} Kg</Text>
+                                                             :<Text style={styles.textLogin}>{e.tipo}: {e.valore} cm</Text>
+                                            }
                                             <Text style={styles.textInput}></Text>
                                             <Icon
                                                 size="24"
@@ -165,7 +220,7 @@ const styles = StyleSheet.create({
     },
     action: {
         flexDirection: 'row',
-        marginTop: 55,
+        marginTop: 30,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
         paddingBottom: 7
@@ -175,17 +230,24 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold"
     },
-    textHeader: {
+    textUsername: {
         color: '#05375a',
         fontSize: 30,
         fontWeight: "bold",
         marginTop: 30
     },
+    textHeader: {
+        color: '#05375a',
+        fontSize: 30,
+        fontWeight: "bold",
+        marginTop: 100
+    },
     textInput: {
         flex: 1,
         marginTop: 4,
         paddingLeft: 15,
-        color: '#05375a'
+        color: '#05375a',
+        fontSize:25
     },
     button: {
         alignItems: 'center',

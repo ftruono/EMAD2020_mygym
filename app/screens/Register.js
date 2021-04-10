@@ -19,6 +19,8 @@ export default function Register(props) {
     const EMAIL_ERROR = "Email non presente oppure invalida"
     const CATEGORY_ERROR = "Inserisci una categoria corretta"
 
+    const [username, setUsername] = useState('');
+    const [usernameError, setUsernameError] = useState('');
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [password, setPassword] = useState('');
@@ -52,10 +54,16 @@ export default function Register(props) {
 
     const validateFormUser = () => {
         var validate = true;
+        setUsernameError('')
         setEmailError('');
         setPasswordError('');
         setEqualPswError('');
 
+
+        if (username.length == 0) {
+            validate = false;
+            setEmailError(MANDATORY_FIELD);
+        }
 
         if (email.length == 0 && !email.includes('@')) {
             validate = false;
@@ -77,6 +85,7 @@ export default function Register(props) {
     }
 
     function cleanFormUser() {
+        setUsername('')
         setEmail('');
         setPassword('');
         setConfirmPsw('');
@@ -99,11 +108,17 @@ export default function Register(props) {
 
     const validateFormPT = () => {
         var validate = true;
+        setUsernameError('')
         setTipoError('');
         setEmailError('');
         setPasswordError('');
         setEqualPswError('');
 
+
+        if (username.length == 0) {
+            validate = false;
+            setEmailError(MANDATORY_FIELD);
+        }
 
         if (email.length == 0 && !email.includes('@')) {
             validate = false;
@@ -232,6 +247,21 @@ export default function Register(props) {
     return (
         <ScrollView>
             <View style={styles.container}>
+            <Text style={styles.textLogin}>Username</Text>
+                <View style={styles.action}>
+                    <Feather name="user" color="#05375a" size={20}></Feather>
+                    <TextInput
+                        placeholder="Username"
+                        placeholderTextColor="#666666"
+                        style={styles.textInput}
+                        autoCapitalize="none"
+                        onChangeText={setUsername}
+                        value={username}
+                    />
+                </View>
+
+                <Text style={{ color: 'red' }}>{usernameError}</Text>
+
                 <Text style={styles.textLogin}>E-mail</Text>
                 <View style={styles.action}>
                     <Feather name="mail" color="#05375a" size={20}></Feather>

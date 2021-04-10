@@ -22,7 +22,7 @@ const json =
 class Dieta extends React.Component {
     constructor(props) {
             super(props);
-            this.getUser()
+            this.getUserAndDiete()
         }
     
         state = {
@@ -30,36 +30,37 @@ class Dieta extends React.Component {
             pasti:[]
         }
     
-        getUser = async () => {
+        getUserAndDiete = async () => {
             const user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
-            this.setState({diete:user.diete})
-            //const pasti =(await Firestore.collection('DIETE').doc(this.state.diete[0]).get()).data();
-            for (let i = 0; i < this.state.diete.length; i++) {
-                Firestore.collection('DIETE').doc(this.state.diete[i]).get()
-                    .then((dieta) => {
-                        this.state.pasti.push(dieta.data().pasti)
-                        var support = this.state.pasti;
-                        this.setState({ pasti: support})
-                    });
-            }
-            console.log(this.state.pasti.length)
+            this.setState({diete:user.dieta})
+            const pastiData =(await Firestore.collection('DIETE').doc(this.state.diete[0]).get()).data();
+            this.state.pasti.push(pastiData);
+            var support = this.state.pasti;
+            this.setState({ pasti: support });
+            console.log(this.state.pasti)
         }
     
         
         render() {
-    
+        
             var pastiArray=[];
             var contentArray=[];
-            if(this.state.pasti.length == 0 || this.state.pasti.length == 1) {
+            this.state.pasti.map((item,i) => {
+                console.log(item)
+                pastiArray.push(item.valori)
+            })
+            if(this.state.pasti.length == 0) {
                 return null
             } else{
-                 for(let i = 0; i < this.state.pasti.length; i++){
-                     for(let j = 1 ; j<this.state.pasti[i].length; j++) {
-                        contentArray.push(this.state.pasti[i][j])
-                     }
-                     pastiArray.push({nome:this.state.pasti[i][0],contenuto: contentArray})
-                     contentArray=[]
-                }
+                console.log("Sono qui")
+                pastiArray = (Object.values(pastiArray))
+
+                pastiArray.map((lista,i) => {
+                    lista.map((element,i) => {
+                        contentArray.push({nome: element.tipo, contenuto:element.valore});
+                    })
+                })
+                console.log(contentArray)
                 console.log(pastiArray)
             }
         return (
@@ -74,7 +75,7 @@ class Dieta extends React.Component {
 
 
                 <FlatList style={{ margin: 10, flex: 0.8, alignContent: 'center' }}
-                    data={pastiArray}
+                    data={contentArray}
                     scrollEnabled={true}
                     numColumns={2}
                     keyExtractor={(item) => item.nome}

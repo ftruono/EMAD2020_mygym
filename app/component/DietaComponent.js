@@ -14,23 +14,17 @@ class DietaComponent extends React.Component {
     render() {
         const state=(global.userType == 'NT') ? true : false;
         return (
-               <SafeAreaView style={{flex:1}}>
-                    <TouchableOpacity onPress={() => { this.props.navigation.navigate("Dieta")}}>
-                    <Card style={{ flex: 1 }}>
-                        <Card.Title>{this.props.item.nome}</Card.Title>
-                        <Card.Divider />
-                        {this.props.item.contenuto.map((item,i) => {
-                            console.log(item)
-                                return (
-                            <View style={styles.body}>
-                                <Text>{item}</Text>
-                            </View>
-                               );
-                            }
-                            )}
-                    </Card>
-                    </TouchableOpacity>
-               </SafeAreaView>
+            <SafeAreaView style={{flex:1}}>
+            <TouchableOpacity onPress={() => { this.props.navigation.navigate("Dieta")}}>
+            <Card style={{ flex: 1 }}>
+                <Card.Title>{this.props.item.nome}</Card.Title>
+                <Card.Divider />
+                    <View style={styles.body}>
+                        <Text>{this.props.item.contenuto}</Text>
+                    </View>
+            </Card>
+            </TouchableOpacity>
+       </SafeAreaView>
 
             
 
