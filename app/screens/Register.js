@@ -1,13 +1,9 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome"
 import Feather from "react-native-vector-icons/Feather"
-import Entypo from "react-native-vector-icons/Entypo"
 import DropDownPicker from 'react-native-dropdown-picker';
-import { AuthContext } from '../config/AutenticationConfig';
-import * as DocumentPicker from 'expo-document-picker';
-import { FirebaseAutentication } from '../config/FirebaseConfig';
-import { HelperText } from 'react-native-paper';
+import { FirebaseAutentication, Firestore } from '../config/FirebaseConfig';
 import sendEmail, {Email} from 'react-native-email';
 
 
@@ -97,9 +93,56 @@ export default function Register(props) {
     }
 
     async function register() {
+        var typeUser = '';
+
+        if(tipo == 'Personal Trainer') {
+            typeUser = 'PT'
+        }
+
+        if(tipo == 'Nutrizionista') {
+            typeUser = 'NT'
+        } else {
+            typeUser = 'UT'
+        }
+
         try {
+
             await FirebaseAutentication.createUserWithEmailAndPassword(email, password);
+            
+            var userRef = FirebaseAutentication.currentUser.uid
+
+
+            if(typeUser == 'NT' || typeUser == 'PT') {
+
+                Firestore.collection(
+                    'UTENTI'
+                ).doc(
+                    userRef
+                ).set({
+                    type: typeUser,
+                    username: username,
+                    appuntamenti:[],
+                    clienti:[]
+                });
+
+            } else {
+
+                Firestore.collection(
+                    'UTENTI'
+                ).doc(
+                    userRef
+                ).set({
+                    type: typeUser,
+                    username: username,
+                    misure:[],
+                    schede:[],
+                    diete:[]
+                });
+
+            }
+            
         } catch (e) {
+            console.log(e)
             alert("Register Failed")
         }
 
@@ -149,7 +192,7 @@ export default function Register(props) {
     }
 
 
-    function getUploadFile(type) {
+/*     function getUploadFile(type) {
         if (type == "DOC") {
             setfileContentDocument('');
             setfileNameDocument('');
@@ -174,9 +217,7 @@ export default function Register(props) {
 
             }
         );
-
-
-    }
+    } */
 
     const handleEmail = () => {
       const to = ['liguorinovincenzo0@gmail.com'] // string or array of email addresses
@@ -197,9 +238,8 @@ export default function Register(props) {
                         <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 200 }]}                     
                         onPress={() => {
                                 if (validateFormUser()) {
-                                    alert("Puoi fare la registrazione")
-                                    cleanFormUser()
                                     register()
+                                    cleanFormUser()
                                 }
                             }}>
                                 <Text style={styles.appButtonText}>Registrati</Text>
@@ -232,8 +272,8 @@ export default function Register(props) {
                         <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 200 }]}
                             onPress={() => {
                                 if (validateFormPT()) {
-                                    cleanFormPT()
                                     register()
+                                    cleanFormPT()
                                 }
                             }}>
                             <Text style={styles.appButtonText}>Registrati</Text>
