@@ -1,11 +1,10 @@
-import { firestore } from "firebase";
-import React, { Component, useState, useEffect } from "react";
-import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
-import { Icon, ThemeConsumer } from 'react-native-elements';
+import React from "react";
+import { StyleSheet, View, Text, SafeAreaView, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 import HeaderComponent from "../../component/HeaderComponent";
 import WorkoutCard from '../../component/WorkoutCard';
-import { Firestore } from "../../config/FirebaseConfig";
+import { Firestore,FirebaseAutentication } from "../../config/FirebaseConfig";
 import Dieta from "../nutritionist/Dieta";
+import sendEmail from 'react-native-email';
 
 
 
@@ -20,37 +19,68 @@ class HomeUser extends React.Component {
         this.getUser()
     }
     state = {
-        data:''
+        data:'',
+        noWorkoutCard:false,
+        userUid:''
     }
 
     getUser = async () => {
-            const user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
-            const scheda = (await Firestore.collection('SCHEDE').doc(user.schede[0]).get()).data();
-            
-            this.setState({data:scheda.days});
 
-            const data= Object.keys(this.state.data).map((key) =>this.state.data[key])
-            // console.log("scheda1->",data)
-            const data1= Object.keys(scheda.days).map((key) =>scheda.days[key])
-            // console.log("scheda2->",data1)
+            var uid = FirebaseAutentication.currentUser.uid
+            
+            const user = (await Firestore.collection('UTENTI').doc(uid).get()).data();
+            if(user.schede[0] !== undefined) {
+                const scheda = (await Firestore.collection('SCHEDE').doc(user.schede[0]).get()).data();
+                this.setState({data:scheda.days});
+                const data= Object.keys(this.state.data).map((key) =>this.state.data[key])
+                // console.log("scheda1->",data)
+                const data1= Object.keys(scheda.days).map((key) =>scheda.days[key])
+                // console.log("scheda2->",data1)
+            } else {
+                this.setState({noWorkoutCard:true})
+            }
 
     }
 
     render() {
+
+        const handleEmailPT = () => {
+            const to = ['liguorinovincenzo0@gmail.com'] // string or array of email addresses
+              sendEmail(to, {
+                  cc: ['Personal Trainer1', 'Personal Trainer2'], // string or array of email addresses
+                  
+                  subject: 'Richiesta Affiliazione Personal Trainer',
+                  body: 'Ciao sono un nuovo cliente dell applicazione e avrei bisogno di un Personal Trainer che mi segua. Saluti'
+      
+              }).catch(console.error)
+          }
        
         return (
 
             <SafeAreaView style={styles.home}>
                 <HeaderComponent {...this.props} title="Home" />
                 <Text style={styles.titleParagraph}>Schede di Allenamento</Text>
-                    <FlatList style={{ margin: 10, flex: 0.5 }}
-                        data={Object.keys(this.state.data).map((key) =>this.state.data[key])}
-                        scrollEnabled={true}
-                        numColumns={2}
-                        renderItem={({ item }) => (
-                            <WorkoutCard exercise={item} {...this.props} />
-                        )}
-                    /> 
+                    {this.state.noWorkoutCard ? (
+                            <>
+                                <Text style={styles.titleSubParagraph}> Non hai ancora schede di allenamento assegnate</Text>
+                                <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                                    <Text style={styles.titleThParagraph}> Fatti aiutare da un nostro</Text>
+                                    <Text style={styles.titleLink} onPress={() => handleEmailPT()}> Personal Trainer</Text>
+                                </View>
+                            </>
+                        ):(
+                            <>
+                            <FlatList style={{ margin: 10, flex: 0.5 }}
+                                data={Object.keys(this.state.data).map((key) =>this.state.data[key])}
+                                scrollEnabled={true}
+                                numColumns={2}
+                                renderItem={({ item }) => (
+                                    <WorkoutCard exercise={item} {...this.props} />
+                                )}
+                            /> 
+                            </>
+                    )}
+                    
                 
                 <Text style={styles.titleParagraph}>Dieta</Text>
                 <Dieta {...this.props} isComponent={true} />
@@ -99,6 +129,26 @@ const styles = StyleSheet.create({
        fontWeight:'bold',
        textAlign:'center',
        marginTop:25
-    }
+    },
+    titleSubParagraph: {
+        fontSize:15,
+        fontWeight:'bold',
+        textAlign:'center',
+        marginTop:50
+     },
+     titleThParagraph: {
+         fontSize:15,
+         fontWeight:'bold',
+         textAlign:'center',
+         marginTop:15
+      },
+      titleLink:{
+        color: 'blue',
+        fontSize:15,
+        fontWeight:'bold',
+        textAlign:'center',
+        marginTop:15,
+        textDecorationLine: 'underline'
+      }
 
 });

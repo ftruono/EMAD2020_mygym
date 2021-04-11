@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Card } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent"
 import ModalAddDati from './ModalAddDati';
-import { Firestore } from "../../config/FirebaseConfig";
+import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import { Icon } from 'react-native-elements';
 import Feather from "react-native-vector-icons/Feather"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
@@ -19,7 +19,8 @@ export default class DatiPersonaliUser extends Component {
             misure: [],
             arrayMisurazioni: [],
             modify: false,
-            username:''
+            username:'',
+            userUid:''
         }
         this.getValori();
     }
@@ -49,14 +50,14 @@ export default class DatiPersonaliUser extends Component {
 
     addValori = async (evento) => {
 
-        let user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
+        let user = (await Firestore.collection('UTENTI').doc(this.state.userUid).get()).data();
         const key = this.makeid(25);
         user.misure.push(key);
 
         Firestore.collection(
             'UTENTI'
         ).doc(
-            '3hVSFBjPhuUUD9RWuNckZKVxpuz1'
+            this.state.userUid
         ).update({
             'misure': user.misure,
         }).then(() => {
@@ -80,21 +81,25 @@ export default class DatiPersonaliUser extends Component {
 
     modifyUsername = async () =>{
         this.setState({modify:false})
+        
         Firestore.collection(
             'UTENTI'
         ).doc(
-            '3hVSFBjPhuUUD9RWuNckZKVxpuz1'
+            this.state.userUid
         ).update({
             'username': this.state.username,
         }).then(() => {
             alert('Username updated!');
-        }); 
+        });
     }
 
     getValori = async () => {
-        const user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
+
+        var uid = FirebaseAutentication.currentUser.uid
+        const user = (await Firestore.collection('UTENTI').doc(uid).get()).data();
         console.log("user-> ", user.username);
         this.setState({username: user.username});
+        this.setState({userUid: uid});
 /*         const misure1 = (await Firestore.collection('MISURE').doc(user.misurazioni).get()).data();
         console.log("misure->", misure);
         this.setState({ misure: Object.keys(misure1.misurazioni).map((key) => misure1.misurazioni[key]) });

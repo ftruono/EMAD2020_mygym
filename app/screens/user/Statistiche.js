@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import { View, Text, Button, Dimensions, SafeAreaView, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, Dimensions, SafeAreaView, StyleSheet } from 'react-native';
 import HeaderComponent from "../../component/HeaderComponent";
 import DropDownPicker from 'react-native-dropdown-picker';
-import Icon from "react-native-vector-icons/Entypo";
 import { LineChart, BarChart, PieChart, ProgressChart, ContributionGraph, StackedBarChart } from "react-native-chart-kit";
-import { Firestore } from "../../config/FirebaseConfig";
+import { Firestore,FirebaseAutentication } from "../../config/FirebaseConfig";
 
 
 
@@ -18,7 +17,8 @@ class Statistiche extends React.Component {
             misure: [],
             valori: [],
             date: [],
-            parteCorpo: ''
+            parteCorpo: '',
+            noMisure:false
         }
         this.getValori()
     }
@@ -32,11 +32,17 @@ class Statistiche extends React.Component {
 
     }
     getValori = async () => {
-        const user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
-
-        user.misure.map((e, i) => {
-            this.getMisure(e);
-        })
+        var uid = FirebaseAutentication.currentUser.uid
+        const user = (await Firestore.collection('UTENTI').doc(uid).get()).data();
+        
+        if(user.misure.length != 0) {
+            user.misure.map((e, i) => {
+                this.getMisure(e);
+            })
+        } else {
+            this.setState({noMisure:true})
+        }
+        
 
     }
 
@@ -67,36 +73,49 @@ class Statistiche extends React.Component {
     }
 
     render() {
-        var label = [], data = [], item = [];
 
-        this.state.misure.map((e, i) => {
-            label.push(new Date(e.data.toDate()).toDateString());
-            data.push(e.valori)
-        })
-        if (this.state.misure.length != label.length) {
-            return null
-        } else {
-            data = (Object.values(data));
+        if(this.state.noMisure == false) {
+            var label = [], data = [], item = [];
 
-            data.map((array, i) => {
-                array.map((singleItem, x) => {
-
-                    if (item.indexOf(singleItem.tipo) < 0) {
-                        item.push(singleItem.tipo)
-                    }
-                })
+            this.state.misure.map((e, i) => {
+                label.push(new Date(e.data.toDate()).toDateString());
+                data.push(e.valori)
             })
-            console.log(item)
-
-            item.map((element, i) => {
-                item[i] = { label: element, value: element }
-                console.log(element, i)
-            });
+            if (this.state.misure.length != label.length) {
+                return null
+            } else {
+                data = (Object.values(data));
+    
+                data.map((array, i) => {
+                    array.map((singleItem, x) => {
+    
+                        if (item.indexOf(singleItem.tipo) < 0) {
+                            item.push(singleItem.tipo)
+                        }
+                    })
+                })
+                console.log(item)
+    
+                item.map((element, i) => {
+                    item[i] = { label: element, value: element }
+                    console.log(element, i)
+                });
+        }
+    }
+        
+        
 
             return (
                 <SafeAreaView style={styles.container}>
                     <HeaderComponent {...this.props} title="Statistiche" />
                     <View style={styles.containerModal}>
+                    {this.state.noMisure ? (
+                            <>
+                                <Text style={styles.titleSubParagraph}> Non hai abbastanza dati per la creazione di un grafico</Text>
+
+                            </>
+                        ):(
+                            <>
                         <DropDownPicker
                             items={item}
                             placeholder="Seleziona una parte del corpo"
@@ -147,13 +166,14 @@ class Statistiche extends React.Component {
                                 borderRadius: 16
                             }}
                         />
+                        </>
+                        )}
                     </View>
                 </SafeAreaView>
 
             );
         }
     }
-}
 
 
 
@@ -168,79 +188,24 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 20,
     },
-    textLogin: {
-        color: '#05375a',
-        fontSize: 30,
-        fontWeight: "bold",
-        marginTop: 50,
-        marginLeft: 5,
-    },
     titleParagraph: {
         fontSize:30,
         fontWeight:'bold',
         textAlign:'left',
         marginTop:25
      },
-    icLockRed: {
-        width: 13 / 2,
-        height: 9,
-        position: 'absolute',
-        top: 2,
-        left: 1,
-        color: '#008000'
+    selectStyle: { 
+        backgroundColor: '#fafafa', 
     },
-    text: {
-        color: '#05375a',
-        fontWeight: "bold",
-        fontSize: 24,
-        marginTop: 35
+    selectdropDownStyle: { 
+        backgroundColor: '#fafafa', 
     },
-    action: {
-        flexDirection: 'row',
-        marginTop: 25,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f2f2f2',
-        paddingBottom: 7
-    },
-    appButtonContainer: {
-        elevation: 8,
-        backgroundColor: "#009688",
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 12
-    },
-    appButtonText: {
-        fontSize: 18,
-        color: "#fff",
-        fontWeight: "bold",
-        alignSelf: "center",
-        textTransform: "uppercase"
-    },
-    modal: { backgroundColor: 'transparent', padding: 20, },
-    selectStyle: { backgroundColor: '#fafafa', },
-    selectdropDownStyle: { backgroundColor: '#fafafa', },
-    itemSelectStyle: { justifyContent: 'flex-start', },
-    button: {
-        position: 'absolute',
-        zIndex: 11,
-        right: 20,
-        bottom: 90,
-        width: 45,
-        height: 45,
-        borderRadius: 50,
-        backgroundColor: '#ff6c16',
-        borderColor: 'black',
-        alignItems: 'center',
-        justifyContent: 'center',
-        elevation: 8,
-    },
-    appButtonText: {
-        fontSize: 20,
-        color: "#fff",
-        fontWeight: "bold",
-        alignSelf: "center",
-        textTransform: "uppercase"
-    }
+    titleSubParagraph: {
+        fontSize:15,
+        fontWeight:'bold',
+        textAlign:'center',
+        marginTop:50
+     }
 });
 
 export default Statistiche;
