@@ -38,7 +38,7 @@ export default class ListaUtenti extends React.Component {
   getClienti = async (idCliente) => {
     const utente = (await Firestore.collection('UTENTI').doc(idCliente).get()).data();
 
-    utente.dieta.map((e, i) => {
+    utente.diete.map((e, i) => {
       this.getDiete(idCliente, e);
     })
     utente.misure.map((e, i) => {
@@ -80,7 +80,7 @@ export default class ListaUtenti extends React.Component {
     return (
 
       <SafeAreaView style={styles.home}>
-        <HeaderComponent {...this.props} title="Home" />
+        <HeaderComponent {...this.props} title="Lista utenti" />
         <Text>Gli utenti a cui dei aggiornare la dieta sono</Text>
         
         <FlatList style={{ margin: 10 }}

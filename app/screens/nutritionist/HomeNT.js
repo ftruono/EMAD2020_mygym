@@ -1,11 +1,11 @@
 import { firestore } from "firebase";
 import React, { Component, useState, useEffect } from "react";
 import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
-import { Icon, ThemeConsumer } from 'react-native-elements';
+
 import HeaderComponent from "../../component/HeaderComponent";
-import WorkoutCard from '../../component/WorkoutCard';
+
 import { Firestore } from "../../config/FirebaseConfig";
-import PianiAlimentari from "../nutritionist/PianiAlimentari";
+
 
 export default class HomeNT extends React.Component {
   constructor(props) {
@@ -38,12 +38,12 @@ export default class HomeNT extends React.Component {
   getClienti = async (idCliente) => {
     const utente = (await Firestore.collection('UTENTI').doc(idCliente).get()).data();
 
-    utente.dieta.map((e, i) => {
-      this.getDiete(idCliente, e);
-    })
-    utente.misure.map((e, i) => {
-      this.getMisure(e)
-    })
+    // utente.diete.map((e, i) => {
+    //   this.getDiete(idCliente, e);
+    // })
+    // utente.misure.map((e, i) => {
+    //   this.getMisure(e)
+    // })
     this.state.clienti.push({ id: this.makeid(5), title: idCliente, username: utente.username })
 
   }
@@ -69,7 +69,7 @@ export default class HomeNT extends React.Component {
 
   renderItem = ({ item }) => (
     <View style={styles.item}>
-      <TouchableOpacity onPress={() => { this.props.navigation.navigate("PianiAlimentari", { atleta: item.title, username: item.username, routeProps: this.props }) }}>
+      <TouchableOpacity onPress={() => { console.log(item),this.props.navigation.navigate("PianiAlimentari", { atleta: item.title, username: item.username, routeProps: this.props }) }}>
         <Text style={styles.title}>{item.username}</Text>
       </TouchableOpacity>
 

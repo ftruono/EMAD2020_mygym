@@ -46,17 +46,27 @@ class PianiAlimentari extends Component {
             alert("si prega di selezionare una data diversa da quella odierna");
         } else if (0 === this.state.arrayPasti.length) {
             alert("scrivere prima i pasti")
+
+        } else if (this.state.arrayPasti.map((e, i) => {
+            if ("" === e.tipo || null === e.valore)
+                return true;
+            else
+                return false;
+        })) {
+            alert("si prega di controllare tutti i campi")
         } else {
             let user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
             const key = this.makeid(25);
-            user.misure.push(key);
+            var arraySupport = [];
+            arraySupport = user.diete;
+            arraySupport.push(key);
 
             Firestore.collection(
                 'UTENTI'
             ).doc(
                 '3hVSFBjPhuUUD9RWuNckZKVxpuz1'
             ).update({
-                'diete': user.misure,
+                'diete': arraySupport,
             }).then(() => {
                 console.log('User updated!');
             });
@@ -73,30 +83,15 @@ class PianiAlimentari extends Component {
 
 
             this.state.arrayPasti = [];
-            var support = this.state.arrayPasti;
-            this.setState({ arrayMisurazioni: [] });
+            this.state.formInput = [];
+
+            this.setState({ arrayPasti: [] });
+            this.setState({ formInput: [] });
+
         }
 
     }
-    //forse non serve
-    getValori = async () => {
-        const user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
-        console.log("user-> ", user);
-        const misure1 = (await Firestore.collection('MISURE').doc(user.misurazioni).get()).data();
-        console.log("misure->", misure);
-        this.setState({ misure: Object.keys(misure1.misurazioni).map((key) => misure1.misurazioni[key]) });
 
-        for (let i = 0; i < this.state.misure.length; i++) {
-            var support = this.state.misure[i];
-            Firestore.collection('MISURAZIONI').doc(support[0]).get()
-                .then((misure) => {
-                    console.log("miurazioni->", misurazioni);
-                    this.state.arrayPasti.push(misure.data())
-                    var support = this.state.arrayPasti;
-                    this.setState({ arrayMisurazioni: support })
-                });
-        }
-    }
 
     //serve
     changeText = (text, id) => {
@@ -109,6 +104,9 @@ class PianiAlimentari extends Component {
     addTextInput = (key) => {
         let formInput = this.state.formInput;
         let arrayPasti = this.state.arrayPasti;
+        console.log("3", this.state.arrayPasti)
+        console.log("4", this.state.arrayPasti)
+
         arrayPasti.push({ tipo: "", valore: null })
         formInput.push(
             <SafeAreaView style={{ flexDirection: 'row' }}>
@@ -147,9 +145,11 @@ class PianiAlimentari extends Component {
                     type='font-awesome'
                     color='#f50'
                     onPress={() => {
-                        // this.state.arrayPasti.splice(i, 1);
-                        // var support = this.state.arrayPasti;
-                        // this.setState({ arrayMisurazioni: support })
+                        this.state.arrayPasti = [];
+                        this.state.formInput = [];
+
+                        this.setState({ arrayPasti: [] });
+                        this.setState({ formInput: [] });
                     }}
                 />
             </SafeAreaView>
@@ -211,86 +211,91 @@ class PianiAlimentari extends Component {
                 <HeaderComponent {...this.props} title="Dati Personali" />
 
 
+                {this.props.route.params === undefined ? (<>
+                    { alert("si prega di selezionare un utente")}
+                    { this.props.navigation.navigate("ListaUtenti", { routeProps: this.prop })}
+                </>) : (<>
+                    <View style={styles.container}>
+                        <Text style={styles.textHeader}>Crea il piano alimentare</Text>
 
-                <View style={styles.container}>
-                    <Text style={styles.textHeader}>Crea il piano alimentare</Text>
+                        <Card.Divider />
+                        {this.renderItem()}
+                        <Card.Divider />
+                        {Platform.OS === 'web' && <>
+                            <View style={{ flexDirection: 'row' }}  >
 
-                    <Card.Divider />
-                    {this.renderItem()}
-                    <Card.Divider />
-                    {Platform.OS === 'web' && <>
-                        <View style={{ flexDirection: 'row' }}  >
+                                <Text>Si prega di inserire una data per lo scadere della dieta</Text>
+                                <TextInputMask
+                                    type={'datetime'}
+                                    options={{
+                                        format: 'DD/MM/YYYY'
+                                    }}
+                                    value={this.state.date}
+                                    onChangeText={(text) => {
+
+                                        var data = new Intl.DateTimeFormat('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+
+                                        this.state.date = text
+                                        this.setState({ date: text })
+                                        if (text === data) {
+                                            alert("si prega di selezionare una data diversa da quella odierna");
+                                            this.setState({ date: '' })
+                                        }
+
+
+                                        console.log(this.state.date)
+
+                                    }}
+                                    style={styles.textInputStype}
+                                />
+                            </View>
+                        </>}
+
+                        {Platform.OS !== 'web' && <>
 
                             <Text>Si prega di inserire una data per lo scadere della dieta</Text>
-                            <TextInputMask
-                                type={'datetime'}
-                                options={{
-                                    format: 'DD/MM/YYYY'
-                                }}
+
+                            {/* <Button onPress={() => this.showDatepicker()} title="Show date picker!" /> */}
+                            {/* <Button onPress={() => this.showTimepicker()} title="Show time picker!" /> */}
+
+                            <DateTimePicker
+                                testID="dateTimePicker"
                                 value={this.state.date}
-                                onChangeText={(text) => {
-
-                                    var data = new Intl.DateTimeFormat('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-
-                                    this.state.date = text
-                                    this.setState({ date: text })
-                                    if (text === data) {
-                                        alert("si prega di selezionare una data diversa da quella odierna");
-                                        this.setState({ date: '' })
-                                    }
-
-
-                                    console.log(this.state.date)
-
-                                }}
-                                style={styles.textInputStype}
+                                mode={this.state.mode}
+                                dateFormat="longdate"
+                                RNDateTimePicker locale="it-IT"
+                                is24Hour={true}
+                                display="default"
+                                onChange={this.onChange}
                             />
-                        </View>
-                    </>}
 
-                    {Platform.OS !== 'web' && <>
-
-                        <Text>Si prega di inserire una data per lo scadere della dieta</Text>
-
-                        {/* <Button onPress={() => this.showDatepicker()} title="Show date picker!" /> */}
-                        {/* <Button onPress={() => this.showTimepicker()} title="Show time picker!" /> */}
-
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            value={this.state.date}
-                            mode={this.state.mode}
-                            dateFormat="longdate"
-                            RNDateTimePicker locale="it-IT"
-                            is24Hour={true}
-                            display="default"
-                            onChange={this.onChange}
-                        />
-
-                    </>}
-                    <View style={{ marginTop: 15 }}>
-                        <Card style={{ flex: 1 }}>
-                            <Card.Title>Set Palestra</Card.Title>
-                            <Card.Divider />
-                            <View style={{ flexDirection: 'row' }}>
-                                <View>
-                                    {this.state.formInput.map((value, index) => {
-                                        return value
-                                    })}
+                        </>}
+                        <View style={{ marginTop: 15 }}>
+                            <Card style={{ flex: 1 }}>
+                                <Card.Title>Set Palestra</Card.Title>
+                                <Card.Divider />
+                                <View style={{ flexDirection: 'row' }}>
+                                    <View>
+                                        {this.state.formInput.map((value, index) => {
+                                            return value
+                                        })}
+                                    </View>
                                 </View>
-                            </View>
-                        </Card>
+                            </Card>
+                        </View>
                     </View>
-                </View>
 
 
 
-                <TouchableOpacity style={styles.button} onPress={() => this.addTextInput(this.state.formInput.length)}>
-                    <Text style={styles.appButtonText}>+</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => this.addTextInput(this.state.formInput.length)}>
+                        <Text style={styles.appButtonText}>+</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={styles.appButtonSave} onPress={() => { this.addValori() }}>
-                    <Text style={styles.appButtonText}>Salva</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.appButtonSave} onPress={() => { this.addValori() }}>
+                        <Text style={styles.appButtonText}>Salva</Text>
+                    </TouchableOpacity></>)
+                }
+
                 {/* <ModalAddPranzi aggiungiValori={this.aggiungiValori}></ModalAddPranzi> */}
             </SafeAreaView>
         )
@@ -431,3 +436,23 @@ const styles = StyleSheet.create({
 {/* <Text style={style.appButtonText}>+</Text> */ }
 {/* </TouchableOpacity> */ }
 {/* <Button style={styles.appButtonSave} title='+++' onPress={() => this.addTextInput(this.state.textInput.length)} /> */ }
+
+//forse non serve
+// getValori = async () => {
+//     const user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
+//     console.log("user-> ", user);
+//     const misure1 = (await Firestore.collection('MISURE').doc(user.misurazioni).get()).data();
+//     console.log("misure->", misure);
+//     this.setState({ misure: Object.keys(misure1.misurazioni).map((key) => misure1.misurazioni[key]) });
+
+//     for (let i = 0; i < this.state.misure.length; i++) {
+//         var support = this.state.misure[i];
+//         Firestore.collection('MISURAZIONI').doc(support[0]).get()
+//             .then((misure) => {
+//                 console.log("miurazioni->", misurazioni);
+//                 this.state.arrayPasti.push(misure.data())
+//                 var support = this.state.arrayPasti;
+//                 this.setState({ arrayMisurazioni: support })
+//             });
+//     }
+// }
