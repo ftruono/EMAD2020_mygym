@@ -38,9 +38,9 @@ export default class HomeNT extends React.Component {
   getClienti = async (idCliente) => {
     const utente = (await Firestore.collection('UTENTI').doc(idCliente).get()).data();
 
-    // utente.diete.map((e, i) => {
-    //   this.getDiete(idCliente, e);
-    // })
+    utente.diete.map((e, i) => {
+      this.getDiete(idCliente, e);
+    })
     // utente.misure.map((e, i) => {
     //   this.getMisure(e)
     // })

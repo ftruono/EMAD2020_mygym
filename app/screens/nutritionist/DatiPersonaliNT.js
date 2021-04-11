@@ -151,7 +151,7 @@ export default class DatiPersonaliNT extends React.Component {
 
         return (
             <SafeAreaView style={styles.container}>
-                <HeaderComponent {...this.props} title="Schede allenamento" />
+                <HeaderComponent {...this.props} title="Dati personali" />
 
                 <Text>I tuoi utenti sono </Text>
 

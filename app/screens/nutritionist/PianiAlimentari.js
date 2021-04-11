@@ -208,7 +208,7 @@ class PianiAlimentari extends Component {
 
         return (
             <SafeAreaView style={styles.datiPersonali}>
-                <HeaderComponent {...this.props} title="Dati Personali" />
+                <HeaderComponent {...this.props} title="Piani alimentari" />
 
 
                 {this.props.route.params === undefined ? (<>
