@@ -20,6 +20,7 @@ import Dieta from "../screens/nutritionist/Dieta";
 import { AuthContext } from "./AutenticationConfig";
 import Statistiche from "../screens/user/Statistiche";
 import ListaUtenti from "../screens/nutritionist/ListaUtenti";
+import DatiPersonaliNT from "../screens/nutritionist/DatiPersonaliNT";
 
 const Drawer = createDrawerNavigator();
 
@@ -166,7 +167,7 @@ const DrawerNavigator = ({ navigation, route }) => {
                                 />
                             ),
                         }} />
-                        <Drawer.Screen name="Dati_Personali" component={HomeNT} options={{
+                        <Drawer.Screen name="Dati_Personali" component={DatiPersonaliNT} options={{
                             title: 'Dati Personali',
                             drawerIcon: ({ }) => (
                                 <Octicons
@@ -179,8 +180,8 @@ const DrawerNavigator = ({ navigation, route }) => {
                         <Drawer.Screen name="ListaUtenti" component={ListaUtenti} options={{
                             title: 'Vedi Clienti',
                             drawerIcon: ({ }) => (
-                                <MaterialIcons
-                                    name="person-search"
+                                <FontAwesome
+                                    name="address-book"
                                     size={20}
                                     color='black'
                                 />
@@ -188,55 +189,55 @@ const DrawerNavigator = ({ navigation, route }) => {
                         }} />
                     </>
                 ) : (
-                        <>
-                            <Drawer.Screen name="Home" component={HomePT} options={{
-                                title: 'Home',
-                                drawerIcon: ({ }) => (
-                                    <Icon
-                                        name="home"
-                                        size={20}
-                                        color='black'
-                                    />
-                                ),
-                            }} />
-                            <Drawer.Screen name="Scheda_Allenamento" component={CreateWorkout} options={{
-                                title: 'Scheda Allenamento',
-                                drawerIcon: ({ }) => (
-                                    <Entypo
-                                        name="news"
-                                        size={20}
-                                        color='black'
-                                    />
-                                ),
-                            }} />
-                            <Drawer.Screen name="Vedi Clienti" component={HomePT} options={{
-                                title: 'Vedi Clienti',
-                                drawerIcon: ({ }) => (
-                                    <MaterialIcons
-                                        name="person-search"
-                                        size={20}
-                                        color='black'
-                                    />
-                                ),
-                            }} />
-                            <Drawer.Screen name="Calendario_Live" component={LiveCalendar} options={{
-                                title: 'Calendario Live',
-                                drawerIcon: ({ }) => (
-                                    <FontAwesome
-                                        name="calendar"
-                                        size={20}
-                                        color='black'
-                                    />
-                                ),
-                            }} />
+                    <>
+                        <Drawer.Screen name="Home" component={HomePT} options={{
+                            title: 'Home',
+                            drawerIcon: ({ }) => (
+                                <Icon
+                                    name="home"
+                                    size={20}
+                                    color='black'
+                                />
+                            ),
+                        }} />
+                        <Drawer.Screen name="Scheda_Allenamento" component={CreateWorkout} options={{
+                            title: 'Scheda Allenamento',
+                            drawerIcon: ({ }) => (
+                                <Entypo
+                                    name="news"
+                                    size={20}
+                                    color='black'
+                                />
+                            ),
+                        }} />
+                        <Drawer.Screen name="Vedi Clienti" component={HomePT} options={{
+                            title: 'Vedi Clienti',
+                            drawerIcon: ({ }) => (
+                                <FontAwesome
+                                    name="address-book"
+                                    size={20}
+                                    color='black'
+                                />
+                            ),
+                        }} />
+                        <Drawer.Screen name="Calendario_Live" component={LiveCalendar} options={{
+                            title: 'Calendario Live',
+                            drawerIcon: ({ }) => (
+                                <FontAwesome
+                                    name="calendar"
+                                    size={20}
+                                    color='black'
+                                />
+                            ),
+                        }} />
 
 
-                        </>
-                    )
+                    </>
+                )
 
 
 
-                )}
+            )}
 
         </Drawer.Navigator>
     );
