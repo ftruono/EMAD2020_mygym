@@ -4,136 +4,197 @@ import Icon from "react-native-vector-icons/FontAwesome"
 import Feather from "react-native-vector-icons/Feather"
 import DropDownPicker from 'react-native-dropdown-picker';
 import { FirebaseAutentication, Firestore } from '../config/FirebaseConfig';
-import sendEmail, {Email} from 'react-native-email';
+import sendEmail from 'react-native-email';
 
 
 
-
-export default function Register(props) {
-
-    const MANDATORY_FIELD = "Campo Obbligatorio";
-    const EMAIL_ERROR = "Email non presente oppure invalida"
-    const CATEGORY_ERROR = "Inserisci una categoria corretta"
-
-    const [username, setUsername] = useState('');
-    const [usernameError, setUsernameError] = useState('');
-    const [email, setEmail] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const [confirmPsw, setConfirmPsw] = useState('');
-    const [equalPswError, setEqualPswError] = useState('');
-    const [selectedValue, setSelectedValue] = useState('');
-    const [tipo, setTipoUser] = useState('');
-    const [tipoError, setTipoError] = useState('');
-    const [secureTextEntryPass, setSecureTextEntryPass] = useState(true);
-    const [secureTextEntry, setSecureTextEntry] = useState(true);
-    const [iconNamePass, setIconNamePass] = useState("eye-off");
-    const [iconName, setIconName] = useState("eye-off");
-    const [fileContentDocument, setfileContentDocument] = useState('');
-    const [fileContentCertificate, setfileContentCertificate] = useState('');
-    const [fileNameDocument, setfileNameDocument] = useState('');
-    const [fileNameCertificate, setfileNameCertificate] = useState('');
-
-
-    function updateSecureTextEntryPass() {
-        setSecureTextEntryPass(!secureTextEntryPass);
-        setIconNamePass((secureTextEntryPass) ? "eye" : "eye-off");
+class Register extends React.Component {
+    constructor(props) {
+        super(props);
+        this.getUsernameAndEmail()
+    }
+    state = {
         
+        MANDATORY_FIELD: 'Campo Obbligatorio',
+        EMAIL_ERROR: 'Email non presente oppure invalida',
+        CATEGORY_ERROR: 'Inserisci una categoria corretta',
+        DUPLICATED_USERNAME_ERROR: 'Username duplicato, questo indicato esiste già',
+        DUPLICATED_EMAIL_ERROR: 'Email già presente, sceglierne un altra',
+        arrayUsername: [],
+        arrayEmail: [],
+        username:'',
+        usernameError:'',
+        email:'',
+        emailError:'',
+        password:'',
+        passwordError:'',
+        confirmPsw:'',
+        equalPswError:'',
+        selectedValue:'',
+        tipo:'',
+        tipoError:'',
+        secureTextEntry: true,
+        secureTextEntryPass: true,
+        iconNamePass:'eye-off',
+        iconName:'eye-off',
+    }
+    
+
+    updateSecureTextEntryPass() {
+        this.setState({secureTextEntryPass: !this.state.secureTextEntryPass})
+        this.setState({iconNamePass: this.state.secureTextEntryPass ? 'eye' : 'eye-off'})
     }
 
-    function updateSecureTextEntry() {
-        setSecureTextEntry(!secureTextEntry);
-        setIconName((secureTextEntry) ? "eye" : "eye-off");
-        
+    updateSecureTextEntry() {
+        this.setState({secureTextEntry: !this.state.secureTextEntry})
+        this.setState({iconNamePass: this.statesecureTextEntry ? 'eye' : 'eye-off'})
     }
 
-    const validateFormUser = () => {
+    getUsernameAndEmail = async () => {
+
+        var idDocument = [];
+        const user = await Firestore.collection('UTENTI').get()
+        for(let i = 0; i<user.docs.length; i++) {
+            idDocument.push(user.docs[i].id)
+        }
+
+        var usernameArray= [];
+        var emailArray= [];
+        for(let j = 0; j< idDocument.length; j++ ) {
+            const user = (await Firestore.collection('UTENTI').doc(idDocument[j]).get()).data();
+            if(user.username != undefined) {
+                usernameArray.push(user.username);
+            }
+            if(user.email != undefined) {
+                emailArray.push(user.email);
+            }
+        }
+
+        this.setState({arrayUsername:usernameArray})
+        this.setState({arrayEmail:emailArray})
+
+        console.log(this.state.arrayUsername)
+        console.log(this.state.arrayEmail)
+    }
+
+    validateFormUser = () => {
         var validate = true;
-        setUsernameError('')
-        setEmailError('');
-        setPasswordError('');
-        setEqualPswError('');
+        this.setState({usernameError:''})
+        this.setState({emailError:''})
+        this.setState({passwordError:''})
+        this.setState({equalPswError:''})
 
 
-        if (username.length == 0) {
+
+        if (this.state.username.length == 0) {
             validate = false;
-            setEmailError(MANDATORY_FIELD);
+            this.setState({usernameError: this.state.MANDATORY_FIELD})
         }
 
-        if (email.length == 0 && !email.includes('@')) {
+        if(this.state.arrayUsername.includes(this.state.username)) {
             validate = false;
-            setEmailError(EMAIL_ERROR);
+            this.setState({usernameError: this.state.DUPLICATED_USERNAME_ERROR})
         }
 
-        if (password.length < 6) {
+        if (this.state.email.length == 0 && !this.state.email.includes('@')) {
             validate = false;
-            setPasswordError(MANDATORY_FIELD);
+            this.setState({emailError:this.state.EMAIL_ERROR})
         }
 
-        if (confirmPsw != password) {
+        if(this.state.arrayEmail.includes(this.state.email)) {
+            validate = false
+            this.setState({emailError:this.state.DUPLICATED_EMAIL_ERROR})
+        }
+
+        if (this.state.password.length < 6) {
             validate = false;
-            setEqualPswError("Le password non coincidono")
+            this.setState({passwordError:this.state.MANDATORY_FIELD})
+        }
+
+        if (this.state.confirmPsw != this.state.password) {
+            validate = false;
+            this.setState({equalPswError: 'Le password non coincidono'})
         }
 
         return validate;
 
     }
 
-    function cleanFormUser() {
-        setUsername('')
-        setEmail('');
-        setPassword('');
-        setConfirmPsw('');
+    cleanFormUser() {
+        this.setState({username:''})
+        this.setState({email:''})
+        this.setState({password:''})
+        this.setState({confirmPsw:''})
     }
 
-    function cleanFormPT() {
-        cleanFormUser();
-        setTipoUser('');
+    cleanFormPT() {
+        this.cleanFormUser();
+        this.setState({tipo:''})
+        this.getUsernameAndEmail()
     }
 
-    async function register() {
+    register = async () => {
+        console.log(this.state.tipo)
+        console.log(this.state.username)
+        var usernameUser = this.state.username
+        console.log(this.state.password)
+        var emailUser = this.state.email
+        console.log(this.state.email)
         var typeUser = '';
 
-        if(tipo == 'Personal Trainer') {
+        if(this.state.tipo === 'Personal Trainer') {
             typeUser = 'PT'
+        } else {
+            if(this.state.tipo === 'Nutrizionista') {
+                typeUser = 'NT'
+            } else {
+                typeUser = 'UT'
+            }
         }
 
-        if(tipo == 'Nutrizionista') {
-            typeUser = 'NT'
-        } else {
-            typeUser = 'UT'
-        }
+        
+
+        console.log(typeUser)
 
         try {
 
-            await FirebaseAutentication.createUserWithEmailAndPassword(email, password);
+            await FirebaseAutentication.createUserWithEmailAndPassword(this.state.email, this.state.password);
             
             var userRef = FirebaseAutentication.currentUser.uid
 
 
             if(typeUser == 'NT' || typeUser == 'PT') {
 
+                console.log(usernameUser)
+                console.log('Appuntamenti e clienti' + typeUser)
+                console.log(emailUser)
+
                 Firestore.collection(
                     'UTENTI'
                 ).doc(
                     userRef
                 ).set({
                     type: typeUser,
-                    username: username,
+                    username: usernameUser,
                     appuntamenti:[],
-                    clienti:[]
+                    clienti:[],
+                    email: emailUser
                 });
 
             } else {
 
+                console.log(usernameUser)
+                console.log('Schede, Misure e Diete' + typeUser)
+                console.log(emailUser)
+
                 Firestore.collection(
                     'UTENTI'
                 ).doc(
                     userRef
                 ).set({
                     type: typeUser,
-                    username: username,
+                    username: usernameUser,
+                    email: emailUser,
                     misure:[],
                     schede:[],
                     diete:[]
@@ -145,101 +206,82 @@ export default function Register(props) {
             console.log(e)
             alert("Register Failed")
         }
-
     }
 
-
-    const validateFormPT = () => {
+    validateFormPT = () => {
         var validate = true;
-        setUsernameError('')
-        setTipoError('');
-        setEmailError('');
-        setPasswordError('');
-        setEqualPswError('');
+        this.setState({usernameError:''})
+        this.setState({emailError:''})
+        this.setState({passwordError:''})
+        this.setState({equalPswError:''})
+        this.setState({tipoError:''})
 
 
-        if (username.length == 0) {
+        if (this.state.username.length == 0) {
             validate = false;
-            setEmailError(MANDATORY_FIELD);
+            this.setState({usernameError: this.state.MANDATORY_FIELD})
         }
 
-        if (email.length == 0 && !email.includes('@')) {
+        if(this.state.arrayUsername.includes(this.state.username)) {
             validate = false;
-            setEmailError(EMAIL_ERROR);
+            this.setState({usernameError: this.state.DUPLICATED_USERNAME_ERROR})
         }
 
-        if (password.length < 6) {
+        if (this.state.email.length == 0 && !this.state.email.includes('@')) {
             validate = false;
-            setPasswordError(MANDATORY_FIELD);
+            this.setState({emailError:this.state.EMAIL_ERROR})
         }
 
-        if (confirmPsw != password) {
-            validate = false;
-            setEqualPswError("Le password non coincidono")
+        if(this.state.arrayEmail.includes(this.state.email)) {
+            validate = false
+            this.setState({emailError:this.state.DUPLICATED_EMAIL_ERROR})
         }
 
-        if (tipo.length == 0) {
+        if (this.state.password.length < 6) {
+            validate = false;
+            this.setState({passwordError:this.state.MANDATORY_FIELD})
+        }
+
+        if (this.state.confirmPsw != this.state.password) {
+            validate = false;
+            this.setState({equalPswError: 'Le password non coincidono'})
+        }
+
+        if (this.state.tipo.length == 0) {
             validate = false;
             setTipoError(MANDATORY_FIELD);
         }
 
-        if(tipo !== 'Nutrizionista' && tipo !== 'Personal Trainer') {
+        if(this.state.tipo !== 'Nutrizionista' && this.state.tipo !== 'Personal Trainer') {
             validate = false;
-            setTipoError(CATEGORY_ERROR);
+            this.setState({tipoError: this.state.CATEGORY_ERROR})
         }
 
         return validate;
     }
 
 
-/*     function getUploadFile(type) {
-        if (type == "DOC") {
-            setfileContentDocument('');
-            setfileNameDocument('');
-        } else {
-            setfileContentCertificate('');
-            setfileNameCertificate('');
-        }
-
-        DocumentPicker.getDocumentAsync({ type: "application/pdf" }).then(
-            (value) => {
-                if (value.type == "success") {
-                    if (type == "DOC") {
-                        setfileNameDocument(value.name);
-                        setfileContentDocument(value.uri);
-                    } else {
-                        setfileNameCertificate(value.name);
-                        setfileContentCertificate(value.uri);
-                    }
-                    console.log(value.uri);
-                }
-
-
-            }
-        );
-    } */
-
-    const handleEmail = () => {
-      const to = ['liguorinovincenzo0@gmail.com'] // string or array of email addresses
-        sendEmail(to, {
-            //cc: ['bazzy@moo.com', 'doooo@daaa.com'], // string or array of email addresses
-            
-            subject: 'Certificati/Documenti per My Gym',
-            body: 'Ciao sono  ' + email + ' questi sono i miei documenti. Saluti'
-
-        }).catch(console.error)
+    handleEmail = () => {
+        const to = ['liguorinovincenzo0@gmail.com'] // string or array of email addresses
+          sendEmail(to, {
+              //cc: ['bazzy@moo.com', 'doooo@daaa.com'], // string or array of email addresses
+              
+              subject: 'Certificati/Documenti per My Gym',
+              body: 'Ciao sono  ' + this.state.email + ' questi sono i miei documenti. Saluti'
+  
+          }).catch(console.error)
     }
 
-    function renderSelectedForm(param) {
+    renderSelectedForm(param) {
         switch (param) {
             case 'No':
                 return (
                     <View name="form_user">
                         <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 200 }]}                     
                         onPress={() => {
-                                if (validateFormUser()) {
-                                    register()
-                                    cleanFormUser()
+                                if (this.validateFormUser()) {
+                                    this.register()
+                                    this.cleanFormUser()
                                 }
                             }}>
                                 <Text style={styles.appButtonText}>Registrati</Text>
@@ -256,24 +298,24 @@ export default function Register(props) {
                                 placeholder='Tipo utente'
                                 autoCapitalize="none"
                                 placeholderTextColor="#666666"
-                                onChangeText={setTipoUser}
-                                value={tipo}
+                                onChangeText={text => {this.setState({ tipo: text })}}
+                                value={this.state.tipo}
                             />
                         </View>
 
-                        <Text style={{ color: 'red' }}>{tipoError}</Text>
+                        <Text style={{ color: 'red' }}>{this.state.tipoError}</Text>
 
                         <Text style={[styles.textLogin, { marginTop: 35 }]}>Per completare la registrazione inviaci i tuoi certificati e il tuo documento d'identità</Text>
                         <TouchableOpacity style={{ marginTop: 15 }}
-                            onPress={() => handleEmail()}>
+                            onPress={() => this.handleEmail()}>
                             <Feather name="mail" color="#05375a" size={40}></Feather>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 50, width: 200 }]}
                             onPress={() => {
-                                if (validateFormPT()) {
-                                    register()
-                                    cleanFormPT()
+                                if (this.validateFormPT()) {
+                                    this.register()
+                                    this.cleanFormPT()
                                 }
                             }}>
                             <Text style={styles.appButtonText}>Registrati</Text>
@@ -283,9 +325,15 @@ export default function Register(props) {
                 return null;
         }
     }
+    
+  
 
-    return (
-        <ScrollView>
+    render() {
+
+       
+        return (
+
+            <ScrollView>
             <View style={styles.container}>
             <Text style={styles.textLogin}>Username</Text>
                 <View style={styles.action}>
@@ -295,12 +343,12 @@ export default function Register(props) {
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={setUsername}
-                        value={username}
+                        onChangeText={text => {this.setState({ username: text })}}
+                        value={this.state.username}
                     />
                 </View>
 
-                <Text style={{ color: 'red' }}>{usernameError}</Text>
+                <Text style={{ color: 'red' }}>{this.state.usernameError}</Text>
 
                 <Text style={styles.textLogin}>E-mail</Text>
                 <View style={styles.action}>
@@ -310,61 +358,60 @@ export default function Register(props) {
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={setEmail}
-                        value={email}
+                        onChangeText={text => {this.setState({ email: text })}}
+                        value={this.state.email}
                     />
                 </View>
 
-                <Text style={{ color: 'red' }}>{emailError}</Text>
-
+                <Text style={{ color: 'red' }}>{this.state.emailError}</Text>
 
                 <Text style={[styles.textLogin, { marginTop: 35 }]}>Password</Text>
                 <View style={styles.action}>
                     <Icon name="lock" color="#05375a" size={20}></Icon>
                     <TextInput
                         placeholder="Password"
-                        secureTextEntry={secureTextEntryPass}
+                        secureTextEntry={this.state.secureTextEntryPass}
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={setPassword}
-                        value={password}
+                        onChangeText={text => {this.setState({ password: text })}}
+                        value={this.state.password}
                     />
 
-                        <TouchableOpacity onPress={() => { updateSecureTextEntryPass() }}>
+                        <TouchableOpacity onPress={() => { this.updateSecureTextEntryPass() }}>
                         <Feather
-                            name={iconNamePass}
+                            name={this.state.iconNamePass}
                             color="grey"
                             size={20}
                         />
                     </TouchableOpacity>
                 </View>
 
-                <Text style={{ color: 'red' }}>{passwordError}</Text>
+                <Text style={{ color: 'red' }}>{this.state.passwordError}</Text>
 
                 <Text style={[styles.textLogin, { marginTop: 35 }]}>Conferma Password</Text>
                 <View style={styles.action}>
                     <Icon name="lock" color="#05375a" size={20}></Icon>
                     <TextInput
                         placeholder="Conferma Password"
-                        secureTextEntry={secureTextEntry}
+                        secureTextEntry={this.state.secureTextEntry}
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={setConfirmPsw}
-                        value={confirmPsw}
+                        onChangeText={text => {this.setState({ confirmPsw: text })}}
+                        value={this.state.confirmPsw}
                     />
 
-                        <TouchableOpacity onPress={() => { updateSecureTextEntry() }}>
+                        <TouchableOpacity onPress={() => { this.updateSecureTextEntry() }}>
                         <Feather
-                            name={iconName}
+                            name={this.state.iconName}
                             color="grey"
                             size={20}
                         />
                     </TouchableOpacity>
                 </View>
 
-                <Text style={{ color: 'red' }}>{equalPswError}</Text>
+                <Text style={{ color: 'red' }}>{this.state.equalPswError}</Text>
 
                 <Text style={[styles.textLogin, { marginTop: 35 }]}>Sei un Nutrizionista o Personal Trainer?</Text>
                 <DropDownPicker
@@ -372,7 +419,7 @@ export default function Register(props) {
                         { label: 'Si', value: 'Si' },
                         { label: 'No', value: 'No' }
                     ]}
-                    defaultValue={selectedValue}
+                    defaultValue={this.state.selectedValue}
                     placeholder="Scegli..."
                     containerStyle={{ height: 60, width: 150 }}
                     style={{ backgroundColor: '#fafafa', marginTop: 10 }}
@@ -380,15 +427,18 @@ export default function Register(props) {
                         justifyContent: 'flex-start'
                     }}
                     dropDownStyle={{ backgroundColor: '#fafafa' }}
-                    onChangeItem={(item) => setSelectedValue(item.value)}
+                    onChangeItem={(item) => {this.setState({ selectedValue: item.value })}}
                 />
 
-                {renderSelectedForm(selectedValue)}
+                {this.renderSelectedForm(this.state.selectedValue)}
 
             </View>
         </ScrollView>
-    );
+        );
+    }
 }
+
+export default Register;
 
 
 const styles = StyleSheet.create({
@@ -418,22 +468,6 @@ const styles = StyleSheet.create({
         marginTop: 4,
         paddingLeft: 15,
         color: '#05375a',
-    },
-    button: {
-        alignItems: 'center',
-        marginTop: 50
-    },
-    signIn: {
-        width: '100%',
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10
-    },
-    textSign: {
-        fontSize: 18,
-        color: '#fff',
-        fontWeight: 'bold'
     },
     appButtonContainer: {
         elevation: 8,
