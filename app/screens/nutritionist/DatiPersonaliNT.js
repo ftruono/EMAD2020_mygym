@@ -8,6 +8,9 @@ import { Firestore } from "../../config/FirebaseConfig";
 import PianiAlimentari from "../nutritionist/PianiAlimentari";
 import BottoneNt from "../nutritionist/BottoneNT";
 import moment from 'moment';
+import BottoneAddWorkOut from '../personaltrainer/BottoneAddWorkOut'
+import AddAppuntamenti from "./AddAppuntamenti";
+import AddClienti from "./AddClienti";
 
 export default class DatiPersonaliNT extends React.Component {
     constructor(props) {
@@ -16,9 +19,12 @@ export default class DatiPersonaliNT extends React.Component {
     }
     state = {
         clienti: [],
-        diete: [],
-        misure: [],
         appuntamenti: [],
+        visibleAddAppuntamenti: false,
+        visibleAddClienti: false,
+        ArrayClienti: [],
+        users: []
+
     }
 
     makeid = (length) => {
@@ -30,7 +36,14 @@ export default class DatiPersonaliNT extends React.Component {
         }
         return result;
     }
-
+    hidenAddAppuntamenti = () => {
+        this.state.visibleAddAppuntamenti = false;
+        this.setState({ visibleAddAppuntamenti: false })
+    }
+    hidenAddClienti = () => {
+        this.state.visibleAddClienti = false;
+        this.setState({ visibleAddClienti: false })
+    }
     //1
     getUser = async () => {
         const nt = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
@@ -38,7 +51,6 @@ export default class DatiPersonaliNT extends React.Component {
         nt.clienti.map((e, i) => {
             this.getClienti(e);
         })
-
         this.setState({ appuntamenti: nt.appuntamenti });
     }
 
@@ -50,66 +62,82 @@ export default class DatiPersonaliNT extends React.Component {
         this.setState({ clienti: this.state.clienti });
     }
 
-    // //3
-    // getDiete = async (idCliente, id) => {
-    //     var valori = (await Firestore.collection('DIETE').doc(id).get()).data()
-
-    //     this.state.diete.push({ 'cliente': idCliente, 'valori': valori })
-    //     var support = this.state.diete;
-    //     this.setState({ diete: support });
-
-    // }
-
-    // getMisure = async (id) => {
-    //     const valori = (await Firestore.collection('MISURAZIONI').doc(id).get()).data();
-
-    //     this.state.misure.push(valori)
-    //     var support = this.state.misure;
-    //     this.setState({ misure: support });
-
-    // }
-
     addCliente = async () => {
-        alert("ciao")
+        this.getUsers();
+        this.state.visibleAddClienti = true;
+        this.setState({ visibleAddClienti: true })
     }
 
-    addValori = async () => {
-        // const today = moment().format("MMM Do YY");
-
-        // if (today === moment(this.state.date, true).format("MMM Do YY")) {
-        // alert("si prega di selezionare una data diversa da quella odierna");
-        // } else if (0 === this.state.arrayPasti.length) {
-        // alert("scrivere prima i pasti")
-        // } else {
-            // da scommentare
-        // let user = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
-        // const key = this.makeid(25);
-
-        // let support = []; support.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1', ora: "prova" })
-        // user.appuntamenti.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1', ora: "prova" });
-
-        // Firestore.collection(
-            // 'UTENTI'
-        // ).doc(
-            // 'PdlCUX3dqLNDqp4gcRD0awdAJ0t2'
-        // ).update({
-            // 'appuntamenti': user.appuntamenti,
-        // }).then(() => {
-            // console.log('User updated!');
-        // });
-
-        // Firestore.collection(
-        // 'DIETE'
-        // ).doc(
-        // key
-        // ).set({
-        // valori: this.state.arrayPasti,
-        // datainizio: new Date(),
-        // datafine: this.state.date
-        // });
-
-
+    addAppuntamenti = async () => {
+        this.getMyClienti();
+        this.state.visibleAddAppuntamenti = true;
+        this.setState({ visibleAddAppuntamenti: true })
     }
+    getUsers = async () => {
+        const idDocument = [];
+
+        const user = await Firestore.collection('UTENTI').get();
+
+        for (let i = 0; i < user.docs.length; i++) {
+            idDocument.push(user.docs[i].id);
+        }
+
+        for (let j = 0; j < idDocument.length; j++) {
+            const user = (await Firestore.collection('UTENTI').doc(idDocument[j]).get()).data();
+            if (user.username != undefined) {
+                this.state.users.push(user.username);
+            }
+        }
+        
+        this.setState({ users: this.state.users });
+        console.log(this.state.users.length);
+    }
+
+    addPianoAlimentare = async () => {
+        const today = moment().format("MMM Do YY");
+
+        if (today === moment(this.state.date, true).format("MMM Do YY")) {
+            alert("si prega di selezionare una data diversa da quella odierna");
+        } else if (0 === this.state.arrayPasti.length) {
+            alert("scrivere prima i pasti")
+        } else {
+
+            let user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
+            const key = this.makeid(25);
+
+            let support = []; support.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' })
+            user.appuntamenti.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' });
+
+            Firestore.collection(
+                'UTENTI'
+            ).doc(
+                'PdlCUX3dqLNDqp4gcRD0awdAJ0t2'
+            ).update({
+                'diete': user.appuntamenti,
+            }).then(() => {
+                console.log('User updated!');
+            });
+
+            Firestore.collection(
+                'DIETE'
+            ).doc(
+                key
+            ).set({
+                valori: this.state.arrayPasti,
+                datainizio: new Date(),
+                datafine: this.state.date
+            });
+        }
+    };
+    getMyClienti = () => {
+
+        this.state.clienti.map((e) => {
+            this.state.ArrayClienti.push({ label: e.username, value: this.makeid(10) })
+        })
+
+        this.setState({ ArrayClienti: this.state.ArrayClienti })
+        console.log(this.state.ArrayClienti)
+    };
 
     renderUser = ({ item }) => (
         <View style={styles.item}>
@@ -127,7 +155,6 @@ export default class DatiPersonaliNT extends React.Component {
             }}>
 
                 <Text style={styles.title}>{this.state.clienti.map((e) => {
-                    console.log(e)
                     if (e.title === item.cliente) return e.username; else return "nome non trovato";
                 })}</Text>
                 <Text> data {new Date(item.giorno.toDate()).toDateString()}</Text>
@@ -161,7 +188,7 @@ export default class DatiPersonaliNT extends React.Component {
                     keyExtractor={(item) => { item.title }}
                     refreshing={this._onRefresh}
                     renderItem={this.renderUser}
-                /> 
+                />
 
                 <Text>I tuoi appuntamenti sono:</Text>
                 <FlatList style={{ margin: 10 }}
@@ -171,7 +198,11 @@ export default class DatiPersonaliNT extends React.Component {
                     refreshing={this._onRefresh}
                     renderItem={this.renderAppuntamenti}
                 />
-                {/* <BottoneNt addCliente={this.addCliente} addValori={this.addValori} />  */}
+
+                <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti} {...this.props} />
+                <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users} {...this.props} />
+
+                <BottoneNt addCliente={this.addCliente} addAppuntamenti={this.addAppuntamenti} />
 
             </SafeAreaView>
         );

@@ -24,6 +24,7 @@ class PianiAlimentari extends Component {
             date: Platform.OS === 'web' ? '' : new Date(),
             mode: 'date',
             show: true,
+            checkDati: false,
         }
         console.log("piani alimentari", this.props)
     }
@@ -37,25 +38,34 @@ class PianiAlimentari extends Component {
         }
         return result;
     }
-
+    //serve
+    checkDati = () => {
+        this.state.arrayPasti.map((e, i) => {
+            console.log(e)
+            if ("" === e.tipo || null === e.valore) {
+                this.state.checkDati = true;
+                this.setState({ checkDati: true })
+            } else {
+                this.state.checkDati = false;
+                this.setState({ checkDati: false })
+            }
+        })
+    }
     //serve
     addValori = async () => {
         const today = moment().format("MMM Do YY");
-
-        if (today === moment(this.state.date, true).format("MMM Do YY")) {
-            alert("si prega di selezionare una data diversa da quella odierna");
+        this.checkDati()
+        if (today >= moment(this.state.date, true).format("MMM Do YY")) {
+            alert("si prega di selezionare una data successiva a quella odierna");
         } else if (0 === this.state.arrayPasti.length) {
             alert("scrivere prima i pasti")
-
-        } else if (this.state.arrayPasti.map((e, i) => {
-            if ("" === e.tipo || null === e.valore)
-                return true;
-            else
-                return false;
-        })) {
+        } else if (this.state.checkDati) {
             alert("si prega di controllare tutti i campi")
+        } else if (this.props.route.params.uid === undefined) {
+            alert("seleziona prima un cliente")
         } else {
-            let user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
+            console.log(this.props.route.params.uid)
+            let user = (await Firestore.collection('UTENTI').doc(this.props.route.params.uid).get()).data();
             const key = this.makeid(25);
             var arraySupport = [];
             arraySupport = user.diete;
@@ -64,7 +74,7 @@ class PianiAlimentari extends Component {
             Firestore.collection(
                 'UTENTI'
             ).doc(
-                '3hVSFBjPhuUUD9RWuNckZKVxpuz1'
+                this.props.route.params.uid
             ).update({
                 'diete': arraySupport,
             }).then(() => {
@@ -79,7 +89,7 @@ class PianiAlimentari extends Component {
                 valori: this.state.arrayPasti,
                 datainizio: new Date(),
                 datafine: this.state.date
-            });
+            }).then(console.log("aggiunti"));
 
 
             this.state.arrayPasti = [];
@@ -89,9 +99,7 @@ class PianiAlimentari extends Component {
             this.setState({ formInput: [] });
 
         }
-
     }
-
 
     //serve
     changeText = (text, id) => {
@@ -99,7 +107,7 @@ class PianiAlimentari extends Component {
         var support = this.state.arrayPasti;
         this.setState({ arrayMisurazioni: support });
     }
-
+    
     //serve
     addTextInput = (key) => {
         let formInput = this.state.formInput;
@@ -156,18 +164,10 @@ class PianiAlimentari extends Component {
         );
         this.setState({ formInput })
     }
-    //non serve
-    addPasto = (text) => {
-        return (
-            <TextInput
-                style={styles.input}
-                onChangeText={this.addPasto}
-                value={text}
-            />
-        )
-    }
+    //serve
     renderItem = () => (
         <View style={{ flexDirection: 'row' }}  >
+            {this.showPage()}
             <Text style={styles.textInput}> L'atleta scelto è {this.props.route.params.username}</Text>
             <Icon
                 raised
@@ -183,7 +183,7 @@ class PianiAlimentari extends Component {
                 }} />
         </View>
     );
-
+    //serve
     onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         this.state.show = false;
@@ -196,14 +196,19 @@ class PianiAlimentari extends Component {
             alert("si prega di selezionare una data diversa da quella odierna");
         }
     };
-
+    //serve
     showMode = (currentMode) => {
         this.setState({ show: true })
         this.setState({ mode: currentMode })
     };
-
-
-
+    //serve
+    showPage = () => {
+        if (this.props.route.params === undefined) {
+            alert("si prega di selezionare un utente");
+            console.log(this.props.route.params);
+            this.props.navigation.navigate("ListaUtenti", { routeProps: this.prop });
+        }
+    }
     render() {
 
         return (
@@ -211,14 +216,14 @@ class PianiAlimentari extends Component {
                 <HeaderComponent {...this.props} title="Piani alimentari" />
 
 
-                {this.props.route.params === undefined ? (<>
-                    { alert("si prega di selezionare un utente")}
-                    { this.props.navigation.navigate("ListaUtenti", { routeProps: this.prop })}
+                {this.props.route.params === undefined || this.props.route.params.username === undefined ? (<>
+                    {this.showPage()}
                 </>) : (<>
                     <View style={styles.container}>
                         <Text style={styles.textHeader}>Crea il piano alimentare</Text>
 
                         <Card.Divider />
+
                         {this.renderItem()}
                         <Card.Divider />
                         {Platform.OS === 'web' && <>
@@ -242,9 +247,6 @@ class PianiAlimentari extends Component {
                                             this.setState({ date: '' })
                                         }
 
-
-                                        console.log(this.state.date)
-
                                     }}
                                     style={styles.textInputStype}
                                 />
@@ -254,9 +256,6 @@ class PianiAlimentari extends Component {
                         {Platform.OS !== 'web' && <>
 
                             <Text>Si prega di inserire una data per lo scadere della dieta</Text>
-
-                            {/* <Button onPress={() => this.showDatepicker()} title="Show date picker!" /> */}
-                            {/* <Button onPress={() => this.showTimepicker()} title="Show time picker!" /> */}
 
                             <DateTimePicker
                                 testID="dateTimePicker"
@@ -295,8 +294,6 @@ class PianiAlimentari extends Component {
                         <Text style={styles.appButtonText}>Salva</Text>
                     </TouchableOpacity></>)
                 }
-
-                {/* <ModalAddPranzi aggiungiValori={this.aggiungiValori}></ModalAddPranzi> */}
             </SafeAreaView>
         )
     }

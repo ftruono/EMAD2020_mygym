@@ -54,7 +54,8 @@ class Statistiche extends React.Component {
 
         // console.log("valori",support)
 
-        this.state.valori=[];
+
+        this.state.valori = [];
         var support = this.state.valori;
         this.setState({ valori: support });
 
@@ -65,11 +66,13 @@ class Statistiche extends React.Component {
                     this.state.valori.push(singleItem.valore)
                     var support = this.state.valori;
                     this.setState({ valori: support });
+                this.state.valori.push(singleItem.valore)
+                // var support = this.state.valori;
+                 this.setState({ valori: this.state.valori });
                 }
 
             })
         })
-        console.log("data", this.state.valori);
     }
 
     render() {
@@ -138,6 +141,7 @@ class Statistiche extends React.Component {
                                 ]
                             }}
                             width={Dimensions.get("window").width-40} // from react-native
+                            width={Dimensions.get("window").width - 40} // from react-native
                             height={220}
                             yAxisLabel=""
                             yAxisSuffix="cm"
@@ -151,6 +155,8 @@ class Statistiche extends React.Component {
                                 labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                                 yAxisLabel:" ",
                                 yAxisSuffix:"cm",
+                                yAxisLabel: " ",
+                                yAxisSuffix: "cm",
                                 style: {
                                     borderRadius: 16
                                 },

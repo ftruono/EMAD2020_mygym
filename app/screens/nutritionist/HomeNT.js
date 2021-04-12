@@ -69,7 +69,7 @@ export default class HomeNT extends React.Component {
 
   renderItem = ({ item }) => (
     <View style={styles.item}>
-      <TouchableOpacity onPress={() => { console.log(item),this.props.navigation.navigate("PianiAlimentari", { atleta: item.title, username: item.username, routeProps: this.props }) }}>
+      <TouchableOpacity onPress={() => { console.log(item),this.props.navigation.navigate("PianiAlimentari", { uid: item.title, username: item.username, routeProps: this.props }) }}>
         <Text style={styles.title}>{item.username}</Text>
       </TouchableOpacity>
 

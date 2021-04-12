@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FAB, Portal, Provider } from 'react-native-paper';
+import AddAppuntamenti from './AddAppuntamenti';
 
 
 const BottoneNt = (props) => {
@@ -17,15 +18,15 @@ const BottoneNt = (props) => {
           icon={open ? 'plus' : 'plus'}
           actions={[
             {
-              icon: 'calendar',
-              label: 'appuntamento',
+              icon: 'account-plus',
+              label: 'cliente',
               onPress: () => props.addCliente(),
             },
             {
-              icon: 'USERbell',
-              label: 'cliente',
-              onPress: () => props.addValori(),
-
+              icon: 'calendar-plus',
+              label: 'appuntamento',
+              onPress: () => props.addAppuntamenti(),
+              
             },
           ]}
           onStateChange={onStateChange}
