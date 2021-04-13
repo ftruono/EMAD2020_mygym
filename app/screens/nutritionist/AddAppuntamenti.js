@@ -15,26 +15,13 @@ const AddAppuntamenti = (props) => {
 
     const [date, setDate] = React.useState(new Date());
     const [ora, setOra] = React.useState(new Date());
+    const [user, setUser] = React.useState('')
+
     const [showData, setShowData] = React.useState(true);
     const [showOra, setShowOra] = React.useState(true);
     // const showModal = () => React.setVisible(true);
     const hideModal = () => { setVisible(false), props.hidenAddAppuntamenti() };
 
-    const [user, setUser] = React.useState('')
-    const onlyNumber = (text) => {
-        let newText = '';
-        let numbers = '0123456789';
-
-        for (var i = 0; i < text.length; i++) {
-            if (numbers.indexOf(text[i]) > -1) {
-                newText = newText + text[i];
-            }
-            else {
-                alert("si prega di inserire solo numeri");
-            }
-        }
-        setMisurazione(newText);
-    }
 
 
     const onChangeOra = (event, selectedDate) => {

@@ -85,12 +85,12 @@ export default class DatiPersonaliNT extends React.Component {
         for (let j = 0; j < idDocument.length; j++) {
             const user = (await Firestore.collection('UTENTI').doc(idDocument[j]).get()).data();
             if (user.username != undefined) {
-                this.state.users.push(user.username);
+                this.state.users.push({user: user.username, uid:idDocument[j] });
             }
         }
         
         this.setState({ users: this.state.users });
-        console.log(this.state.users.length);
+        console.log(this.state.users.lenght);
     }
 
     addPianoAlimentare = async () => {
