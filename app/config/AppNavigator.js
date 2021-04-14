@@ -14,6 +14,7 @@ import LiveCalendar from "../screens/personaltrainer/LiveCalendar";
 import DatiPersonaliUser from "../screens/user/DatiPersonaliUser"
 import ViewSingleDay from '../screens/user/ViewSingleDay'
 import IniziaAllenamento from '../screens/user/IniziaAllenamento'
+import Feather from "react-native-vector-icons/Feather"
 
 import CreateWorkout from "../screens/personaltrainer/CreateWorkout";
 import Dieta from "../screens/nutritionist/Dieta";
@@ -168,10 +169,10 @@ const DrawerNavigator = ({ navigation, route }) => {
                             ),
                         }} />
                         <Drawer.Screen name="Dati_Personali" component={DatiPersonaliNT} options={{
-                            title: 'Dati Personali',
+                            title: 'Appuntamenti',
                             drawerIcon: ({ }) => (
-                                <Octicons
-                                    name="person"
+                                <Feather
+                                    name="book-open"
                                     size={20}
                                     color='black'
                                 />
