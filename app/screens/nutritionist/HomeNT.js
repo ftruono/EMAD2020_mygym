@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   textStyle: {
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     fontSize: 15,
     marginTop: 16,
     marginLeft: 35,

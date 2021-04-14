@@ -101,7 +101,7 @@ export default class ListaUtenti extends React.Component {
 }
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#transparent',
+    backgroundColor: 'transparent',
     padding: 10,
     marginVertical: 5,
     marginHorizontal: 10,
