@@ -12,9 +12,10 @@ import moment from 'moment';
 
 
 
+
+
+
 const { width, height } = Dimensions.get('screen');
-
-
 class PianiAlimentari extends Component {
     constructor(props) {
         super(props);
@@ -117,7 +118,8 @@ class PianiAlimentari extends Component {
 
         arrayPasti.push({ tipo: "", valore: null })
         formInput.push(
-            <SafeAreaView style={{ flexDirection: 'row' }}>
+            <SafeAreaView>
+            <View style={{ flexDirection: 'row' }}>
                 <DropDownPicker
                     items={[
                         { label: 'Colazione', value: 'colazione' },
@@ -137,10 +139,11 @@ class PianiAlimentari extends Component {
                     }}
                 />
                 <TextInput
-                    label="Inserisci la misurazione"
+                    label="Inserisci gli alimenti"
 
                     value={arrayPasti[key].valore}
-                    placeholder="inserisci gli alimenti"
+                    style={styles.textInput}
+                    placeholder="Inserisci gli alimenti"
                     onChangeText={text => {
                         arrayPasti[key].valore = text
                         this.setState({ arrayPasti: arrayPasti })
@@ -148,7 +151,8 @@ class PianiAlimentari extends Component {
                     }}
                 />
                 <Icon
-                    size='24'
+                    size={25}
+                    style={{marginLeft:15, marginTop: 8}}
                     name='trash'
                     type='font-awesome'
                     color='#f50'
@@ -160,6 +164,7 @@ class PianiAlimentari extends Component {
                         this.setState({ formInput: [] });
                     }}
                 />
+                </View>
             </SafeAreaView>
         );
         this.setState({ formInput })
@@ -168,10 +173,10 @@ class PianiAlimentari extends Component {
     renderItem = () => (
         <View style={{ flexDirection: 'row' }}  >
             {this.showPage()}
-            <Text style={styles.textInput}> L'atleta scelto è {this.props.route.params.username}</Text>
+            <Text style={styles.textInput}> Il cliente selezionato è {this.props.route.params.username}</Text>
             <Icon
                 raised
-                size={15}
+                size={10}
                 name='times'
                 type='font-awesome'
                 color='#f50'
@@ -220,7 +225,7 @@ class PianiAlimentari extends Component {
                     {this.showPage()}
                 </>) : (<>
                     <View style={styles.container}>
-                        <Text style={styles.textHeader}>Crea il piano alimentare</Text>
+                        <Text style={styles.titleParagraph}>Crea il piano alimentare</Text>
 
                         <Card.Divider />
 
@@ -248,7 +253,7 @@ class PianiAlimentari extends Component {
                                         }
 
                                     }}
-                                    style={styles.textInputStype}
+                                    style={{marginHorizontal:10, borderColor:'black', borderWidth:2}}
                                 />
                             </View>
                         </>}
@@ -271,7 +276,7 @@ class PianiAlimentari extends Component {
                         </>}
                         <View style={{ marginTop: 15 }}>
                             <Card style={{ flex: 1 }}>
-                                <Card.Title>Set Palestra</Card.Title>
+                                <Card.Title>Piano Alimentare</Card.Title>
                                 <Card.Divider />
                                 <View style={{ flexDirection: 'row' }}>
                                     <View>
@@ -362,21 +367,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 8,
-    },
-
-    // action: {
-    //     flexDirection: 'row',
-    //     marginTop: 55,
-    //     borderBottomWidth: 1,
-    //     borderBottomColor: '#f2f2f2',
-    //     paddingBottom: 7
-    // },
-    // textLogin: {
-    //     color: '#05375a',
-    //     fontSize: 18,
-    //     fontWeight: "bold"
-    // },
-
+    },titleParagraph: {
+      fontSize:30,
+      fontWeight:'bold',
+      textAlign:'left',
+      marginTop:15,
+      marginLeft:15
+  },
     //si riferisce al textinput che si aggiunge col pulsante
     textInput: {
         flex: 1,
@@ -387,69 +384,5 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
 
     },
-    // button: {
-    //     alignItems: 'center',
-    //     marginTop: 50
-    // },
-    // signIn: {
-    //     width: '100%',
-    //     height: 50,
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     borderRadius: 10
-    // },
-    // textSign: {
-    //     fontSize: 18,
-    //     color: '#fff',
-    //     fontWeight: 'bold'
-    // },
-    // appButtonContainer: {
-    //     position: 'absolute',
-    //     zIndex: 11,
-    //     right: 20,
-    //     bottom: 90,
-    //     width: 45,
-    //     height: 45,
-    //     borderRadius: 50,
-    //     backgroundColor: 'black',
-    //     borderColor: 'black',
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    //     elevation: 8,
-    // },
-
-
-    // appButtonText: {
-    //     fontSize: 20,
-    //     color: "#fff",
-    //     fontWeight: "bold",
-    //     alignSelf: "center",
-    //     textTransform: "uppercase"
-    // },
-
-
+    
 });
-{/* <TouchableOpacity style={style.button} onPress={showModal}> */ }
-{/* <Text style={style.appButtonText}>+</Text> */ }
-{/* </TouchableOpacity> */ }
-{/* <Button style={styles.appButtonSave} title='+++' onPress={() => this.addTextInput(this.state.textInput.length)} /> */ }
-
-//forse non serve
-// getValori = async () => {
-//     const user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
-//     console.log("user-> ", user);
-//     const misure1 = (await Firestore.collection('MISURE').doc(user.misurazioni).get()).data();
-//     console.log("misure->", misure);
-//     this.setState({ misure: Object.keys(misure1.misurazioni).map((key) => misure1.misurazioni[key]) });
-
-//     for (let i = 0; i < this.state.misure.length; i++) {
-//         var support = this.state.misure[i];
-//         Firestore.collection('MISURAZIONI').doc(support[0]).get()
-//             .then((misure) => {
-//                 console.log("miurazioni->", misurazioni);
-//                 this.state.arrayPasti.push(misure.data())
-//                 var support = this.state.arrayPasti;
-//                 this.setState({ arrayMisurazioni: support })
-//             });
-//     }
-// }

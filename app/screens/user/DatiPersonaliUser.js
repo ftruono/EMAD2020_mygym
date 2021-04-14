@@ -162,18 +162,7 @@ export default class DatiPersonaliUser extends Component {
                         />
                     </View>
                         <Text style={styles.textHeader}>Dati personali</Text>
-                        {/* <View style={styles.action}>
-                            <Text style={styles.textLogin}>Peso:</Text>
-                            <TextInput
-                                placeholder="Inserisci il peso"
-                                placeholderTextColor="#666666"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-
-                            />
-                            <Text style={{ color: 'blue', textDecorationLine: "underline" }}>Vedi statistiche</Text>
-                        </View> */}
-
+                        
                         <View style={{ marginTop: 15 }}>
                             <Card style={{ flex: 1 }}>
                                 <Card.Title>Set Palestra</Card.Title>
