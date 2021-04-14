@@ -61,15 +61,6 @@ export default class HomeNT extends React.Component {
 
   }
 
-/*   getMisure = async (id) => {
-    const valori = (await Firestore.collection('MISURAZIONI').doc(id).get()).data();
-
-    this.state.misure.push(valori)
-    var support = this.state.misure;
-    this.setState({ misure: support });
-
-  } */
-
   renderItem = ({ item }) => (
     <View style={styles.item}>
       <TouchableOpacity onPress={() => { console.log(item),this.props.navigation.navigate("PianiAlimentari", { uid: item.title, username: item.username, routeProps: this.props }) }}>
@@ -101,12 +92,21 @@ export default class HomeNT extends React.Component {
         <Card.Divider />
 
         <Text style={styles.titleParagraph}>Lista di Appuntamenti Odierni:</Text>
-        <View style={styles.item}>
-          <Text style={styles.title}>• Vincenzo ore 15</Text>
-          <Text style={styles.title}>• Vincenzo ore 15</Text>
-          <Text style={styles.title}>• Vincenzo ore 15</Text>
-          <Text style={styles.title}>• Vincenzo ore 15</Text>
-          <Text style={styles.title}>• Vincenzo ore 15</Text>
+        <View style={styles.action}>
+            <Feather name="book-open" color="#05375a" size={20} style={{marginLeft:20}}></Feather>
+            <Text style={styles.title}> Vincenzo ore 15</Text>
+        </View>
+        <View style={styles.action}>
+            <Feather name="book-open" color="#05375a" size={20} style={{marginLeft:20}}></Feather>
+            <Text style={styles.title}> Nello ore 16</Text>
+        </View>
+        <View style={styles.action}>
+            <Feather name="book-open" color="#05375a" size={20} style={{marginLeft:20}}></Feather>
+            <Text style={styles.title}> Massimo ore 17</Text>
+        </View>
+        <View style={styles.action}>
+            <Feather name="book-open" color="#05375a" size={20} style={{marginLeft:20}}></Feather>
+            <Text style={styles.title}> Mario ore 18</Text>
         </View>
       </SafeAreaView>
     );
@@ -172,5 +172,13 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
         paddingBottom: 7
+  },
+  actionApp: {
+        flexDirection: 'row',
+        marginTop: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f2f2f2',
+        paddingBottom: 7,
+        marginLeft:10
     }
 });
