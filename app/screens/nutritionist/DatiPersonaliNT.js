@@ -1,17 +1,12 @@
-import { firestore } from "firebase";
-import React, { Component, useState, useEffect } from "react";
+import React, { Component } from "react";
 import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
-import { Icon, ThemeConsumer } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent";
-import WorkoutCard from '../../component/WorkoutCard';
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import PianiAlimentari from "../nutritionist/PianiAlimentari";
 import BottoneNt from "../nutritionist/BottoneNT";
-import moment from 'moment';
-import BottoneAddWorkOut from '../personaltrainer/BottoneAddWorkOut'
 import AddAppuntamenti from "./AddAppuntamenti";
-import AddClienti from "./AddClienti";
-import { Paragraph, Dialog, Portal } from 'react-native-paper';
+//import AddClienti from "./AddClienti";
 import Feather from "react-native-vector-icons/Feather"
 
 export default class DatiPersonaliNT extends React.Component {
@@ -23,11 +18,11 @@ export default class DatiPersonaliNT extends React.Component {
         clienti: [],
         appuntamenti: [],
         visibleAddAppuntamenti: false,
-        visibleAddClienti: false,
+        //visibleAddClienti: false,
         visibleDialog: false,
         ArrayClienti: [],
-        users: [],
-        uidClienti: []
+        //users: [],
+        //uidClienti: []
 
     }
     showDialog = () => this.setState({ visibleDialog: true });
@@ -72,11 +67,11 @@ export default class DatiPersonaliNT extends React.Component {
         this.setState({ clienti: this.state.clienti });
     }
 
-    addCliente = async () => {
+    /* addCliente = async () => {
         this.getUsers();
         this.state.visibleAddClienti = true;
         this.setState({ visibleAddClienti: true })
-    }
+    } */
 
     addAppuntamenti = async () => {
         this.getMyClienti();
@@ -116,7 +111,7 @@ export default class DatiPersonaliNT extends React.Component {
         console.log(this.state.ArrayClienti)
     };
 
-    r/* enderUser = ({ item }) => (
+    /* renderUser = ({ item }) => (
         <View style={styles.item}>
             <TouchableOpacity onPress={() => { this.props.navigation.navigate("PianiAlimentari", { atleta: item.title, username: item.username, routeProps: this.props }) }}>
                 <Text style={styles.title}>{item.username}</Text>
@@ -177,7 +172,8 @@ export default class DatiPersonaliNT extends React.Component {
                 {/* <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
                 ArrayUid={this.state.uidClienti}  {...this.props} /> */}
 
-                <BottoneNt addCliente={this.addCliente} addAppuntamenti={this.addAppuntamenti} />
+                {/* <BottoneNt addCliente={this.addCliente} addAppuntamenti={this.addAppuntamenti} /> */}
+                <BottoneNt addAppuntamenti={this.addAppuntamenti} />
 
             </SafeAreaView>
         );

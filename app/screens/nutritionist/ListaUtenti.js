@@ -1,12 +1,11 @@
-import { firestore } from "firebase";
-import React, { Component, useState, useEffect } from "react";
-import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, FlatList, TouchableOpacity } from 'react-native';
-import { Icon, ThemeConsumer } from 'react-native-elements';
+import React, { Component } from "react";
+import { StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 import HeaderComponent from "../../component/HeaderComponent";
-import WorkoutCard from '../../component/WorkoutCard';
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import PianiAlimentari from "./PianiAlimentari";
 import Feather from "react-native-vector-icons/Feather"
+import AddClienti from "./AddClienti";
+import BottoneNtClienti from "../nutritionist/BottoneNtClienti";
 
 export default class ListaUtenti extends React.Component {
   constructor(props) {
@@ -17,7 +16,42 @@ export default class ListaUtenti extends React.Component {
     clienti: [],
     diete: [],
     misure: [],
+    visibleAddClienti: false,
+    users: [],
+    uidClienti: []
   }
+
+  hidenAddClienti = () => {
+        this.state.visibleAddClienti = false;
+        this.setState({ visibleAddClienti: false })
+  }
+
+  addCliente = async () => {
+        this.getUsers();
+        this.state.visibleAddClienti = true;
+        this.setState({ visibleAddClienti: true })
+  }
+
+  getUsers = async () => {
+      const idDocument = [];
+
+        const user = await Firestore.collection('UTENTI').get();
+
+        for (let i = 0; i < user.docs.length; i++) {
+            idDocument.push(user.docs[i].id);
+        }
+
+        for (let j = 0; j < idDocument.length; j++) {
+            const user = (await Firestore.collection('UTENTI').doc(idDocument[j]).get()).data();
+            if (user.username != undefined) {
+                this.state.users.push(user.username);
+                this.state.uidClienti.push(idDocument[j])
+            }
+        }
+        this.setState({ uidClienti: this.state.uidClienti });
+        this.setState({ users: this.state.users });
+  }
+
   makeid = (length) => {
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -84,8 +118,8 @@ export default class ListaUtenti extends React.Component {
 
     return (
 
-      <SafeAreaView style={styles.home}>
-        <HeaderComponent {...this.props} title="Lista utenti" />
+      <SafeAreaView style={styles.container}>
+        <HeaderComponent {...this.props} title="Lista Clienti" />
         <Text style={styles.titleParagraph}>I miei clienti:</Text>
         
         <FlatList style={{ margin: 10 }}
@@ -95,6 +129,11 @@ export default class ListaUtenti extends React.Component {
           refreshing={this._onRefresh}
           renderItem={this.renderItem}
         />
+
+        <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
+                ArrayUid={this.state.uidClienti}  {...this.props} />
+
+        <BottoneNtClienti addCliente={this.addCliente} />
       </SafeAreaView>
     );
   }
@@ -109,14 +148,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
   },
-  textStyle: {
-    backgroundColor: '#fff',
-    fontSize: 15,
-    marginTop: 16,
-    marginLeft: 35,
-    marginRight: 35,
-    textAlign: 'center',
-  },
   titleParagraph: {
       fontSize:20,
       fontWeight:'bold',
@@ -125,10 +156,14 @@ const styles = StyleSheet.create({
       marginLeft:15
   },
   action: {
-        flexDirection: 'row',
-        marginTop: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f2f2f2',
-        paddingBottom: 7
-    }
+      flexDirection: 'row',
+      marginTop: 15,
+      borderBottomWidth: 1,
+      borderBottomColor: '#f2f2f2',
+      paddingBottom: 7
+  },
+  container: {
+      flex: 1,
+      alignItems: 'stretch'
+  }
 });

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { FAB, Portal, Provider } from 'react-native-paper';
-import AddAppuntamenti from './AddAppuntamenti';
+//import AddAppuntamenti from './AddAppuntamenti';
 
 
-const BottoneNt = (props) => {
+const BottoneNtClienti = (props) => {
   const [state, setState] = React.useState({ open: false });
 
   const onStateChange = ({ open }) => setState({ open });
@@ -19,15 +19,15 @@ const BottoneNt = (props) => {
           actions={[
             {
               icon: 'account-plus',
-              label: 'cliente',
+              label: 'Nuovo cliente',
               onPress: () => props.addCliente(),
-            },
+            }/* ,
             {
               icon: 'calendar-plus',
               label: 'appuntamento',
               onPress: () => props.addAppuntamenti(),
               
-            },
+            }, */
           ]}
           onStateChange={onStateChange}
         />
@@ -36,5 +36,5 @@ const BottoneNt = (props) => {
   );
 };
 
-export default BottoneNt;
+export default BottoneNtClienti;
 
