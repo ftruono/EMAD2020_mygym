@@ -1,59 +1,59 @@
 import * as React from 'react';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { Icon } from 'react-native-elements';
-import { Modal, Portal, Text, Button, Provider, TextInput } from 'react-native-paper';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, Portal, Text, Button, Provider, TextInput, Paragraph, Dialog } from 'react-native-paper';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Firestore } from "../../config/FirebaseConfig";
 
 
 
-
 const AddClienti = (props) => {
 
+
     const [visible, setVisible] = React.useState(props.visible);
-    const [check, setCheck] = React.useState(false);
+    const [check, setCheck] = React.useState('-1');
     const [user, setUser] = React.useState('');
 
     const hideModal = () => { setVisible(false), props.hidenAddClienti() };
+    const hideAcceptModal = async () => {
+        let support = [];
+        let nt = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
+        support = nt.clienti;
+        support.push(props.ArrayUid[check]);
+
+        Firestore.collection('UTENTI').
+            doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').
+            update({
+                'clienti': support,
+            }).then(() => {
+                console.log('User updated!');
+            });
+
+        setVisible(false);
+        props.hidenAddClienti();
+        setCheck('-1');
+        setUser('');
+    };
 
 
 
     const checkUser = async () => {
-        console.log(Object.values(props.ArrayClienti))
-        // if (0 > props.ArrayClienti.user.indexOf(user)) {
-            // alert("non trovato")
-        // } else {
-            // setCheck(true);
-        // }
+        const index = props.ArrayClienti.indexOf(user)
+        if (0 > index) {
+            alert("non trovato");
+            setCheck('-1');
+            setUser('');
+        } else {
+            setCheck(index);
+        }
     }
 
-    const addCliente = async () => {
-        let nt = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
-        nt.clienti.push(user)
-        
-        console.log()
-        // Firestore.collection(
-            // 'UTENTI'
-        // ).doc(
-            // 'PdlCUX3dqLNDqp4gcRD0awdAJ0t2'
-        // ).update({
-            // 'diete': user.appuntamenti,
-        // }).then(() => {
-            // console.log('User updated!');
-        // });
-
-
-
-            hideModal()
-
-    }
 
     return (
         <Provider>
             <Portal styel={{ padding: 20, }}>
                 <Modal visible={props.visible} onDismiss={hideModal} contentContainerStyle={style.modal}>
-                    {check === false ? (<>
+                    {check < 0 ? (<>
                         <TextInput
                             label="Scrivi il nome dell'utente"
                             value={user}
@@ -70,11 +70,11 @@ const AddClienti = (props) => {
 
                             }} />
                     </>) : (<>
-                        <Text>Sicuro che vuoi aggiungere {user}?</Text>
-                        <Button icon="check" mode="contained" onPress={() => addCliente()}>
+                        <Text>Sicuro che vuoi aggiungere?</Text>
+                        <Button icon="check" mode="contained" onPress={() => setCheck('-1'), hideAcceptModal}>
                             Accetta
                         </Button>
-                        <Button icon="check" mode="contained" onPress={() => setCheck(false)}>
+                        <Button icon="check" mode="contained" onPress={() => {setCheck('-1'), setUser('')}}>
                             Rifiuta
                         </Button>
                     </>)}

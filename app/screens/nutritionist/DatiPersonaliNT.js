@@ -11,6 +11,7 @@ import moment from 'moment';
 import BottoneAddWorkOut from '../personaltrainer/BottoneAddWorkOut'
 import AddAppuntamenti from "./AddAppuntamenti";
 import AddClienti from "./AddClienti";
+import { Paragraph, Dialog, Portal } from 'react-native-paper';
 
 export default class DatiPersonaliNT extends React.Component {
     constructor(props) {
@@ -22,10 +23,15 @@ export default class DatiPersonaliNT extends React.Component {
         appuntamenti: [],
         visibleAddAppuntamenti: false,
         visibleAddClienti: false,
+        visibleDialog: false,
         ArrayClienti: [],
-        users: []
+        users: [],
+        uidClienti: []
 
     }
+    showDialog = () => this.setState({ visibleDialog: true });
+
+    hideDialog = () => this.setState({ visibleDialog: false });
 
     makeid = (length) => {
         var result = '';
@@ -40,10 +46,12 @@ export default class DatiPersonaliNT extends React.Component {
         this.state.visibleAddAppuntamenti = false;
         this.setState({ visibleAddAppuntamenti: false })
     }
+
     hidenAddClienti = () => {
         this.state.visibleAddClienti = false;
         this.setState({ visibleAddClienti: false })
     }
+
     //1
     getUser = async () => {
         const nt = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
@@ -73,6 +81,7 @@ export default class DatiPersonaliNT extends React.Component {
         this.state.visibleAddAppuntamenti = true;
         this.setState({ visibleAddAppuntamenti: true })
     }
+
     getUsers = async () => {
         const idDocument = [];
 
@@ -85,54 +94,20 @@ export default class DatiPersonaliNT extends React.Component {
         for (let j = 0; j < idDocument.length; j++) {
             const user = (await Firestore.collection('UTENTI').doc(idDocument[j]).get()).data();
             if (user.username != undefined) {
-                this.state.users.push({user: user.username, uid:idDocument[j] });
+                this.state.users.push(user.username);
+                this.state.uidClienti.push(idDocument[j])
             }
         }
-        
+        this.setState({ uidClienti: this.state.uidClienti });
         this.setState({ users: this.state.users });
-        console.log(this.state.users.lenght);
     }
 
-    addPianoAlimentare = async () => {
-        const today = moment().format("MMM Do YY");
+   
 
-        if (today === moment(this.state.date, true).format("MMM Do YY")) {
-            alert("si prega di selezionare una data diversa da quella odierna");
-        } else if (0 === this.state.arrayPasti.length) {
-            alert("scrivere prima i pasti")
-        } else {
-
-            let user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
-            const key = this.makeid(25);
-
-            let support = []; support.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' })
-            user.appuntamenti.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' });
-
-            Firestore.collection(
-                'UTENTI'
-            ).doc(
-                'PdlCUX3dqLNDqp4gcRD0awdAJ0t2'
-            ).update({
-                'diete': user.appuntamenti,
-            }).then(() => {
-                console.log('User updated!');
-            });
-
-            Firestore.collection(
-                'DIETE'
-            ).doc(
-                key
-            ).set({
-                valori: this.state.arrayPasti,
-                datainizio: new Date(),
-                datafine: this.state.date
-            });
-        }
-    };
     getMyClienti = () => {
 
         this.state.clienti.map((e) => {
-            this.state.ArrayClienti.push({ label: e.username, value: this.makeid(10) })
+            this.state.ArrayClienti.push({ label: e.username, value: e.title })
         })
 
         this.setState({ ArrayClienti: this.state.ArrayClienti })
@@ -199,8 +174,10 @@ export default class DatiPersonaliNT extends React.Component {
                     renderItem={this.renderAppuntamenti}
                 />
 
-                <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti} {...this.props} />
-                <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users} {...this.props} />
+                <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti}
+                ArrayUid={this.state.uidClienti} {...this.props} />
+                <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
+                ArrayUid={this.state.uidClienti}  {...this.props} />
 
                 <BottoneNt addCliente={this.addCliente} addAppuntamenti={this.addAppuntamenti} />
 
