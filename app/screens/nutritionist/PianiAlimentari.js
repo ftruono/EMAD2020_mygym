@@ -119,7 +119,60 @@ class PianiAlimentari extends Component {
         arrayPasti.push({ tipo: "", valore: null })
         formInput.push(
             <SafeAreaView>
+            {Platform.OS !== 'web' && <>
             <View style={{ flexDirection: 'row' }}>
+                    <DropDownPicker
+                        items={[
+                            { label: 'Colazione', value: 'colazione' },
+                            { label: 'Pranzo', value: 'pranzo' },
+                            { label: 'Cena', value: 'cena' },
+                            { label: 'Spuntino', value: 'spuntino' },
+                        ]}
+                        defaultValue={this.state.arrayPasti[key].tipo}
+                        containerStyle={{ height: 40,width:150 }}
+                        style={styles.selectStyle}
+                        itemStyle={styles.selectStyle}
+                        dropDownStyle={styles.selectdropDownStyle}
+                        onChangeItem={item => {
+                            arrayPasti[key].tipo = item.value
+                            this.setState({ arrayPasti: arrayPasti })
+
+                        }}
+                    />
+
+                    <TextInput
+                    label="Inserisci gli alimenti"
+
+                    value={arrayPasti[key].valore}
+                    style={{width:120}}
+                    placeholder="Inserisci gli alimenti"
+                    onChangeText={text => {
+                        arrayPasti[key].valore = text
+                        this.setState({ arrayPasti: arrayPasti })
+                        console.log(this.state.arrayPasti)
+                    }}
+                />
+
+                    <Icon
+                    size={25}
+                    style={{marginLeft:15, marginTop: 8}}
+                    name='trash'
+                    type='font-awesome'
+                    color='#f50'
+                    onPress={() => {
+                        this.state.arrayPasti = [];
+                        this.state.formInput = [];
+
+                        this.setState({ arrayPasti: [] });
+                        this.setState({ formInput: [] });
+                    }}
+                />
+
+            </View>
+                </>}
+                
+               {Platform.OS === 'web' && <>
+                <View style={{ flexDirection: 'row' }}>
                 <DropDownPicker
                     items={[
                         { label: 'Colazione', value: 'colazione' },
@@ -165,6 +218,8 @@ class PianiAlimentari extends Component {
                     }}
                 />
                 </View>
+                </>
+    }
             </SafeAreaView>
         );
         this.setState({ formInput })
