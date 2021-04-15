@@ -3,7 +3,7 @@ import { FAB, Portal, Provider } from 'react-native-paper';
 //import AddAppuntamenti from './AddAppuntamenti';
 
 
-const BottoneNtClienti = (props) => {
+const BottoneNTClienti = (props) => {
   const [state, setState] = React.useState({ open: false });
 
   const onStateChange = ({ open }) => setState({ open });
@@ -36,5 +36,5 @@ const BottoneNtClienti = (props) => {
   );
 };
 
-export default BottoneNtClienti;
+export default BottoneNTClienti;
 

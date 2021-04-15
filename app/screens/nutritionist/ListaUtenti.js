@@ -5,7 +5,7 @@ import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import PianiAlimentari from "./PianiAlimentari";
 import Feather from "react-native-vector-icons/Feather"
 import AddClienti from "./AddClienti";
-//import BottoneNtClienti from "../nutritionist/BottoneNtClienti";
+import BottoneNtClienti from "../nutritionist/BottoneNTClienti";
 
 export default class ListaUtenti extends React.Component {
   constructor(props) {
@@ -133,7 +133,7 @@ export default class ListaUtenti extends React.Component {
         <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
                 ArrayUid={this.state.uidClienti}  {...this.props} />
 
-        {/* <BottoneNtClienti addCliente={this.addCliente} /> */}
+        <BottoneNtClienti addCliente={this.addCliente} />
       </SafeAreaView>
     );
   }

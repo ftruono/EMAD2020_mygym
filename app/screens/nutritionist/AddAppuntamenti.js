@@ -191,7 +191,7 @@ const AddAppuntamenti = (props) => {
 
                     <Icon
                         raised
-                        name='delete'
+                        name='times-circle'
                         type='font-awesome'
                         color='#f50'
                         onPress={() => {
