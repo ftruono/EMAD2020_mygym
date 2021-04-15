@@ -4,7 +4,7 @@ import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, F
 import { Icon, ThemeConsumer } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent";
 import WorkoutCard from '../../component/WorkoutCard';
-import { Firestore } from "../../config/FirebaseConfig";
+import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import PianiAlimentari from "../nutritionist/PianiAlimentari";
 import BottoneNt from "../nutritionist/BottoneNT";
 import moment from 'moment';
@@ -12,6 +12,7 @@ import BottoneAddWorkOut from '../personaltrainer/BottoneAddWorkOut'
 import AddAppuntamenti from "./AddAppuntamenti";
 import AddClienti from "./AddClienti";
 import { Paragraph, Dialog, Portal } from 'react-native-paper';
+import Feather from "react-native-vector-icons/Feather"
 
 export default class DatiPersonaliNT extends React.Component {
     constructor(props) {
@@ -47,14 +48,15 @@ export default class DatiPersonaliNT extends React.Component {
         this.setState({ visibleAddAppuntamenti: false })
     }
 
-    hidenAddClienti = () => {
+    /* hidenAddClienti = () => {
         this.state.visibleAddClienti = false;
         this.setState({ visibleAddClienti: false })
-    }
+    } */
 
     //1
     getUser = async () => {
-        const nt = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
+        var uid = FirebaseAutentication.currentUser.uid
+        const nt = (await Firestore.collection('UTENTI').doc(uid).get()).data();
 
         nt.clienti.map((e, i) => {
             this.getClienti(e);
@@ -114,37 +116,33 @@ export default class DatiPersonaliNT extends React.Component {
         console.log(this.state.ArrayClienti)
     };
 
-    renderUser = ({ item }) => (
+    r/* enderUser = ({ item }) => (
         <View style={styles.item}>
             <TouchableOpacity onPress={() => { this.props.navigation.navigate("PianiAlimentari", { atleta: item.title, username: item.username, routeProps: this.props }) }}>
                 <Text style={styles.title}>{item.username}</Text>
             </TouchableOpacity>
 
         </View>
-    );
+    ); */
     renderAppuntamenti = ({ item }) => (
         <View style={styles.item}>
-            <TouchableOpacity onPress={() => {
-                alert("apri un modal con qualcosa s")
-                // this.props.navigation.navigate("PianiAlimentari", { atleta: item.title, username: item.username, routeProps: this.props }) 
-            }}>
-
+            <TouchableOpacity>
+            <View style={styles.action}>
+                <Feather name="book-open" color="#05375a" size={30}></Feather>
                 <Text style={styles.title}>{this.state.clienti.map((e) => {
-                    if (e.title === item.cliente) return e.username; else return "nome non trovato";
+                    if (e.title === item.cliente) return e.username;
                 })}</Text>
-                <Text> data {new Date(item.giorno.toDate()).toDateString()}</Text>
+            </View>
+                <Text>{new Date(item.giorno.toDate()).toDateString()} alle ore {new Date(item.giorno.toDate()).getHours()}</Text>
+            
             </TouchableOpacity>
             <Icon
-                size='24'
+                size='35'
                 name='trash'
+                style={{marginTop:5}}
                 type='font-awesome'
                 color='#f50'
                 onPress={() => {
-                    // this.state.arrayPasti = [];
-                    // this.state.formInput = [];
-
-                    // this.setState({ arrayPasti: [] });
-                    // this.setState({ formInput: [] });
                 }}
             />
         </View>
@@ -153,9 +151,9 @@ export default class DatiPersonaliNT extends React.Component {
 
         return (
             <SafeAreaView style={styles.container}>
-                <HeaderComponent {...this.props} title="Dati personali" />
+                <HeaderComponent {...this.props} title="Appuntamenti" />
 
-                <Text>I tuoi utenti sono </Text>
+             {/*    <Text>I tuoi utenti sono </Text>
 
                 <FlatList style={{ margin: 10 }}
                     data={this.state.clienti}
@@ -163,9 +161,9 @@ export default class DatiPersonaliNT extends React.Component {
                     keyExtractor={(item) => { item.title }}
                     refreshing={this._onRefresh}
                     renderItem={this.renderUser}
-                />
+                /> */}
 
-                <Text>I tuoi appuntamenti sono:</Text>
+                <Text style={styles.titleParagraph}>I tuoi appuntamenti sono:</Text>
                 <FlatList style={{ margin: 10 }}
                     data={this.state.appuntamenti}
                     scrollEnabled={true}
@@ -176,8 +174,8 @@ export default class DatiPersonaliNT extends React.Component {
 
                 <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti}
                 ArrayUid={this.state.uidClienti} {...this.props} />
-                <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
-                ArrayUid={this.state.uidClienti}  {...this.props} />
+                {/* <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
+                ArrayUid={this.state.uidClienti}  {...this.props} /> */}
 
                 <BottoneNt addCliente={this.addCliente} addAppuntamenti={this.addAppuntamenti} />
 
@@ -194,57 +192,28 @@ const styles = StyleSheet.create({
         flex: 1,
         marginBottom: 100,
     },
-    appButtonSave: {
-        position: 'absolute',
-        zIndex: 11,
-        right: 20,
-        bottom: 20,
-        width: 120,
-        height: 45,
-        borderRadius: 30,
-        backgroundColor: '#ff6c16',
-        borderColor: 'black',
-        alignItems: 'center',
-        justifyContent: 'center',
-        elevation: 8,
-    },
     item: {
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
+        backgroundColor: 'transparent',
+        padding: 10,
+        marginVertical: 1,
+        marginHorizontal: 5,
     },
     title: {
-        fontSize: 32,
+        fontSize: 25,
+        marginLeft:10
     },
-    mainBody: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 20,
-    },
-    buttonStyle: {
-        backgroundColor: '#307ecc',
-        borderWidth: 0,
-        color: '#FFFFFF',
-        borderColor: '#307ecc',
-        height: 40,
-        alignItems: 'center',
-        borderRadius: 30,
-        marginLeft: 35,
-        marginRight: 35,
+    action: {
+        flexDirection: 'row',
         marginTop: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f2f2f2',
+        paddingBottom: 7
     },
-    buttonTextStyle: {
-        color: '#FFFFFF',
-        paddingVertical: 10,
-        fontSize: 16,
-    },
-    textStyle: {
-        backgroundColor: '#fff',
-        fontSize: 15,
-        marginTop: 16,
-        marginLeft: 35,
-        marginRight: 35,
-        textAlign: 'center',
-    },
+    titleParagraph: {
+      fontSize:20,
+      fontWeight:'bold',
+      textAlign:'left',
+      marginTop:25,
+      marginLeft:15
+    }
 });

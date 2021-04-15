@@ -15,17 +15,16 @@ const BottoneNt = (props) => {
       <Portal>
         <FAB.Group
           open={open}
-          icon={open ? 'minus' : 'plus'}
-          
+          icon={open ? 'plus' : 'plus'}
           actions={[
-            /* {
+            {
               icon: 'account-plus',
               label: 'cliente',
               onPress: () => props.addCliente(),
-            }, */
+            },
             {
               icon: 'calendar-plus',
-              label: 'Nuovo appuntamento',
+              label: 'appuntamento',
               onPress: () => props.addAppuntamenti(),
               
             },
