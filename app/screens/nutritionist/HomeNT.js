@@ -39,13 +39,12 @@ export default class HomeNT extends React.Component {
     })
 
     nt.appuntamenti.map((e) => {
-
-      if (moment().format("MMM Do YY") > moment(e.giorno, true).format("MMM Do YY")) {
+      if (moment().format("MMM Do YY") === moment(e.giorno.toDate()).format("MMM Do YY")) {
         this.renderItemList(e);
-      } else {
-        console.log("diverso")
+      } else{
+        
+        console.log(this.state.appuntamenti)
       }
-
     })
   }
 
