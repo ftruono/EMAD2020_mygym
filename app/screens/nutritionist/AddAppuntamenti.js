@@ -4,8 +4,7 @@ import { Icon } from 'react-native-elements';
 import { Modal, Portal, Button, Provider, View } from 'react-native-paper';
 import { StyleSheet, TouchableOpacity, Platform, TextInput, Text } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { TextInputMask } from 'react-native-masked-text';
-
+import { Firestore } from "../../config/FirebaseConfig";
 import moment from 'moment';
 
 
@@ -18,54 +17,66 @@ const AddAppuntamenti = (props) => {
     const [hour, setHour] = React.useState(null);
 
     const [date, setDate] = React.useState(new Date());
-    const [ora, setOra] = React.useState(new Date());
     const [user, setUser] = React.useState('');
+    const [uid, setUid] = React.useState('')
+    const [mode, setMode] = React.useState('date');
+    const [show, setShow] = React.useState(false);
 
-
-    const [showData, setShowData] = React.useState(true);
-    const [showOra, setShowOra] = React.useState(true);
     // const showModal = () => React.setVisible(true);
     const hideModal = () => { setVisible(false), props.hidenAddAppuntamenti() };
+    const selectUser = (name) => { console.log(Object.values(name)[1]); setUser(Object.values(name)[1]); setUid(Object.values(name)[1]); }
 
-
-
-    const onChangeOra = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setOra(currentDate);
+    const makeid = (length) => {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
     };
-    const onChangeData = (event, selectedDate) => {
+
+    const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
         setDate(currentDate);
+        setMode('time');
     };
 
-    const addAppuntamentoWeb = () => {
+
+
+
+    const addAppuntamentoWeb = async () => {
         // moment(textData).format("MMM Do YY");
-        const supportDate = textData + "," + hour
+        const supportDate = textData + "," + hour;
         const today = moment(supportDate).format('MMMM Do YYYY,HH:mm');
-        console.log(today)
+
         if (today === 'Invalid date') {
             alert("data non valida si preda di rispettare il formato delineato")
-        } else if (moment().format("MMM Do YY") === moment(date, true).format("MMM Do YY")) {
+        } else if (moment().format("MMM Do YY") > moment(today, true).format("MMM Do YY")) {
             alert("seleziona una data valida");
-        } else if (user === '') {
+        } else if (user === '' || uid === '') {
             alert("seleziona un utente valido");
         } else {
-            ArrayClienti.map((e) => { console.log(e) })
-            // let user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
-            // const key = this.makeid(25);
+            let nt = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
+            let support = [];
+
+            nt.appuntamenti.push({ giorno: new Date(moment(supportDate).format('YYYY-MM-DD hh:mm:ss a')), cliente: uid, id: makeid(10) });
+            support = nt.appuntamenti;
+
 
             // let support = []; support.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' })
             // user.appuntamenti.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' });
 
-            // Firestore.collection(
-            //     'UTENTI'
-            // ).doc(
-            //     'PdlCUX3dqLNDqp4gcRD0awdAJ0t2'
-            // ).update({
-            //     'appuntamenti': user.appuntamenti,
-            // }).then(() => {
-            //     console.log('User updated!');
-            // });
+            Firestore.collection(
+                'UTENTI'
+            ).doc(
+                'PdlCUX3dqLNDqp4gcRD0awdAJ0t2'
+            ).update({
+                'appuntamenti': support,
+            }).then(() => {
+                console.log('User updated!');
+            });
 
 
         }
@@ -75,37 +86,35 @@ const AddAppuntamenti = (props) => {
     const addAppuntamento = async () => {
         // const today = moment().format("MMM Do YY");
 
-        if (moment().format("MMM Do YY") === moment(date, true).format("MMM Do YY")) {
+        if (moment().format("MMM Do YY") > moment(date, true).format("MMM Do YY")) {
             alert("seleziona una data valida");
-        } else if (user === '') {
+        } else if (user === '' || uid === '') {
             alert("seleziona un utente valido");
         } else {
-            ArrayClienti.map((e) => { console.log(e) })
-            // let user = (await Firestore.collection('UTENTI').doc('3hVSFBjPhuUUD9RWuNckZKVxpuz1').get()).data();
-            // const key = this.makeid(25);
+            let nt = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
+            let support = [];
+
+
+            nt.appuntamenti.push({ giorno: date, cliente: uid, id: makeid(10) });
+            support = nt.appuntamenti;
+
 
             // let support = []; support.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' })
-            // user.appuntamenti.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' });
+// user.appuntamenti.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' });
 
-            // Firestore.collection(
-            //     'UTENTI'
-            // ).doc(
-            //     'PdlCUX3dqLNDqp4gcRD0awdAJ0t2'
-            // ).update({
-            //     'appuntamenti': user.appuntamenti,
-            // }).then(() => {
-            //     console.log('User updated!');
-            // });
+            Firestore.collection(
+                'UTENTI'
+            ).doc(
+                'PdlCUX3dqLNDqp4gcRD0awdAJ0t2'
+            ).update({
+                'appuntamenti': support,
+            }).then(() => {
+                console.log('User updated!');
+            });
 
 
         }
     };
-    const selectUser = (name) => {
-        // var support = Object.values(name)[1];
-        console.log(Object.values(name)[1]);
- 
-        setUser(Object.values(name)[1])
-    }
 
     return (
         <Provider>
@@ -127,22 +136,10 @@ const AddAppuntamenti = (props) => {
                         <DateTimePicker
                             testID="dateTimePicker"
                             value={date}
-                            mode={'date'}
-                            dateFormat="longdate"
-                            RNDateTimePicker locale="it-IT"
+                            mode={mode}
                             is24Hour={true}
                             display="default"
-                            onChange={onChangeData}
-                        />
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            value={ora}
-                            mode={'time'}
-                            dateFormat="longdate"
-                            RNDateTimePicker locale="it-IT"
-                            is24Hour={true}
-                            display="default"
-                            onChange={onChangeOra}
+                            onChange={onChange}
                         />
                         <Icon
                             raised
