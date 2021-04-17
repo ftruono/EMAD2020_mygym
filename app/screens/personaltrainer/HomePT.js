@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-elements';
-import Icon from "react-native-vector-icons/Entypo";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import HeaderComponent from "../../component/HeaderComponent";
 import { Firestore,FirebaseAutentication } from "../../config/FirebaseConfig";
 
@@ -13,8 +13,20 @@ class HomePT extends React.Component {
     }
     state = {
         noClienti:false,
+        clienti:[],
+        myClient:[],
         noAppuntamenti:false
     }
+
+    makeid = (length) => {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+      }
 
 
     getUser = async () => {
@@ -23,9 +35,9 @@ class HomePT extends React.Component {
         if(pt.clienti.length === 0) {
             this.setState({noClienti:true})
         } else {
-            //nt.clienti.map((e, i) => {
-              //  this.getClienti(e)
-            //})
+            pt.clienti.map((e, i) => {
+                this.getClienti(e)
+            })
         }
 
         if(pt.appuntamenti.length === 0) {
@@ -39,7 +51,36 @@ class HomePT extends React.Component {
         console.log(pt.clienti);
         
     }
+
+    getClienti = async (idCliente) => {
+        const utente = (await Firestore.collection('UTENTI').doc(idCliente).get()).data();
+    
+        /* utente.diete.map((e, i) => {
+          this.getDiete(idCliente, e);
+        }) */
+        // utente.misure.map((e, i) => {
+        //   this.getMisure(e)
+        // })
+        this.state.clienti.push({ id: this.makeid(5), title: idCliente, username: utente.username })
+
+        this.setState({myClient: this.state.clienti})
+    
+      }
+
+      renderItem = ({ item }) => (
+        <View style={styles.item}>
+          <TouchableOpacity>
+            <View style={styles.action}>
+                <MaterialIcons name="fitness-center" color="#05375a" size={25}></MaterialIcons>
+                <Text style={styles.title}> {item.username}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      );
     render() {
+        if (this.state.myClient.length == 0) {
+            return null
+        } else {
         return (
             <SafeAreaView style={styles.home}>
             <HeaderComponent {...this.props} title="Home PT" />
@@ -53,13 +94,13 @@ class HomePT extends React.Component {
             ):(
                     <>
 
-                        {/* <FlatList style={{ margin: 10 }}
+                        <FlatList style={{ margin: 10 }}
                             data={this.state.clienti}
                             scrollEnabled={true}
                             keyExtractor={(item) => item.id}
                             refreshing={this._onRefresh}
                             renderItem={this.renderItem}
-                        /> */}
+                        />
                             
                     </>
             )}
@@ -77,7 +118,7 @@ class HomePT extends React.Component {
                     <>
 
                         {/* <FlatList style={{ margin: 10 }}
-                            data={this.state.clienti}
+                            data={this.state.myClient}
                             scrollEnabled={true}
                             keyExtractor={(item) => item.id}
                             refreshing={this._onRefresh}
@@ -106,28 +147,78 @@ class HomePT extends React.Component {
           </SafeAreaView>
         );
     }
+    }
 }
 
 export default HomePT;
 
 const styles = StyleSheet.create({
-    home: {
+    item: {
+        backgroundColor: 'transparent',
+        padding: 10,
+        marginVertical: 4,
+        marginHorizontal: 10,
+      },
+      title: {
+        fontSize: 20,
+      },
+      mainBody: {
         flex: 1,
-        alignItems: 'stretch'
-    },
-    titleSubParagraph: {
-        fontSize:15,
-        fontWeight:'bold',
-        textAlign:'center',
-        marginTop:50,
-        paddingBottom:35
-     },
+        justifyContent: 'center',
+        padding: 20,
+      },
+      buttonStyle: {
+        backgroundColor: '#307ecc',
+        borderWidth: 0,
+        color: '#FFFFFF',
+        borderColor: '#307ecc',
+        height: 40,
+        alignItems: 'center',
+        borderRadius: 30,
+        marginLeft: 35,
+        marginRight: 35,
+        marginTop: 15,
+      },
+      buttonTextStyle: {
+        color: '#FFFFFF',
+        paddingVertical: 10,
+        fontSize: 16,
+      },
+      textStyle: {
+        backgroundColor: 'transparent',
+        fontSize: 15,
+        marginTop: 16,
+        marginLeft: 35,
+        marginRight: 35,
+        textAlign: 'center',
+      },
       titleParagraph: {
           fontSize:20,
           fontWeight:'bold',
           textAlign:'left',
           marginTop:25,
           marginLeft:15
-      }
+      },
+      titleSubParagraph: {
+          fontSize:15,
+          fontWeight:'bold',
+          textAlign:'center',
+          marginTop:50,
+       },
+      action: {
+            flexDirection: 'row',
+            marginTop: 15,
+            borderBottomWidth: 1,
+            borderBottomColor: '#f2f2f2',
+            paddingBottom: 7
+      },
+      actionApp: {
+            flexDirection: 'row',
+            marginTop: 15,
+            borderBottomWidth: 1,
+            borderBottomColor: '#f2f2f2',
+            paddingBottom: 7,
+            marginLeft:10
+        }
 
 });
