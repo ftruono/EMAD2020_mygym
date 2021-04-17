@@ -222,6 +222,16 @@ const DrawerNavigator = ({ navigation, route }) => {
                                 />
                             ),
                         }} />
+                        <Drawer.Screen name="Appuntamenti" component={ListaUtentiPT} options={{
+                            title: 'Appuntamenti',
+                            drawerIcon: ({ }) => (
+                                <Feather
+                                    name="book-open"
+                                    size={20}
+                                    color='black'
+                                />
+                            ),
+                        }} />
                         <Drawer.Screen name="Calendario_Live" component={LiveCalendar} options={{
                             title: 'Calendario Live',
                             drawerIcon: ({ }) => (
