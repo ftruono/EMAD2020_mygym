@@ -6,7 +6,8 @@ import Feather from "react-native-vector-icons/Feather"
 
 import HeaderComponent from "../../component/HeaderComponent";
 
-import { Firestore,FirebaseAutentication } from "../../config/FirebaseConfig";
+import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
+import moment from "moment";
 
 
 export default class HomeNT extends React.Component {
@@ -17,7 +18,8 @@ export default class HomeNT extends React.Component {
   state = {
     clienti: [],
     diete: [],
-    misure: [],
+    appuntamenti: [],
+    itemList: [],
   }
   makeid = (length) => {
     var result = '';
@@ -35,6 +37,16 @@ export default class HomeNT extends React.Component {
     nt.clienti.map((e, i) => {
       this.getClienti(e)
     })
+
+    nt.appuntamenti.map((e) => {
+
+      if (moment().format("MMM Do YY") > moment(e.giorno, true).format("MMM Do YY")) {
+        this.renderItemList(e);
+      } else {
+        console.log("diverso")
+      }
+
+    })
   }
 
   //2
@@ -44,9 +56,6 @@ export default class HomeNT extends React.Component {
     utente.diete.map((e, i) => {
       this.getDiete(idCliente, e);
     })
-    // utente.misure.map((e, i) => {
-    //   this.getMisure(e)
-    // })
     this.state.clienti.push({ id: this.makeid(5), title: idCliente, username: utente.username })
 
   }
@@ -60,13 +69,22 @@ export default class HomeNT extends React.Component {
     this.setState({ diete: support });
 
   }
+  renderItemList = (appuntamento) => {
 
+    this.state.itemList.push(
+      < View style={styles.action} >
+        <Feather name="book-open" color="#05375a" size={20} style={{ marginLeft: 20 }}></Feather>
+
+        <Text style={styles.title}> {appuntamento.nome} alle ore {new Date(appuntamento.giorno.toDate()).getHours()}</Text>
+      </View >
+    )
+  }
   renderItem = ({ item }) => (
     <View style={styles.item}>
-      <TouchableOpacity onPress={() => { console.log(item),this.props.navigation.navigate("PianiAlimentari", { uid: item.title, username: item.username, routeProps: this.props }) }}>
+      <TouchableOpacity onPress={() => { console.log(item), this.props.navigation.navigate("PianiAlimentari", { uid: item.title, username: item.username, routeProps: this.props }) }}>
         <View style={styles.action}>
-            <Feather name="user" color="#05375a" size={20}></Feather>
-            <Text style={styles.title}> {item.username}</Text>
+          <Feather name="user" color="#05375a" size={20}></Feather>
+          <Text style={styles.title}> {item.username}</Text>
         </View>
       </TouchableOpacity>
 
@@ -92,22 +110,15 @@ export default class HomeNT extends React.Component {
         <Card.Divider />
 
         <Text style={styles.titleParagraph}>Lista di Appuntamenti Odierni:</Text>
-        <View style={styles.action}>
-            <Feather name="book-open" color="#05375a" size={20} style={{marginLeft:20}}></Feather>
-            <Text style={styles.title}> Vincenzo ore 15</Text>
+        <View>
+          {this.state.appuntamenti.length === 0 && <>
+            <Text style={styles.titleParagraph}>Non hai appuntamenti per oggi</Text>
+          </>}
+          {this.state.itemList.map((value, index) => {
+            return value
+          })}
         </View>
-        <View style={styles.action}>
-            <Feather name="book-open" color="#05375a" size={20} style={{marginLeft:20}}></Feather>
-            <Text style={styles.title}> Nello ore 16</Text>
-        </View>
-        <View style={styles.action}>
-            <Feather name="book-open" color="#05375a" size={20} style={{marginLeft:20}}></Feather>
-            <Text style={styles.title}> Massimo ore 17</Text>
-        </View>
-        <View style={styles.action}>
-            <Feather name="book-open" color="#05375a" size={20} style={{marginLeft:20}}></Feather>
-            <Text style={styles.title}> Mario ore 18</Text>
-        </View>
+
       </SafeAreaView>
     );
   }
@@ -153,32 +164,32 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   titleParagraph: {
-      fontSize:20,
-      fontWeight:'bold',
-      textAlign:'left',
-      marginTop:25,
-      marginLeft:15
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    marginTop: 25,
+    marginLeft: 15
   },
   titleSubParagraph: {
-      fontSize:20,
-      fontWeight:'bold',
-      textAlign:'left',
-      marginTop:50,
-      marginLeft:15
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    marginTop: 50,
+    marginLeft: 15
   },
   action: {
-        flexDirection: 'row',
-        marginTop: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f2f2f2',
-        paddingBottom: 7
+    flexDirection: 'row',
+    marginTop: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f2f2f2',
+    paddingBottom: 7
   },
   actionApp: {
-        flexDirection: 'row',
-        marginTop: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f2f2f2',
-        paddingBottom: 7,
-        marginLeft:10
-    }
+    flexDirection: 'row',
+    marginTop: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f2f2f2',
+    paddingBottom: 7,
+    marginLeft: 10
+  }
 });
