@@ -23,6 +23,7 @@ import Statistiche from "../screens/user/Statistiche";
 import ListaUtenti from "../screens/nutritionist/ListaUtenti";
 import DatiPersonaliNT from "../screens/nutritionist/DatiPersonaliNT";
 import ListaUtentiPT from "../screens/personaltrainer/ListaUtentiPT";
+import AppuntamentiPT from "../screens/personaltrainer/AppuntamentiPT";
 
 const Drawer = createDrawerNavigator();
 
@@ -222,7 +223,7 @@ const DrawerNavigator = ({ navigation, route }) => {
                                 />
                             ),
                         }} />
-                        <Drawer.Screen name="Appuntamenti" component={ListaUtentiPT} options={{
+                        <Drawer.Screen name="Appuntamenti" component={AppuntamentiPT} options={{
                             title: 'Appuntamenti',
                             drawerIcon: ({ }) => (
                                 <Feather
