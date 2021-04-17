@@ -169,7 +169,7 @@ const DrawerNavigator = ({ navigation, route }) => {
                                 />
                             ),
                         }} />
-                        <Drawer.Screen name="Dati_Personali" component={DatiPersonaliNT} options={{
+                        <Drawer.Screen name="Appuntamenti" component={DatiPersonaliNT} options={{
                             title: 'Appuntamenti',
                             drawerIcon: ({ }) => (
                                 <Feather
