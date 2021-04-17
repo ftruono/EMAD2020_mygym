@@ -5,6 +5,8 @@ import { RefreshControl, SafeAreaView } from 'react-navigation';
 import HeaderComponent from "../../component/HeaderComponent";
 import BottoneAddWorkOut from './BottoneAddWorkOut';
 import Scheda from './Scheda';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 
 const { width, height } = Dimensions.get('screen');
 var selectDay;
@@ -12,8 +14,12 @@ class CreateWorkout extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            clienti:[],
             schedaArray: [],
+            arrayClienti:[],
+            userSelected:''
         };
+        this.getUser();
     }
 
     addDay = () => {
@@ -58,11 +64,52 @@ class CreateWorkout extends Component {
         console.log(selectDay);
     }
 
+    getUser = async () => {
+        var uid = FirebaseAutentication.currentUser.uid
+        const pt = (await Firestore.collection('UTENTI').doc(uid).get()).data();
+
+        if(pt.clienti.length === 0) {
+            this.setState({arrayClienti:[]})
+        } else {
+            pt.clienti.map((e, i) => {
+              this.getClienti(e)
+            })
+        }
+    }
+
+    getClienti = async (idCliente) => {
+        const utente = (await Firestore.collection('UTENTI').doc(idCliente).get()).data();
+
+        this.state.clienti.push({ title: idCliente, username: utente.username });
+        this.setState({ clienti: this.state.clienti });
+
+        this.state.clienti.map((e) => {
+            this.state.arrayClienti.push({ label: e.username, value: e.title })
+        })
+
+        this.setState({ arrayClienti: this.state.arrayClienti })
+        console.log(this.state.arrayClienti)
+    }
+
     render() {
         const { schedaArray } = this.state;
         return (
             <SafeAreaView style={styles.container}>
                 <HeaderComponent {...this.props} title="Schede allenamento" />
+
+                <Text style={styles.titleParagraph}>Scegli l'alteta:</Text>
+                <DropDownPicker
+                        items={this.state.arrayClienti}
+                        defaultValue={this.state.userSelected}
+                        placeholder="Scegli..."
+                        containerStyle={{ height: 60, width: 150 }}
+                        style={{ backgroundColor: '#fafafa', marginTop: 10, marginLeft:15 }}
+                        itemStyle={{
+                            justifyContent: 'flex-start'
+                        }}
+                        dropDownStyle={{ backgroundColor: '#fafafa',marginLeft:15 }}
+                        onChangeItem={item => this.setState({userSelected: item})}
+                />
 
                 <FlatList style={{ margin: 10}}
                     data={schedaArray}
@@ -74,8 +121,7 @@ class CreateWorkout extends Component {
                         <Scheda scheda={schedaArray[index]} aggiungiValori={this.aggiungiValori} daySelected={this.daySelected} />
                     )}
                 />
-
-                <BottoneAddWorkOut addDay={this.addDay} addEsercizio={this.addEsercizio} exitDay={selectDay} />
+                <BottoneAddWorkOut addDay={this.addDay} addEsercizio={this.addEsercizio} exitDay={selectDay} atletaSelezionato={this.state.userSelected}/>
             </SafeAreaView>
         );
     }
@@ -91,5 +137,12 @@ const styles = StyleSheet.create({
         flex: 1,
         marginBottom: 100,
     },
+    titleParagraph: {
+        fontSize:20,
+        fontWeight:'bold',
+        textAlign:'left',
+        marginTop:25,
+        marginLeft:15
+    }
 })
 

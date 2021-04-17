@@ -19,12 +19,12 @@ const BottoneAddWorkOut = (props) => {
               {
                 icon: 'email',
                 label: 'esercizio',
-                onPress: () => props.exitDay!=null? props.addEsercizio(): alert("aggiungi un giorno") ,
+                onPress: () => props.exitDay!=null? props.addEsercizio() : alert("aggiungi un giorno") ,
               },
               {
                 icon: 'bell',
                 label: 'day',
-                onPress: () =>props.addDay(),
+                onPress: () =>props.atletaSelezionato != '' ? props.addDay() : alert("Devi prima selezionare un'atleta"),
                 
               },
             ]}

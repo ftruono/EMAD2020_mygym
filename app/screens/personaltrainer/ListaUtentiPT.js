@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import { StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 import HeaderComponent from "../../component/HeaderComponent";
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
-import Feather from "react-native-vector-icons/Feather"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import AddClienti from "../nutritionist/AddClienti"
 import BottoneNtClienti from "../nutritionist/BottoneNTClienti"
-
 export default class ListaUtentiPT extends React.Component {
   constructor(props) {
     super(props);
@@ -13,6 +12,7 @@ export default class ListaUtentiPT extends React.Component {
   }
   state = {
     noClienti:false,
+    myClient:[],
     clienti: [],
     diete: [],
     misure: [],
@@ -61,6 +61,10 @@ export default class ListaUtentiPT extends React.Component {
     }
     return result;
   }
+
+  refreshPage = async () => {
+    console.log(window.location)
+  };
   //1
   getUser = async () => {
     var uid = FirebaseAutentication.currentUser.uid
@@ -68,9 +72,9 @@ export default class ListaUtentiPT extends React.Component {
     if(pt.clienti.length === 0) {
         this.setState({noClienti:true})
     } else {
-        //nt.clienti.map((e, i) => {
-          //  this.getClienti(e)
-        //})
+        pt.clienti.map((e, i) => {
+          this.getClienti(e)
+        })
     }
   }
 
@@ -85,6 +89,9 @@ export default class ListaUtentiPT extends React.Component {
       this.getMisure(e)
     })
     this.state.clienti.push({ id: this.makeid(5), title: idCliente, username: utente.username })
+
+    
+    this.setState({myClient: this.state.clienti})
 
   }
 
@@ -109,23 +116,30 @@ export default class ListaUtentiPT extends React.Component {
 
   renderItem = ({ item }) => (
     <View style={styles.item}>
-      <TouchableOpacity onPress={() => { this.props.navigation.navigate("PianiAlimentari", { atleta: item.title, username: item.username, routeProps: this.props }) }}>
+      <TouchableOpacity>
         <View style={styles.action}>
-            <Feather name="user" color="#05375a" size={20}></Feather>
+            <MaterialIcons name="fitness-center" color="#05375a" size={25}></MaterialIcons>
             <Text style={styles.title}> {item.username}</Text>
         </View>
       </TouchableOpacity>
-
     </View>
   );
   render() {
-
+    if (this.state.myClient.length == 0) {
+        return null
+    } else {
     return (
 
       <SafeAreaView style={styles.container}>
         <HeaderComponent {...this.props} title="Lista Clienti PT" />
-        <Text style={styles.titleParagraph}>I miei clienti:</Text>
-
+        <View style={{flexDirection:'row'}}>
+            <Text style={styles.titleParagraph}>I miei clienti:</Text>
+            <TouchableOpacity onPress={() => this.refreshPage()} >
+                <MaterialIcons name="refresh" color="#05375a" size={25} style={{marginTop:25, marginLeft:30}}></MaterialIcons>
+            </TouchableOpacity>
+        </View>
+        
+ 
         {this.state.noClienti ? (
                     <>
                         <Text style={styles.titleSubParagraph}> Non hai ancora clienti</Text>
@@ -138,25 +152,27 @@ export default class ListaUtentiPT extends React.Component {
 
                     </>
             ):(
+                    
                     <>
+                        <FlatList style={{ margin: 10 }}
+                            data={this.state.myClient}
+                            scrollEnabled={true}
+                            keyExtractor={(item) => item.id}
+                            refreshing={this._onRefresh}
+                            renderItem={this.renderItem}
+                        />
 
-                        {/*         <FlatList style={{ margin: 10 }}
-                    data={this.state.clienti}
-          scrollEnabled={true}
-          keyExtractor={(item) => item.id}
-          refreshing={this._onRefresh}
-          renderItem={this.renderItem}
-        />
+                        <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
+                                ArrayUid={this.state.uidClienti}  {...this.props} />
 
-        <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
-                ArrayUid={this.state.uidClienti}  {...this.props} />
-
-        <BottoneNtClienti addCliente={this.addCliente} /> */}
+                        <BottoneNtClienti addCliente={this.addCliente} />
                             
-                    </>
+                </>
             )}
+            
       </SafeAreaView>
     );
+    }
   }
 }
 const styles = StyleSheet.create({
