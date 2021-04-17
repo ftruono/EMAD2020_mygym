@@ -40,6 +40,7 @@ export default class HomeNT extends React.Component {
 
     nt.appuntamenti.map((e) => {
       if (moment().format("MMM Do YY") === moment(e.giorno.toDate()).format("MMM Do YY")) {
+        this.setState({appuntamenti:Object.values(e)})
         this.renderItemList(e);
       } else{
         
@@ -111,7 +112,7 @@ export default class HomeNT extends React.Component {
         <Text style={styles.titleParagraph}>Lista di Appuntamenti Odierni:</Text>
         <View>
           {this.state.appuntamenti.length === 0 && <>
-            <Text style={styles.titleParagraph}>Non hai appuntamenti per oggi</Text>
+            <Text style={styles.titleSubParagraph}>Non hai appuntamenti per oggi</Text>
           </>}
           {this.state.itemList.map((value, index) => {
             return value

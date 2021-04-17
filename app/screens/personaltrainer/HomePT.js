@@ -4,6 +4,8 @@ import { Card } from 'react-native-elements';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import HeaderComponent from "../../component/HeaderComponent";
 import { Firestore,FirebaseAutentication } from "../../config/FirebaseConfig";
+import moment from "moment";
+import Feather from "react-native-vector-icons/Feather"
 
 class HomePT extends React.Component {
 
@@ -15,7 +17,9 @@ class HomePT extends React.Component {
         noClienti:false,
         clienti:[],
         myClient:[],
-        noAppuntamenti:false
+        noAppuntamenti:false,
+        itemList: [],
+        appuntamenti: []
     }
 
     makeid = (length) => {
@@ -43,9 +47,14 @@ class HomePT extends React.Component {
         if(pt.appuntamenti.length === 0) {
             this.setState({noAppuntamenti:true})
         } else {
-            //nt.clienti.map((e, i) => {
-              //  this.getClienti(e)
-            //})
+          pt.appuntamenti.map((e) => {
+            if (moment().format("MMM Do YY") === moment(e.giorno.toDate()).format("MMM Do YY")) {
+              this.setState({appuntamenti:Object.values(e)})
+              this.renderTodayAppunt(e);
+            } else{
+              console.log(this.state.appuntamenti)
+            }
+          })
         }
 
         console.log(pt.clienti);
@@ -77,6 +86,16 @@ class HomePT extends React.Component {
           </TouchableOpacity>
         </View>
       );
+
+      renderTodayAppunt = (appuntamento) => {
+
+        this.state.itemList.push(
+          < View style={styles.action} >
+            <Feather name="book-open" color="#05375a" size={20} style={{ marginLeft: 20 }}></Feather>
+            <Text style={styles.title}> {appuntamento.nome} alle ore {new Date(appuntamento.giorno.toDate()).getHours()}</Text>
+          </View >
+        )
+      }
     render() {
         if (this.state.myClient.length == 0) {
             return null
@@ -117,33 +136,20 @@ class HomePT extends React.Component {
             ):(
                     <>
 
-                        {/* <FlatList style={{ margin: 10 }}
-                            data={this.state.myClient}
-                            scrollEnabled={true}
-                            keyExtractor={(item) => item.id}
-                            refreshing={this._onRefresh}
-                            renderItem={this.renderItem}
-                        /> */}
+                        <View>
+                            {this.state.appuntamenti.length === 0 && 
+                              <>
+                                <Text style={styles.titleSubParagraph}>Non hai appuntamenti per oggi</Text>
+                              </>
+                            }
+                            
+                            {this.state.itemList.map((value, index) => {
+                                    return value
+                            })}
+                        </View>
                             
                     </>
             )}
-            {/* 
-            <View style={styles.action}>
-                <Feather name="book-open" color="#05375a" size={20} style={{marginLeft:20}}></Feather>
-                <Text style={styles.title}> Vincenzo ore 15</Text>
-            </View>
-            <View style={styles.action}>
-                <Feather name="book-open" color="#05375a" size={20} style={{marginLeft:20}}></Feather>
-                <Text style={styles.title}> Nello ore 16</Text>
-            </View>
-            <View style={styles.action}>
-                <Feather name="book-open" color="#05375a" size={20} style={{marginLeft:20}}></Feather>
-                <Text style={styles.title}> Massimo ore 17</Text>
-            </View>
-            <View style={styles.action}>
-                <Feather name="book-open" color="#05375a" size={20} style={{marginLeft:20}}></Feather>
-                <Text style={styles.title}> Mario ore 18</Text>
-            </View> */}
           </SafeAreaView>
         );
     }
