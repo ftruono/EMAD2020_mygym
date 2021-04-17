@@ -1,17 +1,18 @@
-import React from "react";
+import React, { Component } from "react";
 import { StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 import HeaderComponent from "../../component/HeaderComponent";
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import Feather from "react-native-vector-icons/Feather"
-import AddClienti from "./AddClienti";
-import BottoneNtClienti from "../nutritionist/BottoneNTClienti";
+import AddClienti from "../nutritionist/AddClienti"
+import BottoneNtClienti from "../nutritionist/BottoneNTClienti"
 
-export default class ListaUtenti extends React.Component {
+export default class ListaUtentiPT extends React.Component {
   constructor(props) {
     super(props);
     this.getUser()
   }
   state = {
+    noClienti:false,
     clienti: [],
     diete: [],
     misure: [],
@@ -63,10 +64,14 @@ export default class ListaUtenti extends React.Component {
   //1
   getUser = async () => {
     var uid = FirebaseAutentication.currentUser.uid
-    const nt = (await Firestore.collection('UTENTI').doc(uid).get()).data();
-    nt.clienti.map((e, i) => {
-      this.getClienti(e)
-    })
+    const pt = (await Firestore.collection('UTENTI').doc(uid).get()).data();
+    if(pt.clienti.length === 0) {
+        this.setState({noClienti:true})
+    } else {
+        //nt.clienti.map((e, i) => {
+          //  this.getClienti(e)
+        //})
+    }
   }
 
   //2
@@ -118,11 +123,25 @@ export default class ListaUtenti extends React.Component {
     return (
 
       <SafeAreaView style={styles.container}>
-        <HeaderComponent {...this.props} title="Lista Clienti" />
+        <HeaderComponent {...this.props} title="Lista Clienti PT" />
         <Text style={styles.titleParagraph}>I miei clienti:</Text>
-        
-        <FlatList style={{ margin: 10 }}
-          data={this.state.clienti}
+
+        {this.state.noClienti ? (
+                    <>
+                        <Text style={styles.titleSubParagraph}> Non hai ancora clienti</Text>
+                        <Text style={styles.titleThParagraph}> aggiungine dei nuovi con il bottone in fondo alla pagina</Text>
+
+                        <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
+                                ArrayUid={this.state.uidClienti}  {...this.props} />
+
+                        <BottoneNtClienti addCliente={this.addCliente} />
+
+                    </>
+            ):(
+                    <>
+
+                        {/*         <FlatList style={{ margin: 10 }}
+                    data={this.state.clienti}
           scrollEnabled={true}
           keyExtractor={(item) => item.id}
           refreshing={this._onRefresh}
@@ -132,7 +151,10 @@ export default class ListaUtenti extends React.Component {
         <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
                 ArrayUid={this.state.uidClienti}  {...this.props} />
 
-        <BottoneNtClienti addCliente={this.addCliente} />
+        <BottoneNtClienti addCliente={this.addCliente} /> */}
+                            
+                    </>
+            )}
       </SafeAreaView>
     );
   }
@@ -154,15 +176,27 @@ const styles = StyleSheet.create({
       marginTop:25,
       marginLeft:15
   },
-  action: {
+action: {
       flexDirection: 'row',
       marginTop: 15,
       borderBottomWidth: 1,
       borderBottomColor: '#f2f2f2',
       paddingBottom: 7
-  },
-  container: {
+},
+container: {
       flex: 1,
       alignItems: 'stretch'
-  }
+},
+titleSubParagraph: {
+    fontSize:15,
+    fontWeight:'bold',
+    textAlign:'center',
+    marginTop:50,
+ },
+titleThParagraph: {
+     fontSize:15,
+     fontWeight:'bold',
+     textAlign:'center',
+     marginTop:5
+}
 });

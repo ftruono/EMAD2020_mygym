@@ -19,7 +19,7 @@ const BottoneNTClienti = (props) => {
           actions={[
             {
               icon: 'account-plus',
-              label: 'Nuovo cliente',
+              label: 'Aggiungi cliente',
               onPress: () => props.addCliente(),
             }/* ,
             {

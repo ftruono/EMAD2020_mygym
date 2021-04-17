@@ -22,6 +22,7 @@ import { AuthContext } from "./AutenticationConfig";
 import Statistiche from "../screens/user/Statistiche";
 import ListaUtenti from "../screens/nutritionist/ListaUtenti";
 import DatiPersonaliNT from "../screens/nutritionist/DatiPersonaliNT";
+import ListaUtentiPT from "../screens/personaltrainer/ListaUtentiPT";
 
 const Drawer = createDrawerNavigator();
 
@@ -211,7 +212,7 @@ const DrawerNavigator = ({ navigation, route }) => {
                                 />
                             ),
                         }} />
-                        <Drawer.Screen name="Vedi Clienti" component={HomePT} options={{
+                        <Drawer.Screen name="Vedi Clienti" component={ListaUtentiPT} options={{
                             title: 'Vedi Clienti',
                             drawerIcon: ({ }) => (
                                 <FontAwesome

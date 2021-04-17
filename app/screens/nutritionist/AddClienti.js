@@ -3,7 +3,7 @@ import { Icon } from 'react-native-elements';
 import { Modal, Portal, Text, Button, Provider, TextInput, Paragraph, Dialog } from 'react-native-paper';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Firestore } from "../../config/FirebaseConfig";
+import { Firestore,FirebaseAutentication } from "../../config/FirebaseConfig";
 
 
 
@@ -17,12 +17,13 @@ const AddClienti = (props) => {
     const hideModal = () => { setVisible(false), props.hidenAddClienti() };
     const hideAcceptModal = async () => {
         let support = [];
-        let nt = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
+        var uid = FirebaseAutentication.currentUser.uid
+        let nt = (await Firestore.collection('UTENTI').doc(uid).get()).data();
         support = nt.clienti;
         support.push(props.ArrayUid[check]);
 
         Firestore.collection('UTENTI').
-            doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').
+            doc(uid).
             update({
                 'clienti': support,
             }).then(() => {
