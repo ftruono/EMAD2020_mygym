@@ -64,6 +64,12 @@ class CreateWorkout extends Component {
         console.log(selectDay);
     }
 
+    selectUser = (item) => { 
+        var user = Object.values(item)[1];
+        this.state.userSelected = user
+        this.setState({userSelected:this.state.userSelected})
+    }
+
     getUser = async () => {
         var uid = FirebaseAutentication.currentUser.uid
         const pt = (await Firestore.collection('UTENTI').doc(uid).get()).data();
@@ -108,7 +114,7 @@ class CreateWorkout extends Component {
                             justifyContent: 'flex-start'
                         }}
                         dropDownStyle={{ backgroundColor: '#fafafa',marginLeft:15 }}
-                        onChangeItem={item => this.setState({userSelected: item})}
+                        onChangeItem={item => this.selectUser(item)}
                 />
 
                 <FlatList style={{ margin: 10}}
