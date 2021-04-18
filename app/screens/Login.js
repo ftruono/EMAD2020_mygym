@@ -1,5 +1,5 @@
 import React, { Component, useReducer } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity,Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity,Image, Platform, KeyboardAvoidingView } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome"
 import Feather from "react-native-vector-icons/Feather"
 import { AuthContext } from '../config/AutenticationConfig';
@@ -16,9 +16,9 @@ export const Login = () => {
     
 
     const [iconName, setIconName] = React.useState("eye-off");
-    const [username, setUsername] = React.useState("fra@fra.it");
-    const [password, setPassword] = React.useState("frafra");
-    const [secureTextEntry, setSecureTextEntry] = React.useState(false)
+    const [username, setUsername] = React.useState("enzo@enzo.it");
+    const [password, setPassword] = React.useState("vincenzo");
+    const [secureTextEntry, setSecureTextEntry] = React.useState(true)
     const [nameErrror, setNameError] = React.useState('');
     const [passwordError, setPasswordError] = React.useState('');
     const [loginError, setLoginError] = React.useState('');
@@ -82,11 +82,17 @@ export const Login = () => {
     const { signIn } = React.useContext(AuthContext);
 
     return (
-        <View style={styles.container}>
-            <Image
+        
+        <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+        <Image
                 source={require("../../assets/logo1.png")}
                 style={styles.sideMenuProfileIcon}
             />
+        <View style={styles.inner}>
+            
             <Text style={styles.textLogin}>UserID</Text>
             <View style={styles.action}>
                 <Icon name="user-o" color="#05375a" size={20}></Icon>
@@ -143,6 +149,7 @@ export const Login = () => {
 
 
         </View>
+        </KeyboardAvoidingView>
     );
 
 }
@@ -157,6 +164,9 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
         paddingVertical: 30
+    },
+    secondView: {
+        flex:1
     },
     action: {
         flexDirection: 'row',
@@ -218,9 +228,14 @@ const styles = StyleSheet.create({
     },
     sideMenuProfileIcon: {
         resizeMode: 'center',
-        width: 300,
-        height: 300,
+        width: 200,
+        height: 150,
         borderRadius: 100 / 2,
         alignSelf: 'center',
-    }
+    },
+    inner: {
+        padding: 15,
+        flex: 1,
+        justifyContent: "space-around"
+      }
 });
