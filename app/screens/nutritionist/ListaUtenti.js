@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity } from
 import HeaderComponent from "../../component/HeaderComponent";
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import Feather from "react-native-vector-icons/Feather"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import AddClienti from "./AddClienti";
 import BottoneNtClienti from "../nutritionist/BottoneNTClienti";
 
@@ -60,6 +61,11 @@ export default class ListaUtenti extends React.Component {
     }
     return result;
   }
+
+  refreshPage = async () => {
+    this.setState({clienti: []})
+    this.getUser();
+  };
   //1
   getUser = async () => {
     var uid = FirebaseAutentication.currentUser.uid
@@ -119,7 +125,12 @@ export default class ListaUtenti extends React.Component {
 
       <SafeAreaView style={styles.container}>
         <HeaderComponent {...this.props} title="Lista Clienti" />
-        <Text style={styles.titleParagraph}>I miei clienti:</Text>
+        <View style={{flexDirection:'row'}}>
+            <Text style={styles.titleParagraph}>I miei clienti:</Text>
+            <TouchableOpacity onPress={() => this.refreshPage()} >
+                <MaterialIcons name="refresh" color="#05375a" size={25} style={{marginTop:25, marginLeft:30}}></MaterialIcons>
+            </TouchableOpacity>
+        </View>
         
         <FlatList style={{ margin: 10 }}
           data={this.state.clienti}
@@ -130,7 +141,7 @@ export default class ListaUtenti extends React.Component {
         />
 
         <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
-                ArrayUid={this.state.uidClienti}  {...this.props} />
+                ArrayUid={this.state.uidClienti} refreshPage={this.refreshPage}  {...this.props} />
 
         <BottoneNtClienti addCliente={this.addCliente} />
       </SafeAreaView>

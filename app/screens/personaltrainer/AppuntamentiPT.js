@@ -16,6 +16,7 @@ export default class AppuntamentiPT extends React.Component {
     }
     state = {
         noAppuntamenti:false,
+        refreshAppuntamenti:false,
         clienti: [],
         appuntamenti: [],
         visibleAddAppuntamenti: false,
@@ -28,8 +29,10 @@ export default class AppuntamentiPT extends React.Component {
     hideDialog = () => this.setState({ visibleDialog: false });
 
     refreshPage = async () => {
-        console.log(window.location)
-    };
+        this.setState({refreshAppuntamenti:true})
+        this.setState({appuntamenti: []})
+        this.getUser();
+      };
 
     hidenAddAppuntamenti = () => {
         this.state.visibleAddAppuntamenti = false;
@@ -50,11 +53,13 @@ export default class AppuntamentiPT extends React.Component {
         var uid = FirebaseAutentication.currentUser.uid
         const pt = (await Firestore.collection('UTENTI').doc(uid).get()).data();
         console.log(pt.clienti)
-        if(pt.clienti.length === 0) {
-        } else {
-            pt.clienti.map((e, i) => {
-              this.getClienti(e)
-            })
+        if(this.state.refreshAppuntamenti === false) {
+            if(pt.clienti.length === 0) {
+            } else {
+                pt.clienti.map((e, i) => {
+                  this.getClienti(e)
+                })
+            }
         }
         if(pt.appuntamenti.length === 0) {
             this.setState({noAppuntamenti:true})
