@@ -39,23 +39,48 @@ export default class DatiPersonaliNT extends React.Component {
         }
         return result;
     }
+
     hidenAddAppuntamenti = (data, cliente) => {
+        var check = false;
         if (this.state.modify) {
-            console.log(new Date(data), cliente);
-            this.state.appuntamenti.map((e) => {
-                if (new Date(e.giorno.toDate()) === new Date(data)) {
-                    console.log("uguali")
+            console.log(cliente)
+            this.state.appuntamenti.map((e, i) => {
+                console.log(e)
+                if (moment(e.giorno.toDate()).format('YYYY-MM-DD HH:mm') === moment(data).format('YYYY-MM-DD HH:mm')) {
+                    check = true;
+                } else if (cliente.id === e.id) {
+
+
+
+                    this.state.appuntamenti[i] = ({ cliente: cliente.value, giorno: new Date(moment(data).format('YYYY-MM-DD HH:mm:ss')), id: this.makeid(10), nome: cliente.label });
+                    this.setState({ appuntamenti: this.state.appuntamenti})
+                    const uidFirebase = FirebaseAutentication.currentUser.uid;
+                    Firestore.collection(
+                        'UTENTI'
+                    ).doc(
+                        uidFirebase
+                    ).update({
+                        'appuntamenti': this.state.appuntamenti,
+                    }).then(() => {
+                        console.log('User updated!');
+                    });
+
+                     this.setState({ appuntamenti: [] })
+                     this.getUser()
                 }
-                // console.log(moment(new Date(e.giorno)).format('YYYY-MM-DD HH:mm:ss'))
             })
-            //controlla se puoi inserire i dati altrimenti la modal non si chiude e alert("Non data corrispondete non accettabile")
 
 
 
-            this.state.modify = false;
-            this.setState({ modify: false });
-            this.state.visibleAddAppuntamenti = false;
-            this.setState({ visibleAddAppuntamenti: false });
+            if (check) {
+                alert("in quel giorno a quell'ora hai già un appuntamento");
+            } else {
+                this.state.modify = false;
+                this.setState({ modify: false });
+                this.state.visibleAddAppuntamenti = false;
+                this.setState({ visibleAddAppuntamenti: false });
+            }
+
         } else {
             this.state.modify = false;
             this.setState({ modify: false });
@@ -114,8 +139,6 @@ export default class DatiPersonaliNT extends React.Component {
         this.setState({ users: this.state.users });
     }
 
-
-
     getMyClienti = () => {
 
         this.state.clienti.map((e) => {
@@ -125,6 +148,7 @@ export default class DatiPersonaliNT extends React.Component {
         this.setState({ ArrayClienti: this.state.ArrayClienti })
         console.log(this.state.ArrayClienti)
     };
+
     trash = (item) => {
         var support;
         const uid = FirebaseAutentication.currentUser.uid;
@@ -151,15 +175,15 @@ export default class DatiPersonaliNT extends React.Component {
         this.state.appuntamenti = supportArray;
         this.setState({ appuntamenti: this.state.appuntamenti })
 
-        Firestore.collection(
-            'UTENTI'
-        ).doc(
-            uid
-        ).update({
-            'appuntamenti': supportArray,
-        }).then(() => {
-            console.log('User updated!');
-        });
+        // Firestore.collection(
+        // 'UTENTI'
+        // ).doc(
+        // uid
+        // ).update({
+        // 'appuntamenti': supportArray,
+        // }).then(() => {
+        // console.log('User updated!');
+        // });
 
     }
     modify = (item) => {
@@ -168,7 +192,7 @@ export default class DatiPersonaliNT extends React.Component {
 
         this.state.ArrayClienti = []
         this.setState({ ArrayClienti: this.state.ArrayClienti })
-        this.state.ArrayClienti.push({ label: item.nome, value: item.cliente })
+        this.state.ArrayClienti.push({ label: item.nome, value: item.cliente, id: item.id })
         this.setState({ ArrayClienti: this.state.ArrayClienti })
 
         this.state.modify = true;

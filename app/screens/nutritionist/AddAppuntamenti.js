@@ -97,7 +97,7 @@ const AddAppuntamenti = (props) => {
             let support = [];
 
 
-            nt.appuntamenti.push({ giorno: date, cliente: uid, id: makeid(10) });
+            nt.appuntamenti.push({ giorno: date, cliente: uid, id: makeid(10), nome: user });
             support = nt.appuntamenti;
 
 
