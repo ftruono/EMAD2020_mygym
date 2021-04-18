@@ -43,7 +43,7 @@ export default class HomeNT extends React.Component {
         this.setState({appuntamenti:Object.values(e)})
         this.renderItemList(e);
       } else{
-        
+
         console.log(this.state.appuntamenti)
       }
     })
@@ -75,7 +75,7 @@ export default class HomeNT extends React.Component {
       < View style={styles.action} >
         <Feather name="book-open" color="#05375a" size={20} style={{ marginLeft: 20 }}></Feather>
 
-        <Text style={styles.title}> {appuntamento.nome} alle ore {new Date(appuntamento.giorno.toDate()).getHours()}</Text>
+        <Text style={styles.title}> {appuntamento.nome} alle ore {moment.locale('it'), moment(new Date(appuntamento.giorno.toDate())).format('HH:mm')}</Text>
       </View >
     )
   }

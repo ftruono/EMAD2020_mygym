@@ -8,6 +8,7 @@ import BottoneNt from "../nutritionist/BottoneNT";
 import AddAppuntamenti from "./AddAppuntamenti";
 //import AddClienti from "./AddClienti";
 import Feather from "react-native-vector-icons/Feather"
+import moment from 'moment';
 
 export default class DatiPersonaliNT extends React.Component {
     constructor(props) {
@@ -18,12 +19,10 @@ export default class DatiPersonaliNT extends React.Component {
         clienti: [],
         appuntamenti: [],
         visibleAddAppuntamenti: false,
-        //visibleAddClienti: false,
+        modify: false,
         visibleDialog: false,
         ArrayClienti: [],
-        //users: [],
-        //uidClienti: []
-
+        date: new Date(),
     }
     showDialog = () => this.setState({ visibleDialog: true });
 
@@ -38,19 +37,34 @@ export default class DatiPersonaliNT extends React.Component {
         }
         return result;
     }
-    hidenAddAppuntamenti = () => {
-        this.state.visibleAddAppuntamenti = false;
-        this.setState({ visibleAddAppuntamenti: false })
-    }
+    hidenAddAppuntamenti = (data, cliente) => {
+        if (this.state.modify) {
+            console.log(new Date(data), cliente);
+            this.state.appuntamenti.map((e) => {
+                if (new Date(e.giorno.toDate()) === new Date(data)) {
+                    console.log("uguali")
+                }
+                // console.log(moment(new Date(e.giorno)).format('YYYY-MM-DD HH:mm:ss'))
+            })
+            //controlla se puoi inserire i dati altrimenti la modal non si chiude e alert("Non data corrispondete non accettabile")
 
-    /* hidenAddClienti = () => {
-        this.state.visibleAddClienti = false;
-        this.setState({ visibleAddClienti: false })
-    } */
+
+
+            this.state.modify = false;
+            this.setState({ modify: false });
+            this.state.visibleAddAppuntamenti = false;
+            this.setState({ visibleAddAppuntamenti: false });
+        } else {
+            this.state.modify = false;
+            this.setState({ modify: false });
+            this.state.visibleAddAppuntamenti = false;
+            this.setState({ visibleAddAppuntamenti: false });
+        }
+    }
 
     //1
     getUser = async () => {
-        var uid = FirebaseAutentication.currentUser.uid
+        const uid = FirebaseAutentication.currentUser.uid;
         const nt = (await Firestore.collection('UTENTI').doc(uid).get()).data();
 
         nt.clienti.map((e, i) => {
@@ -66,12 +80,6 @@ export default class DatiPersonaliNT extends React.Component {
         this.state.clienti.push({ title: idCliente, username: utente.username });
         this.setState({ clienti: this.state.clienti });
     }
-
-    /* addCliente = async () => {
-        this.getUsers();
-        this.state.visibleAddClienti = true;
-        this.setState({ visibleAddClienti: true })
-    } */
 
     addAppuntamenti = async () => {
         this.getMyClienti();
@@ -92,14 +100,14 @@ export default class DatiPersonaliNT extends React.Component {
             const user = (await Firestore.collection('UTENTI').doc(idDocument[j]).get()).data();
             if (user.username != undefined) {
                 this.state.users.push(user.username);
-                this.state.uidClienti.push(idDocument[j])
+                // this.state.uidClienti.push(idDocument[j])
             }
         }
-        this.setState({ uidClienti: this.state.uidClienti });
+        // this.setState({ uidClienti: this.state.uidClienti });
         this.setState({ users: this.state.users });
     }
 
-   
+
 
     getMyClienti = () => {
 
@@ -110,34 +118,91 @@ export default class DatiPersonaliNT extends React.Component {
         this.setState({ ArrayClienti: this.state.ArrayClienti })
         console.log(this.state.ArrayClienti)
     };
+    trash = (item) => {
+        var support;
+        const uid = FirebaseAutentication.currentUser.uid;
 
-    /* renderUser = ({ item }) => (
-        <View style={styles.item}>
-            <TouchableOpacity onPress={() => { this.props.navigation.navigate("PianiAlimentari", { atleta: item.title, username: item.username, routeProps: this.props }) }}>
-                <Text style={styles.title}>{item.username}</Text>
-            </TouchableOpacity>
+        console.log("item", Object.values(item)[2])
 
-        </View>
-    ); */
+        this.state.appuntamenti.map((e, i) => {
+            console.log(Object.values(e)[2])
+
+            if (Object.values(item)[2] === Object.values(e)[2]) {
+                support = i
+                console.log("uguali")
+
+            }
+        })
+
+        var supportArray=[]
+        
+        this.state.appuntamenti.map((e, i) => {
+            if(support != i ){
+                supportArray.push(e)
+            }
+        })
+        this.state.appuntamenti= supportArray;
+        this.setState({appuntamenti: this.state.appuntamenti})
+
+        Firestore.collection(
+            'UTENTI'
+        ).doc(
+            uid
+        ).update({
+            'appuntamenti': supportArray,
+        }).then(() => {
+            console.log('User updated!');
+        });
+
+    }
+    modify = (item) => {
+
+        this.setState({ date: item.giorno })
+
+        this.state.ArrayClienti = []
+        this.setState({ ArrayClienti: this.state.ArrayClienti })
+        this.state.ArrayClienti.push({ label: item.nome, value: item.cliente })
+        this.setState({ ArrayClienti: this.state.ArrayClienti })
+
+        this.state.modify = true;
+        this.setState({ modify: this.state.modify })
+
+        this.state.visibleAddAppuntamenti = true;
+        this.setState({ visibleAddAppuntamenti: true })
+
+    }
+
     renderAppuntamenti = ({ item }) => (
         <View style={styles.item}>
             <TouchableOpacity>
-            <View style={styles.action}>
-                <Feather name="book-open" color="#05375a" size={30}></Feather>
-                <Text style={styles.title}>{this.state.clienti.map((e) => {
-                    if (e.title === item.cliente) return e.username;
-                })}</Text>
-            </View>
-                <Text>{new Date(item.giorno.toDate()).toDateString()} alle ore {new Date(item.giorno.toDate()).getHours()}</Text>
-            
+                <View style={styles.action}>
+                    <Feather name="book-open" color="#05375a" size={30}></Feather>
+                    <Text style={styles.title}>{this.state.clienti.map((e) => {
+                        if (e.title === item.cliente) return e.username;
+                    })}</Text>
+                </View>
+                <Text>{moment.locale('it'), moment(new Date(item.giorno.toDate())).format('LLLL')}</Text>
+
             </TouchableOpacity>
+
             <Icon
                 size='35'
-                name='trash'
-                style={{marginTop:5}}
+                name='pencil'
+                style={{ marginTop: 5 }}
                 type='font-awesome'
                 color='#f50'
                 onPress={() => {
+                    this.modify(item)
+                }}
+            />
+            <Icon
+                size='35'
+                name='trash'
+                style={{ marginTop: 5 }}
+                type='font-awesome'
+                color='#f50'
+                onPress={() => {
+                    this.trash(item)
                 }}
             />
         </View>
@@ -148,15 +213,6 @@ export default class DatiPersonaliNT extends React.Component {
             <SafeAreaView style={styles.container}>
                 <HeaderComponent {...this.props} title="Appuntamenti" />
 
-             {/*    <Text>I tuoi utenti sono </Text>
-
-                <FlatList style={{ margin: 10 }}
-                    data={this.state.clienti}
-                    scrollEnabled={true}
-                    keyExtractor={(item) => { item.title }}
-                    refreshing={this._onRefresh}
-                    renderItem={this.renderUser}
-                /> */}
 
                 <Text style={styles.titleParagraph}>I tuoi appuntamenti sono:</Text>
                 <FlatList style={{ margin: 10 }}
@@ -167,8 +223,8 @@ export default class DatiPersonaliNT extends React.Component {
                     renderItem={this.renderAppuntamenti}
                 />
 
-                <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti}
-                ArrayUid={this.state.uidClienti} {...this.props} />
+                <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti} date={this.state.date}
+                    modify={this.state.modify} {...this.props} />
                 {/* <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
                 ArrayUid={this.state.uidClienti}  {...this.props} /> */}
 
@@ -196,7 +252,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 25,
-        marginLeft:10
+        marginLeft: 10
     },
     action: {
         flexDirection: 'row',
@@ -206,10 +262,10 @@ const styles = StyleSheet.create({
         paddingBottom: 7
     },
     titleParagraph: {
-      fontSize:20,
-      fontWeight:'bold',
-      textAlign:'left',
-      marginTop:25,
-      marginLeft:15
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'left',
+        marginTop: 25,
+        marginLeft: 15
     }
 });

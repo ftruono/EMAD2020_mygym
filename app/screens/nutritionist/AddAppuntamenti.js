@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements';
 import { Modal, Portal, Button, Provider, View } from 'react-native-paper';
 import { StyleSheet, TouchableOpacity, Platform, TextInput, Text } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Firestore } from "../../config/FirebaseConfig";
+import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import moment from 'moment';
 
 
@@ -21,9 +21,10 @@ const AddAppuntamenti = (props) => {
     const [uid, setUid] = React.useState('')
     const [mode, setMode] = React.useState('date');
     const [show, setShow] = React.useState(false);
+    const uidFirebase = FirebaseAutentication.currentUser.uid;
 
     // const showModal = () => React.setVisible(true);
-    const hideModal = () => { setVisible(false), props.hidenAddAppuntamenti() };
+    const hideModal = (data, cliente) => { setVisible(false), props.hidenAddAppuntamenti(data, cliente) };
     const selectUser = (name) => { console.log(Object.values(name)[1]); setUser(Object.values(name)[1]); setUid(Object.values(name)[1]); }
 
     const makeid = (length) => {
@@ -48,37 +49,38 @@ const AddAppuntamenti = (props) => {
 
     const addAppuntamentoWeb = async () => {
         // moment(textData).format("MMM Do YY");
-        const supportDate = textData + "," + hour;
-        const today = moment(supportDate).format('MMMM Do YYYY,HH:mm');
+        // const uid=FirebaseAutentication.currentUser.uid
+
+
+        const supportDate = textData + " " + hour;
+        const today = new Date(moment(supportDate).format('YYYY-MM-DD HH:mm:ss'));
+
+        // console.log(today)
 
         if (today === 'Invalid date') {
             alert("data non valida si preda di rispettare il formato delineato")
-        } else if (moment().format("MMM Do YY") > moment(today, true).format("MMM Do YY")) {
+        } else if (moment().format("YYYY MM DD") > moment(today, true).format("YYYY MM DD")) {
             alert("seleziona una data valida");
         } else if (user === '' || uid === '') {
             alert("seleziona un utente valido");
         } else {
-            let nt = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
+            let nt = (await Firestore.collection('UTENTI').doc(uidFirebase).get()).data();
             let support = [];
 
-            nt.appuntamenti.push({ giorno: new Date(moment(supportDate).format('YYYY-MM-DD hh:mm:ss a')), cliente: uid, id: makeid(10) });
+            nt.appuntamenti.push({ giorno: new Date(moment(supportDate).format('YYYY-MM-DD HH:mm:ss')), cliente: uid, id: makeid(10) });
             support = nt.appuntamenti;
-
-
-            // let support = []; support.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' })
-            // user.appuntamenti.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' });
 
             Firestore.collection(
                 'UTENTI'
             ).doc(
-                'PdlCUX3dqLNDqp4gcRD0awdAJ0t2'
+                uidFirebase
             ).update({
                 'appuntamenti': support,
             }).then(() => {
                 console.log('User updated!');
             });
 
-
+            hideModal();
         }
 
     }
@@ -91,7 +93,7 @@ const AddAppuntamenti = (props) => {
         } else if (user === '' || uid === '') {
             alert("seleziona un utente valido");
         } else {
-            let nt = (await Firestore.collection('UTENTI').doc('PdlCUX3dqLNDqp4gcRD0awdAJ0t2').get()).data();
+            let nt = (await Firestore.collection('UTENTI').doc(uidFirebase).get()).data();
             let support = [];
 
 
@@ -100,12 +102,12 @@ const AddAppuntamenti = (props) => {
 
 
             // let support = []; support.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' })
-// user.appuntamenti.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' });
+            // user.appuntamenti.push({ giorno: new Date(), cliente: '3hVSFBjPhuUUD9RWuNckZKVxpuz1' });
 
             Firestore.collection(
                 'UTENTI'
             ).doc(
-                'PdlCUX3dqLNDqp4gcRD0awdAJ0t2'
+                uidFirebase
             ).update({
                 'appuntamenti': support,
             }).then(() => {
@@ -117,25 +119,31 @@ const AddAppuntamenti = (props) => {
     };
 
     return (
+
         <Provider>
             <Portal styel={{ padding: 20, }}>
                 <Modal visible={props.visible} onDismiss={hideModal} contentContainerStyle={style.modal}>
                     <Text>Selezione una cliente</Text>
+                    {!props.modify ? (<>
+                        <DropDownPicker
+                            items={ArrayClienti}
+                            defaultValue={user}
+                            //!props.modify ? user : Object.values(props.ArrayClienti[0])[1] === 'undefined'? "errore" : Object.values(props.ArrayClienti[0])[1]}
+                            containerStyle={{ height: 40 }}
+                            style={style.selectStyle}
+                            itemStyle={style.selectStyle}
+                            dropDownStyle={style.selectdropDownStyle}
+                            onChangeItem={item => selectUser(item)}
+                        />
+                    </>) : (<>
+                        <Text>{Object.values(props.ArrayClienti[0])[1] === 'undefined' ? "errore" : Object.values(props.ArrayClienti[0])[0]}</Text>
+                    </>)}
 
-                    <DropDownPicker
-                        items={ArrayClienti}
-                        defaultValue={user}
-                        containerStyle={{ height: 40 }}
-                        style={style.selectStyle}
-                        itemStyle={style.selectStyle}
-                        dropDownStyle={style.selectdropDownStyle}
-                        onChangeItem={item => selectUser(item)}
-                    />
                     <Text>Seleziona giorno e ora</Text>
                     {Platform.OS !== 'web' && <>
                         <DateTimePicker
                             testID="dateTimePicker"
-                            value={date}
+                            value={!props.modify ? date : new Date(props.date.toDate())}
                             mode={mode}
                             is24Hour={true}
                             display="default"
@@ -147,8 +155,13 @@ const AddAppuntamenti = (props) => {
                             type='font-awesome'
                             color='#f50'
                             onPress={() => {
-                                addAppuntamento()
-                                hideModal();
+                                if (!props.modify) {
+                                    addAppuntamento();
+                                    hideModal();
+                                } else {
+                                    hideModal(date, props.ArrayClienti[0]);
+                                }
+
 
                             }}
                         />
@@ -160,15 +173,17 @@ const AddAppuntamenti = (props) => {
                             style={style.input}
                             onChangeText={onChangeTextData}
                             value={textData}
-                            placeholder="DD/MM/YYY"
+                            placeholder={props.modify ? moment(new Date(props.date.toDate())).format('YYYY-MM-YY') : "YYYY-MM-DD"}
                             keyboardType="text"
                         />
+
                         <Text>Inserisci l'ora con il seguente formato HH:MM</Text>
+
                         <TextInput
                             style={style.input}
                             onChangeText={setHour}
                             value={hour}
-                            placeholder="HH:MM"
+                            placeholder={props.modify ? moment(new Date(props.date.toDate())).format('HH:MM') : "hh:mm"}
                             keyboardType="text"
                         />
 
@@ -179,8 +194,11 @@ const AddAppuntamenti = (props) => {
                             type='font-awesome'
                             color='#f50'
                             onPress={() => {
-                                addAppuntamentoWeb()
-                                hideModal();
+                                if (!props.modify) {
+                                    addAppuntamentoWeb();
+                                } else {
+                                    hideModal(today, props.ArrayClienti[0]);
+                                }
 
                             }} />
                     </>}
