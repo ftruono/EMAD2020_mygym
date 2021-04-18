@@ -13,6 +13,7 @@ export default class ListaUtenti extends React.Component {
     this.getUser()
   }
   state = {
+    noClienti:false,
     clienti: [],
     diete: [],
     misure: [],
@@ -70,9 +71,13 @@ export default class ListaUtenti extends React.Component {
   getUser = async () => {
     var uid = FirebaseAutentication.currentUser.uid
     const nt = (await Firestore.collection('UTENTI').doc(uid).get()).data();
-    nt.clienti.map((e, i) => {
-      this.getClienti(e)
-    })
+    if(nt.clienti.length === 0) {
+      this.setState({noClienti:true})
+  } else {
+      nt.clienti.map((e, i) => {
+        this.getClienti(e)
+      })
+  }
   }
 
   //2
@@ -132,18 +137,34 @@ export default class ListaUtenti extends React.Component {
             </TouchableOpacity>
         </View>
         
-        <FlatList style={{ margin: 10 }}
-          data={this.state.clienti}
-          scrollEnabled={true}
-          keyExtractor={(item) => item.id}
-          refreshing={this._onRefresh}
-          renderItem={this.renderItem}
-        />
+        {this.state.noClienti ? (
+                    <>
+                        <Text style={styles.titleSubParagraph}> Non hai ancora clienti</Text>
+                        <Text style={styles.titleThParagraph}> aggiungine dei nuovi con il bottone in fondo alla pagina</Text>
 
-        <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
-                ArrayUid={this.state.uidClienti} refreshPage={this.refreshPage}  {...this.props} />
+                        <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
+                                ArrayUid={this.state.uidClienti} refreshPage={this.refreshPage} {...this.props} />
 
-        <BottoneNtClienti addCliente={this.addCliente} />
+                        <BottoneNtClienti addCliente={this.addCliente} />
+
+                    </>
+            ):(
+                    
+                    <>
+                        <FlatList style={{ margin: 10 }}
+                          data={this.state.clienti}
+                          scrollEnabled={true}
+                          keyExtractor={(item) => item.id}
+                          refreshing={this._onRefresh}
+                          renderItem={this.renderItem}
+                        />
+
+                        <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
+                                ArrayUid={this.state.uidClienti} refreshPage={this.refreshPage}  {...this.props} />
+
+                        <BottoneNtClienti addCliente={this.addCliente} />
+                    </>
+            )}
       </SafeAreaView>
     );
   }
@@ -175,5 +196,17 @@ const styles = StyleSheet.create({
   container: {
       flex: 1,
       alignItems: 'stretch'
+  },
+  titleSubParagraph: {
+      fontSize:15,
+      fontWeight:'bold',
+      textAlign:'center',
+      marginTop:50,
+   },
+  titleThParagraph: {
+       fontSize:15,
+       fontWeight:'bold',
+       textAlign:'center',
+       marginTop:5
   }
 });

@@ -3,7 +3,7 @@ import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, F
 import { Icon } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent";
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
-import PianiAlimentari from "../nutritionist/PianiAlimentari";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import BottoneNt from "../nutritionist/BottoneNT";
 import AddAppuntamenti from "./AddAppuntamenti";
 //import AddClienti from "./AddClienti";
@@ -15,6 +15,7 @@ export default class DatiPersonaliNT extends React.Component {
         this.getUser();
     }
     state = {
+        noAppuntamenti:false,
         clienti: [],
         appuntamenti: [],
         visibleAddAppuntamenti: false,
@@ -56,7 +57,12 @@ export default class DatiPersonaliNT extends React.Component {
         nt.clienti.map((e, i) => {
             this.getClienti(e);
         })
-        this.setState({ appuntamenti: nt.appuntamenti });
+        if(nt.appuntamenti.length === 0) {
+            this.setState({noAppuntamenti:true})
+        } else {
+
+            this.setState({ appuntamenti: pt.appuntamenti });
+        }
     }
 
     //2
@@ -148,32 +154,41 @@ export default class DatiPersonaliNT extends React.Component {
             <SafeAreaView style={styles.container}>
                 <HeaderComponent {...this.props} title="Appuntamenti" />
 
-             {/*    <Text>I tuoi utenti sono </Text>
+                <View style={{flexDirection:'row'}}>
+                    <Text style={styles.titleParagraph}>I tuoi appuntamenti:</Text>
+                    <TouchableOpacity onPress={() => alert('Refresh')} >
+                        <MaterialIcons name="refresh" color="#05375a" size={25} style={{marginTop:25, marginLeft:30}}></MaterialIcons>
+                    </TouchableOpacity>
+                </View>
 
-                <FlatList style={{ margin: 10 }}
-                    data={this.state.clienti}
-                    scrollEnabled={true}
-                    keyExtractor={(item) => { item.title }}
-                    refreshing={this._onRefresh}
-                    renderItem={this.renderUser}
-                /> */}
+                {this.state.noAppuntamenti ? (
+                    <>
+                        <Text style={styles.titleSubParagraph}> Non hai ancora appuntamenti</Text>
+                        <Text style={styles.titleThParagraph}> aggiungine dei nuovi con il bottone in fondo alla pagina</Text>
 
-                <Text style={styles.titleParagraph}>I tuoi appuntamenti sono:</Text>
-                <FlatList style={{ margin: 10 }}
-                    data={this.state.appuntamenti}
-                    scrollEnabled={true}
-                    keyExtractor={(item) => { item.id }}
-                    refreshing={this._onRefresh}
-                    renderItem={this.renderAppuntamenti}
-                />
+                        <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti}
+                                        ArrayUid={this.state.uidClienti} {...this.props} />
 
-                <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti}
-                ArrayUid={this.state.uidClienti} {...this.props} />
-                {/* <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
-                ArrayUid={this.state.uidClienti}  {...this.props} /> */}
+                        <BottoneNt addAppuntamenti={this.addAppuntamenti} />
 
-                {/* <BottoneNt addCliente={this.addCliente} addAppuntamenti={this.addAppuntamenti} /> */}
-                <BottoneNt addAppuntamenti={this.addAppuntamenti} />
+                    </>
+            ):(
+                    
+                    <>
+                            <FlatList style={{ margin: 10 }}
+                                data={this.state.appuntamenti}
+                                scrollEnabled={true}
+                                keyExtractor={(item) => { item.id }}
+                                refreshing={this._onRefresh}
+                                renderItem={this.renderAppuntamenti}
+                            />
+
+                            <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti}
+                            ArrayUid={this.state.uidClienti} {...this.props} />
+                            
+                            <BottoneNt addAppuntamenti={this.addAppuntamenti} />
+                    </>
+            )}
 
             </SafeAreaView>
         );
@@ -211,5 +226,17 @@ const styles = StyleSheet.create({
       textAlign:'left',
       marginTop:25,
       marginLeft:15
+    },
+    titleSubParagraph: {
+        fontSize:15,
+        fontWeight:'bold',
+        textAlign:'center',
+        marginTop:50,
+     },
+    titleThParagraph: {
+         fontSize:15,
+         fontWeight:'bold',
+         textAlign:'center',
+         marginTop:5
     }
 });

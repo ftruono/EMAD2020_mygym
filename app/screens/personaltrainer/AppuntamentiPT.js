@@ -127,7 +127,7 @@ export default class AppuntamentiPT extends React.Component {
                 <HeaderComponent {...this.props} title="Appuntamenti" />
 
                 <View style={{flexDirection:'row'}}>
-                    <Text style={styles.titleParagraph}>I miei appuntamenti:</Text>
+                    <Text style={styles.titleParagraph}>I tuoi appuntamenti:</Text>
                     <TouchableOpacity onPress={() => this.refreshPage()} >
                         <MaterialIcons name="refresh" color="#05375a" size={25} style={{marginTop:25, marginLeft:30}}></MaterialIcons>
                     </TouchableOpacity>
