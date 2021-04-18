@@ -16,8 +16,8 @@ export const Login = () => {
     
 
     const [iconName, setIconName] = React.useState("eye-off");
-    const [username, setUsername] = React.useState("enzo@enzo.it");
-    const [password, setPassword] = React.useState("vincenzo");
+    const [username, setUsername] = React.useState("fra@fra.it");
+    const [password, setPassword] = React.useState("frafra");
     const [secureTextEntry, setSecureTextEntry] = React.useState(true)
     const [nameErrror, setNameError] = React.useState('');
     const [passwordError, setPasswordError] = React.useState('');
@@ -84,9 +84,9 @@ export const Login = () => {
     return (
         
         <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
+            behavior={Platform.OS !== "web" ? "padding" : "height"}
+            style={styles.container}
+        >
         <Image
                 source={require("../../assets/logo1.png")}
                 style={styles.sideMenuProfileIcon}
