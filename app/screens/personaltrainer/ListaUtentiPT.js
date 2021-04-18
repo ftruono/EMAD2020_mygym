@@ -12,6 +12,7 @@ export default class ListaUtentiPT extends React.Component {
   }
   state = {
     noClienti:false,
+    refreshUser:false,
     myClient:[],
     clienti: [],
     diete: [],
@@ -63,7 +64,9 @@ export default class ListaUtentiPT extends React.Component {
   }
 
   refreshPage = async () => {
-    console.log(window.location)
+    this.setState({refreshUser:true})
+    this.setState({clienti: []})
+    this.getUser();
   };
   //1
   getUser = async () => {
@@ -90,8 +93,24 @@ export default class ListaUtentiPT extends React.Component {
     })
     this.state.clienti.push({ id: this.makeid(5), title: idCliente, username: utente.username })
 
+    console.log(this.state.clienti)
+/*     if(this.state.refreshUser === true) {
+      console.log(this.state.refreshUser)
+      const newArray = [];
+      this.state.clienti.forEach(obj => {
+        if (!newArray.some(o => o.username === obj.username)) {
+          newArray.push({ ...obj })
+        }
+  
+      });
+  
+      console.log(newArray);
+      this.setState({myClient: newArray})
+    } else { */
+      this.setState({myClient: this.state.clienti})
+    //}
     
-    this.setState({myClient: this.state.clienti})
+    console.log(this.state.myClient)
 
   }
 
@@ -146,7 +165,7 @@ export default class ListaUtentiPT extends React.Component {
                         <Text style={styles.titleThParagraph}> aggiungine dei nuovi con il bottone in fondo alla pagina</Text>
 
                         <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
-                                ArrayUid={this.state.uidClienti}  {...this.props} />
+                                ArrayUid={this.state.uidClienti} refreshPage={this.refreshPage} {...this.props} />
 
                         <BottoneNtClienti addCliente={this.addCliente} />
 
@@ -163,7 +182,7 @@ export default class ListaUtentiPT extends React.Component {
                         />
 
                         <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
-                                ArrayUid={this.state.uidClienti}  {...this.props} />
+                                ArrayUid={this.state.uidClienti} refreshPage={this.refreshPage} {...this.props} />
 
                         <BottoneNtClienti addCliente={this.addCliente} />
                             

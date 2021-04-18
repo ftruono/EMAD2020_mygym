@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity } from
 import HeaderComponent from "../../component/HeaderComponent";
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import Feather from "react-native-vector-icons/Feather"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import AddClienti from "./AddClienti";
 import BottoneNtClienti from "../nutritionist/BottoneNTClienti";
 
@@ -12,6 +13,7 @@ export default class ListaUtenti extends React.Component {
     this.getUser()
   }
   state = {
+    noClienti:false,
     clienti: [],
     diete: [],
     misure: [],
@@ -60,13 +62,22 @@ export default class ListaUtenti extends React.Component {
     }
     return result;
   }
+
+  refreshPage = async () => {
+    this.setState({clienti: []})
+    this.getUser();
+  };
   //1
   getUser = async () => {
     var uid = FirebaseAutentication.currentUser.uid
     const nt = (await Firestore.collection('UTENTI').doc(uid).get()).data();
-    nt.clienti.map((e, i) => {
-      this.getClienti(e)
-    })
+    if(nt.clienti.length === 0) {
+      this.setState({noClienti:true})
+  } else {
+      nt.clienti.map((e, i) => {
+        this.getClienti(e)
+      })
+  }
   }
 
   //2
@@ -119,20 +130,41 @@ export default class ListaUtenti extends React.Component {
 
       <SafeAreaView style={styles.container}>
         <HeaderComponent {...this.props} title="Lista Clienti" />
-        <Text style={styles.titleParagraph}>I miei clienti:</Text>
+        <View style={{flexDirection:'row'}}>
+            <Text style={styles.titleParagraph}>I miei clienti:</Text>
+            <TouchableOpacity onPress={() => this.refreshPage()} >
+                <MaterialIcons name="refresh" color="#05375a" size={25} style={{marginTop:25, marginLeft:30}}></MaterialIcons>
+            </TouchableOpacity>
+        </View>
         
-        <FlatList style={{ margin: 10 }}
-          data={this.state.clienti}
-          scrollEnabled={true}
-          keyExtractor={(item) => item.id}
-          refreshing={this._onRefresh}
-          renderItem={this.renderItem}
-        />
+        {this.state.noClienti ? (
+                    <>
+                        <Text style={styles.titleSubParagraph}> Non hai ancora clienti</Text>
+                        <Text style={styles.titleThParagraph}> aggiungine dei nuovi con il bottone in fondo alla pagina</Text>
 
-        <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
-                ArrayUid={this.state.uidClienti}  {...this.props} />
+                        <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
+                                ArrayUid={this.state.uidClienti} refreshPage={this.refreshPage} {...this.props} />
 
-        <BottoneNtClienti addCliente={this.addCliente} />
+                        <BottoneNtClienti addCliente={this.addCliente} />
+
+                    </>
+            ):(
+                    
+                    <>
+                        <FlatList style={{ margin: 10 }}
+                          data={this.state.clienti}
+                          scrollEnabled={true}
+                          keyExtractor={(item) => item.id}
+                          refreshing={this._onRefresh}
+                          renderItem={this.renderItem}
+                        />
+
+                        <AddClienti hidenAddClienti={this.hidenAddClienti} visible={this.state.visibleAddClienti} ArrayClienti={this.state.users}
+                                ArrayUid={this.state.uidClienti} refreshPage={this.refreshPage}  {...this.props} />
+
+                        <BottoneNtClienti addCliente={this.addCliente} />
+                    </>
+            )}
       </SafeAreaView>
     );
   }
@@ -164,5 +196,17 @@ const styles = StyleSheet.create({
   container: {
       flex: 1,
       alignItems: 'stretch'
+  },
+  titleSubParagraph: {
+      fontSize:15,
+      fontWeight:'bold',
+      textAlign:'center',
+      marginTop:50,
+   },
+  titleThParagraph: {
+       fontSize:15,
+       fontWeight:'bold',
+       textAlign:'center',
+       marginTop:5
   }
 });

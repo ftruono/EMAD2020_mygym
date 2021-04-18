@@ -32,6 +32,7 @@ const AddClienti = (props) => {
 
         setVisible(false);
         props.hidenAddClienti();
+        props.refreshPage();
         setCheck('-1');
         setUser('');
     };
