@@ -9,6 +9,7 @@ import AddAppuntamenti from "./AddAppuntamenti";
 //import AddClienti from "./AddClienti";
 import Feather from "react-native-vector-icons/Feather"
 import moment from 'moment';
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 export default class DatiPersonaliNT extends React.Component {
     constructor(props) {
@@ -16,7 +17,7 @@ export default class DatiPersonaliNT extends React.Component {
         this.getUser();
     }
     state = {
-        noAppuntamenti:false,
+        noAppuntamenti: false,
         clienti: [],
         appuntamenti: [],
         visibleAddAppuntamenti: false,
@@ -71,11 +72,11 @@ export default class DatiPersonaliNT extends React.Component {
         nt.clienti.map((e, i) => {
             this.getClienti(e);
         })
-        if(nt.appuntamenti.length === 0) {
-            this.setState({noAppuntamenti:true})
+        if (nt.appuntamenti.length === 0) {
+            this.setState({ noAppuntamenti: true })
         } else {
 
-            this.setState({ appuntamenti: pt.appuntamenti });
+            this.setState({ appuntamenti: nt.appuntamenti });
         }
     }
 
@@ -140,15 +141,15 @@ export default class DatiPersonaliNT extends React.Component {
             }
         })
 
-        var supportArray=[]
-        
+        var supportArray = []
+
         this.state.appuntamenti.map((e, i) => {
-            if(support != i ){
+            if (support != i) {
                 supportArray.push(e)
             }
         })
-        this.state.appuntamenti= supportArray;
-        this.setState({appuntamenti: this.state.appuntamenti})
+        this.state.appuntamenti = supportArray;
+        this.setState({ appuntamenti: this.state.appuntamenti })
 
         Firestore.collection(
             'UTENTI'
@@ -219,10 +220,10 @@ export default class DatiPersonaliNT extends React.Component {
             <SafeAreaView style={styles.container}>
                 <HeaderComponent {...this.props} title="Appuntamenti" />
 
-                <View style={{flexDirection:'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.titleParagraph}>I tuoi appuntamenti:</Text>
                     <TouchableOpacity onPress={() => alert('Refresh')} >
-                        <MaterialIcons name="refresh" color="#05375a" size={25} style={{marginTop:25, marginLeft:30}}></MaterialIcons>
+                        <MaterialIcons name="refresh" color="#05375a" size={25} style={{ marginTop: 25, marginLeft: 30 }}></MaterialIcons>
                     </TouchableOpacity>
                 </View>
 
@@ -232,28 +233,28 @@ export default class DatiPersonaliNT extends React.Component {
                         <Text style={styles.titleThParagraph}> aggiungine dei nuovi con il bottone in fondo alla pagina</Text>
 
                         <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti}
-                                        ArrayUid={this.state.uidClienti} {...this.props} />
+                            ArrayUid={this.state.uidClienti} {...this.props} />
 
                         <BottoneNt addAppuntamenti={this.addAppuntamenti} />
 
                     </>
-            ):(
-                    
+                ) : (
+
                     <>
-                            <FlatList style={{ margin: 10 }}
-                                data={this.state.appuntamenti}
-                                scrollEnabled={true}
-                                keyExtractor={(item) => { item.id }}
-                                refreshing={this._onRefresh}
-                                renderItem={this.renderAppuntamenti}
-                            />
+                        <FlatList style={{ margin: 10 }}
+                            data={this.state.appuntamenti}
+                            scrollEnabled={true}
+                            keyExtractor={(item) => { item.id }}
+                            refreshing={this._onRefresh}
+                            renderItem={this.renderAppuntamenti}
+                        />
 
-                <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti} date={this.state.date}
-                    modify={this.state.modify} {...this.props} />
+                        <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti} date={this.state.date}
+                            modify={this.state.modify} {...this.props} />
 
-                            <BottoneNt addAppuntamenti={this.addAppuntamenti} />
+                        <BottoneNt addAppuntamenti={this.addAppuntamenti} />
                     </>
-            )}
+                )}
 
             </SafeAreaView>
         );
@@ -286,22 +287,22 @@ const styles = StyleSheet.create({
         paddingBottom: 7
     },
     titleParagraph: {
-      fontSize:20,
-      fontWeight:'bold',
-      textAlign:'left',
-      marginTop:25,
-      marginLeft:15
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'left',
+        marginTop: 25,
+        marginLeft: 15
     },
     titleSubParagraph: {
-        fontSize:15,
-        fontWeight:'bold',
-        textAlign:'center',
-        marginTop:50,
-     },
+        fontSize: 15,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: 50,
+    },
     titleThParagraph: {
-         fontSize:15,
-         fontWeight:'bold',
-         textAlign:'center',
-         marginTop:5
+        fontSize: 15,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: 5
     }
 });
