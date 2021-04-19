@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
-import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, FlatList } from 'react-native';
-import { Card, ListItem, Icon } from 'react-native-elements';
+import { StyleSheet, View, TextInput, Text, SafeAreaView, ScrollView, Dimensions, FlatList } from 'react-native';
+import Feather from "react-native-vector-icons/Feather"
 import DietaComponent from "../../component/DietaComponent";
 import HeaderComponent from "../../component/HeaderComponent";
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
@@ -94,6 +94,19 @@ class Dieta extends React.Component {
                             </>
                         ):(
                             <>
+                                <Text style={styles.titleParagraph}>Nome Nutrizionista:</Text>
+                                <View style={styles.action}>
+                                    <Feather name="user" color="#05375a" size={30} style={{marginLeft:15}}></Feather>
+                                    <TextInput
+                                            placeholder="Username"
+                                            placeholderTextColor="#666666"
+                                            style={styles.textInput}
+                                            autoCapitalize="none"
+                                            editable={this.state.modify}
+                                            onChangeText={text => {this.setState({ username: text })}}
+                                            value={this.state.username}
+                                    />
+                                </View>
                             
                                 <FlatList style={{ margin: 10, flex: 0.8, alignContent: 'center' }}
                                     data={contentArray}
@@ -137,6 +150,20 @@ const styles = StyleSheet.create({
         textAlign:'center',
         marginTop:15,
         textDecorationLine: 'underline'
+      },
+      titleParagraph: {
+          fontSize:20,
+          fontWeight:'bold',
+          textAlign:'left',
+          marginTop:25,
+          marginLeft:15
+      },
+      action: {
+          flexDirection: 'row',
+          marginTop: 15,
+          borderBottomWidth: 1,
+          borderBottomColor: '#f2f2f2',
+          paddingBottom: 7
       }
 
 });
