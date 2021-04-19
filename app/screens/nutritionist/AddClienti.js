@@ -15,6 +15,7 @@ const AddClienti = (props) => {
     const [user, setUser] = React.useState('');
 
     const hideModal = () => { setVisible(false), props.hidenAddClienti() };
+    
     const hideAcceptModal = async () => {
         let support = [];
         var uid = FirebaseAutentication.currentUser.uid

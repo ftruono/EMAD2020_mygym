@@ -20,11 +20,11 @@ const ConfirmDialog = (props) => {
             <Portal styel={{ padding: 20, }}>
 
                 <Dialog visible={props.visible} onDismiss={hideDialog} contentContainerStyle={style.modal}>
-                    <Dialog.Title>Sei sicuro di voler eliminare {props.user != undefined ? Object.values(props.user)[2] : ''} dalla tua lista ?</Dialog.Title>
+                    <Dialog.Title> {props.text != undefined ? props.text : ''} </Dialog.Title>
 
                     <Dialog.Actions>
-                        <Button icon="camera" mode="contained" onPress={() => console.log('Pressed'), props.hidenConfirmDialog}>NO</Button>
-                        <Button icon="check" mode="contained" onPress={() => console.log('Pressed') , props.deleteUser}>SI</Button>
+                        <Button icon="camera" mode="contained" onPress={() => props.hidenConfirmDialog}>NO</Button>
+                        <Button icon="check" mode="contained" onPress={() => console.log("chekc"), props.check}>SI</Button>
                     </Dialog.Actions>
                 </Dialog>
 

@@ -26,6 +26,7 @@ export default class ListaUtenti extends React.Component {
     uidClienti: [],
     visibleDialogConfirm: false,
     userDelte: null,
+    textConfirm: null,
   }
 
   hidenAddClienti = () => {
@@ -74,8 +75,10 @@ export default class ListaUtenti extends React.Component {
   }
 
   refreshPage = async () => {
+    this.setState({ noClienti: false }),
     this.setState({ clienti: [] });
     this.getUser();
+
   };
   //1
   getUser = async () => {
@@ -127,7 +130,6 @@ export default class ListaUtenti extends React.Component {
     var support;
     const uid = FirebaseAutentication.currentUser.uid;
 
-
     this.state.clienti.map((e, i) => {
       if (Object.values(this.state.userDelete)[1] === Object.values(e)[1]) {
         support = i;
@@ -174,7 +176,8 @@ export default class ListaUtenti extends React.Component {
         type='font-awesome'
         color='#f50'
         onPress={() => {
-          this.setState({ userDelete: item })
+          this.setState({ userDelete: item });
+          this.setState({ textConfirm: "sei sicuro di voler eliminare l'utente "+ Object.values(item)[2] +" dalla tua lista?"});
           this.setState({ visibleDialogConfirm: true });
         }}
       />
@@ -219,7 +222,8 @@ export default class ListaUtenti extends React.Component {
               ArrayUid={this.state.uidClienti} refreshPage={this.refreshPage}  {...this.props} />
 
             <ConfirmDialog visible={this.state.visibleDialogConfirm} hidenConfirmDialog={this.hidenConfirmDialog}
-              deleteUser={this.deleteUser} user={this.state.userDelete} {...this.props} />
+              check={this.deleteUser} 
+              text={this.state.textConfirm != null ? this.state.textConfirm : '' } {...this.props} />
 
             <BottoneNtClienti addCliente={this.addCliente} />
           </>

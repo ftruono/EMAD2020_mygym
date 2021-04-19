@@ -21,7 +21,7 @@ import Dieta from "../screens/nutritionist/Dieta";
 import { AuthContext } from "./AutenticationConfig";
 import Statistiche from "../screens/user/Statistiche";
 import ListaUtenti from "../screens/nutritionist/ListaUtenti";
-import DatiPersonaliNT from "../screens/nutritionist/DatiPersonaliNT";
+import AppuntamentiNT from "../screens/nutritionist/AppuntamentiNT";
 import ListaUtentiPT from "../screens/personaltrainer/ListaUtentiPT";
 import AppuntamentiPT from "../screens/personaltrainer/AppuntamentiPT";
 
@@ -170,7 +170,7 @@ const DrawerNavigator = ({ navigation, route }) => {
                                 />
                             ),
                         }} />
-                        <Drawer.Screen name="Appuntamenti" component={DatiPersonaliNT} options={{
+                        <Drawer.Screen name="Appuntamenti" component={AppuntamentiNT} options={{
                             title: 'Appuntamenti',
                             drawerIcon: ({ }) => (
                                 <Feather

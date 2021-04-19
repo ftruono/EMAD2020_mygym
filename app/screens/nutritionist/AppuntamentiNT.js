@@ -3,15 +3,16 @@ import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, F
 import { Icon } from 'react-native-elements';
 import HeaderComponent from "../../component/HeaderComponent";
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
-import PianiAlimentari from "../nutritionist/PianiAlimentari";
-import BottoneNt from "../nutritionist/BottoneNT";
+import PianiAlimentari from "./PianiAlimentari";
+import BottoneNt from "./BottoneNT";
 import AddAppuntamenti from "./AddAppuntamenti";
 //import AddClienti from "./AddClienti";
 import Feather from "react-native-vector-icons/Feather"
 import moment from 'moment';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import ConfirmDialog from "../../component/ConfirmDialog";
 
-export default class DatiPersonaliNT extends React.Component {
+export default class AppuntamentiNT extends React.Component {
     constructor(props) {
         super(props);
         this.getUser();
@@ -30,6 +31,14 @@ export default class DatiPersonaliNT extends React.Component {
 
     hideDialog = () => this.setState({ visibleDialog: false });
 
+    refreshPage = async () => {
+        this.setState({ noAppuntamenti: false });
+        this.setState({ clienti: [] });
+        this.setState({ appuntamenti: [] });
+        this.setState({ ArrayClienti: [] });
+        this.getUser();
+    };
+
     makeid = (length) => {
         var result = '';
         var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -41,20 +50,19 @@ export default class DatiPersonaliNT extends React.Component {
     }
 
     hidenAddAppuntamenti = (data, cliente) => {
+        const uidFirebase = FirebaseAutentication.currentUser.uid;
         var check = false;
+
         if (this.state.modify) {
-            console.log(cliente)
+
             this.state.appuntamenti.map((e, i) => {
-                console.log(e)
+
                 if (moment(e.giorno.toDate()).format('YYYY-MM-DD HH:mm') === moment(data).format('YYYY-MM-DD HH:mm')) {
                     check = true;
                 } else if (cliente.id === e.id) {
-
-
-
                     this.state.appuntamenti[i] = ({ cliente: cliente.value, giorno: new Date(moment(data).format('YYYY-MM-DD HH:mm:ss')), id: this.makeid(10), nome: cliente.label });
-                    this.setState({ appuntamenti: this.state.appuntamenti})
-                    const uidFirebase = FirebaseAutentication.currentUser.uid;
+                    this.setState({ appuntamenti: this.state.appuntamenti })
+
                     Firestore.collection(
                         'UTENTI'
                     ).doc(
@@ -62,16 +70,14 @@ export default class DatiPersonaliNT extends React.Component {
                     ).update({
                         'appuntamenti': this.state.appuntamenti,
                     }).then(() => {
-                        console.log('User updated!');
+
+                        this.refreshPage();
+                        console.log("Modify");
                     });
 
-                     this.setState({ appuntamenti: [] })
-                     this.getUser()
+
                 }
             })
-
-
-
             if (check) {
                 alert("in quel giorno a quell'ora hai già un appuntamento");
             } else {
@@ -98,7 +104,7 @@ export default class DatiPersonaliNT extends React.Component {
             this.getClienti(e);
         })
         if (nt.appuntamenti.length === 0) {
-            this.setState({ noAppuntamenti: true })
+            this.setState({ noAppuntamenti: true });
         } else {
 
             this.setState({ appuntamenti: nt.appuntamenti });
@@ -172,18 +178,17 @@ export default class DatiPersonaliNT extends React.Component {
                 supportArray.push(e)
             }
         })
-        this.state.appuntamenti = supportArray;
-        this.setState({ appuntamenti: this.state.appuntamenti })
 
-        // Firestore.collection(
-        // 'UTENTI'
-        // ).doc(
-        // uid
-        // ).update({
-        // 'appuntamenti': supportArray,
-        // }).then(() => {
-        // console.log('User updated!');
-        // });
+        Firestore.collection(
+            'UTENTI'
+        ).doc(
+            uid
+        ).update({
+            'appuntamenti': supportArray,
+        }).then(() => {
+            this.refreshPage();
+            console.log('User updated!');
+        });
 
     }
     modify = (item) => {
@@ -212,7 +217,14 @@ export default class DatiPersonaliNT extends React.Component {
                         if (e.title === item.cliente) return e.username;
                     })}</Text>
                 </View>
-                <Text>{moment.locale('it'), moment(new Date(item.giorno.toDate())).format('LLLL')}</Text>
+                {console.log(Object.values(item.giorno))}
+                {Object.values(item.giorno)[1] != null ? (
+                    <>
+                        <Text>{moment.locale('it'), moment(new Date(item.giorno.toDate())).format('LLLL')}</Text>
+
+                    </>) : (<>
+                        <Text>Errore nel caricamento si prega di ricaricare la pagina</Text>
+                    </>)}
 
             </TouchableOpacity>
 
@@ -275,7 +287,7 @@ export default class DatiPersonaliNT extends React.Component {
 
                         <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti} date={this.state.date}
                             modify={this.state.modify} {...this.props} />
-
+                        <ConfirmDialog />
                         <BottoneNt addAppuntamenti={this.addAppuntamenti} />
                     </>
                 )}

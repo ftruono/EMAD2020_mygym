@@ -173,7 +173,7 @@ const AddAppuntamenti = (props) => {
                             style={style.input}
                             onChangeText={onChangeTextData}
                             value={textData}
-                            placeholder={props.modify ? moment(new Date(props.date.toDate())).format('YYYY-MM-YY') : "YYYY-MM-DD"}
+                            placeholder={props.modify ? moment(new Date(props.date.toDate())).format('YYYY-MM-DD') : "YYYY-MM-DD"}
                             keyboardType="text"
                         />
 
@@ -183,7 +183,7 @@ const AddAppuntamenti = (props) => {
                             style={style.input}
                             onChangeText={setHour}
                             value={hour}
-                            placeholder={props.modify ? moment(new Date(props.date.toDate())).format('HH:MM') : "hh:mm"}
+                            placeholder={props.modify ? moment(new Date(props.date.toDate())).format('HH:mm') : "hh:mm"}
                             keyboardType="text"
                         />
 
@@ -197,7 +197,7 @@ const AddAppuntamenti = (props) => {
                                 if (!props.modify) {
                                     addAppuntamentoWeb();
                                 } else {
-                                    hideModal(today, props.ArrayClienti[0]);
+                                    hideModal(textData + " " + hour, props.ArrayClienti[0]);
                                 }
 
                             }} />
