@@ -94,19 +94,27 @@ class Dieta extends React.Component {
                             </>
                         ):(
                             <>
-                                <Text style={styles.titleParagraph}>Nome Nutrizionista:</Text>
-                                <View style={styles.action}>
-                                    <Feather name="user" color="#05375a" size={30} style={{marginLeft:15}}></Feather>
-                                    <TextInput
-                                            placeholder="Username"
-                                            placeholderTextColor="#666666"
-                                            style={styles.textInput}
-                                            autoCapitalize="none"
-                                            editable={this.state.modify}
-                                            onChangeText={text => {this.setState({ username: text })}}
-                                            value={this.state.username}
-                                    />
-                                </View>
+                                {this.props.home ? (
+                                    <>
+                                    </>
+
+                                ):(
+                                    <>
+                                        <Text style={styles.titleParagraph}>Nome Nutrizionista:</Text>
+                                        <View style={styles.action}>
+                                            <Feather name="user" color="#05375a" size={30} style={{marginLeft:15}}></Feather>
+                                            <TextInput
+                                                    placeholder="Username"
+                                                    placeholderTextColor="#666666"
+                                                    style={styles.textInput}
+                                                    autoCapitalize="none"
+                                                    editable={this.state.modify}
+                                                    onChangeText={text => {this.setState({ username: text })}}
+                                                    value={this.state.username}
+                                            />
+                                        </View>
+                                        </>
+                                )}
                             
                                 <FlatList style={{ margin: 10, flex: 0.8, alignContent: 'center' }}
                                     data={contentArray}
