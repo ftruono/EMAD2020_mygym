@@ -52,46 +52,52 @@ export default class AppuntamentiNT extends React.Component {
     hidenAddAppuntamenti = (data, cliente) => {
         const uidFirebase = FirebaseAutentication.currentUser.uid;
         var check = false;
+        if (data === undefined || cliente.id === undefined) {
+            this.state.modify = false;
+            this.setState({ modify: false });
+            this.state.visibleAddAppuntamenti = false;
+            this.setState({ visibleAddAppuntamenti: false });
+        } else {
+            if (this.state.modify) {
 
-        if (this.state.modify) {
+                this.state.appuntamenti.map((e, i) => {
 
-            this.state.appuntamenti.map((e, i) => {
+                    if (moment(e.giorno.toDate()).format('YYYY-MM-DD HH:mm') === moment(data).format('YYYY-MM-DD HH:mm')) {
+                        check = true;
+                    } else if (cliente.id === e.id) {
+                        this.state.appuntamenti[i] = ({ cliente: cliente.value, giorno: new Date(moment(data).format('YYYY-MM-DD HH:mm:ss')), id: this.makeid(10), nome: cliente.label });
+                        this.setState({ appuntamenti: this.state.appuntamenti })
 
-                if (moment(e.giorno.toDate()).format('YYYY-MM-DD HH:mm') === moment(data).format('YYYY-MM-DD HH:mm')) {
-                    check = true;
-                } else if (cliente.id === e.id) {
-                    this.state.appuntamenti[i] = ({ cliente: cliente.value, giorno: new Date(moment(data).format('YYYY-MM-DD HH:mm:ss')), id: this.makeid(10), nome: cliente.label });
-                    this.setState({ appuntamenti: this.state.appuntamenti })
+                        Firestore.collection(
+                            'UTENTI'
+                        ).doc(
+                            uidFirebase
+                        ).update({
+                            'appuntamenti': this.state.appuntamenti,
+                        }).then(() => {
 
-                    Firestore.collection(
-                        'UTENTI'
-                    ).doc(
-                        uidFirebase
-                    ).update({
-                        'appuntamenti': this.state.appuntamenti,
-                    }).then(() => {
-
-                        this.refreshPage();
-                        console.log("Modify");
-                    });
+                            this.refreshPage();
+                            console.log("Modify");
+                        });
 
 
+                    }
+                })
+                if (check) {
+                    alert("in quel giorno a quell'ora hai già un appuntamento");
+                } else {
+                    this.state.modify = false;
+                    this.setState({ modify: false });
+                    this.state.visibleAddAppuntamenti = false;
+                    this.setState({ visibleAddAppuntamenti: false });
                 }
-            })
-            if (check) {
-                alert("in quel giorno a quell'ora hai già un appuntamento");
+
             } else {
                 this.state.modify = false;
                 this.setState({ modify: false });
                 this.state.visibleAddAppuntamenti = false;
                 this.setState({ visibleAddAppuntamenti: false });
             }
-
-        } else {
-            this.state.modify = false;
-            this.setState({ modify: false });
-            this.state.visibleAddAppuntamenti = false;
-            this.setState({ visibleAddAppuntamenti: false });
         }
     }
 
