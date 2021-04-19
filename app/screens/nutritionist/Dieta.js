@@ -17,13 +17,15 @@ class Dieta extends React.Component {
         state = {
             diete:[],
             pasti:[],
-            noDiete:false
+            noDiete:false,
+            nutrizionista:''
         }
     
         getUserAndDiete = async () => {
             var uid = FirebaseAutentication.currentUser.uid
             const user = (await Firestore.collection('UTENTI').doc(uid).get()).data();
             this.setState({diete:user.diete})
+            this.setState({nutrizionista:user.nomeNutrizionista})
             if(this.state.diete[0] !== undefined) {
                 const pastiData =(await Firestore.collection('DIETE').doc(this.state.diete[0]).get()).data();
                 this.state.pasti.push(pastiData);
@@ -63,7 +65,6 @@ class Dieta extends React.Component {
                 if(this.state.pasti.length == 0) {
                     return null
                 } else{
-                    console.log("Sono qui")
                     pastiArray = (Object.values(pastiArray))
     
                     pastiArray.map((lista,i) => {
@@ -104,13 +105,13 @@ class Dieta extends React.Component {
                                         <View style={styles.action}>
                                             <Feather name="user" color="#05375a" size={30} style={{marginLeft:15}}></Feather>
                                             <TextInput
-                                                    placeholder="Username"
+                                                    placeholder="Nome Nutrizionista"
                                                     placeholderTextColor="#666666"
-                                                    style={styles.textInput}
+                                                    style={{marginLeft:5}}
                                                     autoCapitalize="none"
-                                                    editable={this.state.modify}
-                                                    onChangeText={text => {this.setState({ username: text })}}
-                                                    value={this.state.username}
+                                                    editable={false}
+                                                    onChangeText={text => {this.setState({ nomeNutrizionista: text })}}
+                                                    value={this.state.nomeNutrizionista}
                                             />
                                         </View>
                                         </>

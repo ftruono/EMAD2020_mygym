@@ -197,7 +197,9 @@ class Register extends React.Component {
                     email: emailUser,
                     misure:[],
                     schede:[],
-                    diete:[]
+                    diete:[],
+                    nomePersonalTrainer:'',
+                    nomeNutrizionista:''
                 });
 
             }

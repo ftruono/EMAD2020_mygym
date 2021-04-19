@@ -7,6 +7,7 @@ import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import { Icon } from 'react-native-elements';
 import Feather from "react-native-vector-icons/Feather"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 
 // import nextId from 'react-id-generator';
 
@@ -20,7 +21,8 @@ export default class DatiPersonaliUser extends Component {
             arrayMisurazioni: [],
             modify: false,
             username:'',
-            userUid:''
+            userUid:'',
+            personalTrainer:''
         }
         this.getValori();
     }
@@ -100,6 +102,7 @@ export default class DatiPersonaliUser extends Component {
         console.log("user-> ", user.username);
         this.setState({username: user.username});
         this.setState({userUid: uid});
+        this.setState({personalTrainer: user.nomePersonalTrainer})
 /*         const misure1 = (await Firestore.collection('MISURE').doc(user.misurazioni).get()).data();
         console.log("misure->", misure);
         this.setState({ misure: Object.keys(misure1.misurazioni).map((key) => misure1.misurazioni[key]) });
@@ -161,6 +164,19 @@ export default class DatiPersonaliUser extends Component {
                                 value={this.state.username}
                         />
                     </View>
+
+                    <Text style={styles.titleParagraph}>Nome Personal Trainer:</Text>
+                            <View style={styles.action}>
+                            <MaterialIcons name="fitness-center" color="#05375a" size={30}></MaterialIcons>
+                                    <TextInput
+                                        placeholder="Nome Personal Trainer"
+                                        placeholderTextColor="#666666"
+                                        style={{marginLeft:5, fontSize:20}}
+                                        autoCapitalize="none"
+                                        editable={false}
+                                        value={this.state.personalTrainer}
+                                    />
+                            </View>
                         <Text style={styles.textHeader}>Dati personali</Text>
                         
                         <View style={{ marginTop: 15 }}>
@@ -234,7 +250,8 @@ const styles = StyleSheet.create({
         color: '#05375a',
         fontSize: 30,
         fontWeight: "bold",
-        marginTop: 100
+        marginTop: 70,
+        textAlign:'center'
     },
     textInput: {
         flex: 1,
@@ -243,37 +260,6 @@ const styles = StyleSheet.create({
         color: '#05375a',
         fontSize:25
     },
-    button: {
-        alignItems: 'center',
-        marginTop: 50
-    },
-    signIn: {
-        width: '100%',
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10
-    },
-    textSign: {
-        fontSize: 18,
-        color: '#fff',
-        fontWeight: 'bold'
-    },
-    appButtonContainer: {
-        position: 'absolute',
-        zIndex: 11,
-        right: 20,
-        bottom: 90,
-        width: 45,
-        height: 45,
-        borderRadius: 50,
-        backgroundColor: 'black',
-        borderColor: 'black',
-        alignItems: 'center',
-        justifyContent: 'center',
-        elevation: 8,
-    },
-
     appButtonSave: {
         position: 'absolute',
         zIndex: 11,
@@ -294,5 +280,11 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         alignSelf: "center",
         textTransform: "uppercase"
+    },
+    titleParagraph: {
+        fontSize:20,
+        fontWeight:'bold',
+        textAlign:'left',
+        marginTop:25,
     }
 });

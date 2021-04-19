@@ -29,6 +29,25 @@ const AddClienti = (props) => {
             }).then(() => {
                 console.log('User updated!');
             });
+        
+        const user = support[support.length-1];
+        if(nt.type === 'NT'){
+            Firestore.collection('UTENTI').
+                doc(user).
+                update({
+                    'nomeNutrizionista': nt.username,
+                }).then(() => {
+                    console.log('User updated!');
+                });
+        } else {
+           Firestore.collection('UTENTI').
+                doc(user).
+                update({
+                    'nomePersonalTrainer': nt.username,
+                }).then(() => {
+                    console.log('User updated!');
+                });
+        }
 
         setVisible(false);
         props.hidenAddClienti();
