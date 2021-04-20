@@ -83,7 +83,7 @@ class HomeUser extends React.Component {
                     
                 
                 <Text style={styles.titleParagraph}>Dieta</Text>
-                <Dieta {...this.props} isComponent={true} />
+                <Dieta {...this.props} isComponent={true} home={true} />
             </SafeAreaView>
         );
     }

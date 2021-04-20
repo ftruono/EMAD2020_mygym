@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
-import { StyleSheet, View, Button, Text, SafeAreaView, ScrollView, Dimensions, FlatList } from 'react-native';
-import { Card, ListItem, Icon } from 'react-native-elements';
+import { StyleSheet, View, TextInput, Text, SafeAreaView, ScrollView, Dimensions, FlatList } from 'react-native';
+import Feather from "react-native-vector-icons/Feather"
 import DietaComponent from "../../component/DietaComponent";
 import HeaderComponent from "../../component/HeaderComponent";
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
@@ -17,13 +17,15 @@ class Dieta extends React.Component {
         state = {
             diete:[],
             pasti:[],
-            noDiete:false
+            noDiete:false,
+            nutrizionista:''
         }
     
         getUserAndDiete = async () => {
             var uid = FirebaseAutentication.currentUser.uid
             const user = (await Firestore.collection('UTENTI').doc(uid).get()).data();
             this.setState({diete:user.diete})
+            this.setState({nutrizionista:user.nomeNutrizionista})
             if(this.state.diete[0] !== undefined) {
                 const pastiData =(await Firestore.collection('DIETE').doc(this.state.diete[0]).get()).data();
                 this.state.pasti.push(pastiData);
@@ -63,7 +65,6 @@ class Dieta extends React.Component {
                 if(this.state.pasti.length == 0) {
                     return null
                 } else{
-                    console.log("Sono qui")
                     pastiArray = (Object.values(pastiArray))
     
                     pastiArray.map((lista,i) => {
@@ -94,6 +95,27 @@ class Dieta extends React.Component {
                             </>
                         ):(
                             <>
+                                {this.props.home ? (
+                                    <>
+                                    </>
+
+                                ):(
+                                    <>
+                                        <Text style={styles.titleParagraph}>Nome Nutrizionista:</Text>
+                                        <View style={styles.action}>
+                                            <Feather name="user" color="#05375a" size={30} style={{marginLeft:15}}></Feather>
+                                            <TextInput
+                                                    placeholder="Nome Nutrizionista"
+                                                    placeholderTextColor="#666666"
+                                                    style={{marginLeft:5}}
+                                                    autoCapitalize="none"
+                                                    editable={false}
+                                                    onChangeText={text => {this.setState({ nomeNutrizionista: text })}}
+                                                    value={this.state.nomeNutrizionista}
+                                            />
+                                        </View>
+                                        </>
+                                )}
                             
                                 <FlatList style={{ margin: 10, flex: 0.8, alignContent: 'center' }}
                                     data={contentArray}
@@ -137,6 +159,20 @@ const styles = StyleSheet.create({
         textAlign:'center',
         marginTop:15,
         textDecorationLine: 'underline'
+      },
+      titleParagraph: {
+          fontSize:20,
+          fontWeight:'bold',
+          textAlign:'left',
+          marginTop:25,
+          marginLeft:15
+      },
+      action: {
+          flexDirection: 'row',
+          marginTop: 15,
+          borderBottomWidth: 1,
+          borderBottomColor: '#f2f2f2',
+          paddingBottom: 7
       }
 
 });

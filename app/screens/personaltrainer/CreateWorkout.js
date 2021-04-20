@@ -34,6 +34,7 @@ class CreateWorkout extends Component {
         this.state.schedaArray[selectDay].esercizi.push({ esercizio: '', ripetizioni: '', colpi: '', recupero: '' })
         var support = this.state.schedaArray;
         this.setState({ schedaArray: support });
+        console.log(this.state.schedaArray)
     }
 
     aggiungiValori = (daySelect, num, eser, valori) => {
@@ -57,6 +58,7 @@ class CreateWorkout extends Component {
         }
         var support = this.state.schedaArray;
         this.setState({ schedaArray: support });
+        console.log(this.state.schedaArray)
     }
 
     daySelected = (day) => {
@@ -84,6 +86,7 @@ class CreateWorkout extends Component {
     }
 
     getClienti = async (idCliente) => {
+        const newArray = [];
         const utente = (await Firestore.collection('UTENTI').doc(idCliente).get()).data();
 
         this.state.clienti.push({ title: idCliente, username: utente.username });
@@ -93,7 +96,14 @@ class CreateWorkout extends Component {
             this.state.arrayClienti.push({ label: e.username, value: e.title })
         })
 
-        this.setState({ arrayClienti: this.state.arrayClienti })
+        
+        this.state.arrayClienti.forEach(obj => {
+            if (!newArray.some(o => o.label === obj.label)) {
+                newArray.push({ ...obj })
+            }
+        });
+
+        this.setState({ arrayClienti: newArray })
         console.log(this.state.arrayClienti)
     }
 
