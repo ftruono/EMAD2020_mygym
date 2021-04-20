@@ -275,7 +275,7 @@ export default class AppuntamentiNT extends React.Component {
                         <Text style={styles.titleThParagraph}> aggiungine dei nuovi con il bottone in fondo alla pagina</Text>
 
                         <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti}
-                            ArrayUid={this.state.uidClienti} {...this.props} />
+                            date={!this.state.modify ? new Date() : this.state.date} modify={this.state.modify} {...this.props} />
 
                         <BottoneNt addAppuntamenti={this.addAppuntamenti} />
 
@@ -291,8 +291,8 @@ export default class AppuntamentiNT extends React.Component {
                             renderItem={this.renderAppuntamenti}
                         />
 
-                        <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti} date={this.state.date}
-                            modify={this.state.modify} {...this.props} />
+                        <AddAppuntamenti hidenAddAppuntamenti={this.hidenAddAppuntamenti} visible={this.state.visibleAddAppuntamenti} ArrayClienti={this.state.ArrayClienti}
+                            date={!this.state.modify ? new Date() : this.state.date} modify={this.state.modify} {...this.props} />
                         <ConfirmDialog />
                         <BottoneNt addAppuntamenti={this.addAppuntamenti} />
                     </>

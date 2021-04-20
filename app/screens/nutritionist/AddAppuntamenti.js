@@ -13,18 +13,30 @@ const AddAppuntamenti = (props) => {
     let ArrayClienti = props.ArrayClienti, itemsDropDown = [];
 
     const [visible, setVisible] = React.useState(props.visible);
+    //per pc
     const [textData, onChangeTextData] = React.useState(null);
     const [hour, setHour] = React.useState(null);
+    //per mobile
+    const [date, setDate] = React.useState(new Date())
+    // const [mode, setMode] = React.useState('date');
 
-    const [date, setDate] = React.useState(new Date());
     const [user, setUser] = React.useState('');
     const [uid, setUid] = React.useState('')
-    const [mode, setMode] = React.useState('date');
-    const [show, setShow] = React.useState(false);
+    const [supportModify, setSupportModify] = React.useState(true)
     const uidFirebase = FirebaseAutentication.currentUser.uid;
 
     // const showModal = () => React.setVisible(true);
-    const hideModal = (data, cliente) => { setVisible(false), props.hidenAddAppuntamenti(data, cliente) };
+    const hideModal = (data, cliente) => {
+        setVisible(false),
+            props.hidenAddAppuntamenti(data, cliente),
+            setDate(new Date()),
+            setHour(null),
+            onChangeTextData(null),
+            setSupportModify(true),
+            setUser(''),
+            setUid('')
+    };
+
     const selectUser = (name) => { console.log(Object.values(name)[1]); setUser(Object.values(name)[1]); setUid(Object.values(name)[1]); }
 
     const makeid = (length) => {
@@ -38,10 +50,22 @@ const AddAppuntamenti = (props) => {
     };
 
     const onChange = (event, selectedDate) => {
+
+        props.modify === true ? setSupportModify(false) : '';
         const currentDate = selectedDate || date;
-        setShow(Platform.OS === 'ios');
+
         setDate(currentDate);
-        setMode('time');
+
+
+    };
+
+
+    const onChangeTime = (event, selectedDate) => {
+
+        props.modify === true ? setSupportModify(false) : '';
+        const currentDate = selectedDate || date;
+
+        setDate(currentDate);
     };
 
 
@@ -141,14 +165,26 @@ const AddAppuntamenti = (props) => {
 
                     <Text>Seleziona giorno e ora</Text>
                     {Platform.OS !== 'web' && <>
+
+
+
                         <DateTimePicker
                             testID="dateTimePicker"
-                            value={!props.modify ? date : new Date(props.date.toDate())}
-                            mode={mode}
+                            value={props.modify && supportModify ? new Date(props.date.toDate()) : date}
+                            mode={'date'}
                             is24Hour={true}
                             display="default"
                             onChange={onChange}
                         />
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={props.modify && supportModify ? new Date(props.date.toDate()) : date}
+                            mode={'time'}
+                            is24Hour={true}
+                            display="default"
+                            onChange={onChangeTime}
+                        />
+
                         <Icon
                             raised
                             name='check'
@@ -156,10 +192,13 @@ const AddAppuntamenti = (props) => {
                             color='#f50'
                             onPress={() => {
                                 if (!props.modify) {
+                                    console.log(date);
+
                                     addAppuntamento();
                                     hideModal();
                                 } else {
-                                    hideModal(date, props.ArrayClienti[0]);
+                                    console.log(date);
+                                    // hideModal(date, props.ArrayClienti[0]);
                                 }
 
 
