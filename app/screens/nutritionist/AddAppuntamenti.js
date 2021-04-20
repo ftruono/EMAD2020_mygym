@@ -6,7 +6,7 @@ import { StyleSheet, TouchableOpacity, Platform, TextInput, Text } from 'react-n
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import moment from 'moment';
-//import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 
 
@@ -172,14 +172,14 @@ const AddAppuntamenti = (props) => {
 
 
 
-                        {/* <DateTimePickerModal
+                        <DateTimePickerModal
                             isVisible={isDatePickerVisible}
                             mode="datetime"
                             locale="it_IT" // Use "en_GB" here
                             date={props.modify && supportModify ? new Date(props.date.toDate()) : new Date()}
                             onConfirm={handleConfirm}
                             onCancel={hideDatePicker}
-                        /> */}
+                        />
 
 
 
