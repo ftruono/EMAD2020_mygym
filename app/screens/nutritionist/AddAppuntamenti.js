@@ -6,6 +6,7 @@ import { StyleSheet, TouchableOpacity, Platform, TextInput, Text } from 'react-n
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import moment from 'moment';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 
 
@@ -13,31 +14,33 @@ const AddAppuntamenti = (props) => {
     let ArrayClienti = props.ArrayClienti, itemsDropDown = [];
 
     const [visible, setVisible] = React.useState(props.visible);
+    const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
+
     //per pc
     const [textData, onChangeTextData] = React.useState(null);
     const [hour, setHour] = React.useState(null);
     //per mobile
-    const [date, setDate] = React.useState(new Date())
-    // const [mode, setMode] = React.useState('date');
+    const [date, setDate] = React.useState(new Date());
+    const [mode, setMode] = React.useState('date');
 
     const [user, setUser] = React.useState('');
-    const [uid, setUid] = React.useState('')
+    const [uid, setUid] = React.useState(null)
     const [supportModify, setSupportModify] = React.useState(true)
     const uidFirebase = FirebaseAutentication.currentUser.uid;
 
     // const showModal = () => React.setVisible(true);
     const hideModal = (data, cliente) => {
         setVisible(false),
-            props.hidenAddAppuntamenti(data, cliente),
-            setDate(new Date()),
-            setHour(null),
-            onChangeTextData(null),
-            setSupportModify(true),
-            setUser(''),
-            setUid('')
+        props.hidenAddAppuntamenti(data, cliente)
+        // setDate(new Date()),
+        // setHour(null),
+        // onChangeTextData(null),
+        // setSupportModify(true),
+        // setUser(''),
+        // setUid('')
     };
 
-    const selectUser = (name) => { console.log(Object.values(name)[1]); setUser(Object.values(name)[1]); setUid(Object.values(name)[1]); }
+    const selectUser = (name) => { console.log(Object.values(name)); setUser(Object.values(name)[1]); setUid(Object.values(name)); }
 
     const makeid = (length) => {
         var result = '';
@@ -48,27 +51,6 @@ const AddAppuntamenti = (props) => {
         }
         return result;
     };
-
-    const onChange = (event, selectedDate) => {
-
-        props.modify === true ? setSupportModify(false) : '';
-        const currentDate = selectedDate || date;
-
-        setDate(currentDate);
-
-
-    };
-
-
-    const onChangeTime = (event, selectedDate) => {
-
-        props.modify === true ? setSupportModify(false) : '';
-        const currentDate = selectedDate || date;
-
-        setDate(currentDate);
-    };
-
-
 
 
     const addAppuntamentoWeb = async () => {
@@ -85,13 +67,14 @@ const AddAppuntamenti = (props) => {
             alert("data non valida si preda di rispettare il formato delineato")
         } else if (moment().format("YYYY MM DD") > moment(today, true).format("YYYY MM DD")) {
             alert("seleziona una data valida");
-        } else if (user === '' || uid === '') {
+        } else if ( uid === null) {
             alert("seleziona un utente valido");
         } else {
             let nt = (await Firestore.collection('UTENTI').doc(uidFirebase).get()).data();
             let support = [];
 
-            nt.appuntamenti.push({ giorno: new Date(moment(supportDate).format('YYYY-MM-DD HH:mm:ss')), cliente: uid, id: makeid(10) });
+
+            nt.appuntamenti.push({ giorno: new Date(moment(supportDate).format('YYYY-MM-DD HH:mm:ss')), cliente: Object.values(uid)[1], id: makeid(10), nome: Object.values(uid)[0] });
             support = nt.appuntamenti;
 
             Firestore.collection(
@@ -114,14 +97,14 @@ const AddAppuntamenti = (props) => {
 
         if (moment().format("MMM Do YY") > moment(date, true).format("MMM Do YY")) {
             alert("seleziona una data valida");
-        } else if (user === '' || uid === '') {
+        } else if (uid === null) {
             alert("seleziona un utente valido");
         } else {
             let nt = (await Firestore.collection('UTENTI').doc(uidFirebase).get()).data();
             let support = [];
 
 
-            nt.appuntamenti.push({ giorno: date, cliente: uid, id: makeid(10), nome: user });
+            nt.appuntamenti.push({ giorno: date, cliente: Object.values(uid)[1], id: makeid(10), nome: Object.values(uid)[0] });
             support = nt.appuntamenti;
 
 
@@ -142,6 +125,18 @@ const AddAppuntamenti = (props) => {
         }
     };
 
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const handleConfirm = (date) => {
+        setDate(date)
+        console.log("A date has been picked: ", date);
+
+        hideDatePicker();
+
+
+    };
     return (
 
         <Provider>
@@ -167,8 +162,28 @@ const AddAppuntamenti = (props) => {
                     {Platform.OS !== 'web' && <>
 
 
+                        <Button onPress={() => { setDatePickerVisibility(true); setMode('date') }}>Seleziona giorno e ora</Button>
+                        {moment().format() === moment(date, true).format() ? (<>
+                            <Text>La data scelta è {moment.locale('it'), moment().format('LLLL')}</Text>
+                        </>) : (<>
+                            <Text>La data scelta è {moment.locale('it'), moment(date).format('LLLL')}</Text>
 
-                        <DateTimePicker
+                        </>)}
+
+
+
+                        <DateTimePickerModal
+                            isVisible={isDatePickerVisible}
+                            mode="datetime"
+                            locale="it_IT" // Use "en_GB" here
+                            date={props.modify && supportModify ? new Date(props.date.toDate()) : new Date()}
+                            onConfirm={handleConfirm}
+                            onCancel={hideDatePicker}
+                        />
+
+
+
+                        {/* <DateTimePicker
                             testID="dateTimePicker"
                             value={props.modify && supportModify ? new Date(props.date.toDate()) : date}
                             mode={'date'}
@@ -183,7 +198,7 @@ const AddAppuntamenti = (props) => {
                             is24Hour={true}
                             display="default"
                             onChange={onChangeTime}
-                        />
+                        /> */}
 
                         <Icon
                             raised
@@ -256,7 +271,7 @@ const AddAppuntamenti = (props) => {
 
                 </Modal>
             </Portal>
-        </Provider>
+        </Provider >
     );
 };
 

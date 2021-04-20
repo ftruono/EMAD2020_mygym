@@ -12,6 +12,7 @@ import moment from 'moment';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import ConfirmDialog from "../../component/ConfirmDialog";
 
+
 export default class AppuntamentiNT extends React.Component {
     constructor(props) {
         super(props);
@@ -158,17 +159,17 @@ export default class AppuntamentiNT extends React.Component {
         })
 
         this.setState({ ArrayClienti: this.state.ArrayClienti })
-        console.log(this.state.ArrayClienti)
+        // console.log(this.state.ArrayClienti)
     };
 
     trash = (item) => {
         var support;
         const uid = FirebaseAutentication.currentUser.uid;
 
-        console.log("item", Object.values(item)[2])
+        // console.log("item", Object.values(item)[2])
 
         this.state.appuntamenti.map((e, i) => {
-            console.log(Object.values(e)[2])
+            // console.log(Object.values(e)[2])
 
             if (Object.values(item)[2] === Object.values(e)[2]) {
                 support = i
@@ -223,7 +224,7 @@ export default class AppuntamentiNT extends React.Component {
                         if (e.title === item.cliente) return e.username;
                     })}</Text>
                 </View>
-                {console.log(Object.values(item.giorno))}
+                {/* {console.log(Object.values(item.giorno))} */}
                 {Object.values(item.giorno)[1] != null ? (
                     <>
                         <Text>{moment.locale('it'), moment(new Date(item.giorno.toDate())).format('LLLL')}</Text>
