@@ -15,6 +15,7 @@ const BottoneAddWorkOut = (props) => {
           <FAB.Group
             open={open}
             icon={open ? 'plus' : 'plus'}
+            style={{paddingBottom:75}}
             actions={[
               {
                 icon: 'email',

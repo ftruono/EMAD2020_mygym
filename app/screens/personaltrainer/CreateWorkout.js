@@ -107,6 +107,13 @@ class CreateWorkout extends Component {
         console.log(this.state.arrayClienti)
     }
 
+    aggiungiScheda = async () => {
+        console.log(this.state.userSelected)
+
+        console.log(this.state.schedaArray[0].esercizi + 'day'+this.state.schedaArray[0].day)
+
+    }
+
     render() {
         const { schedaArray } = this.state;
         return (
@@ -138,6 +145,9 @@ class CreateWorkout extends Component {
                     )}
                 />
                 <BottoneAddWorkOut addDay={this.addDay} addEsercizio={this.addEsercizio} exitDay={selectDay} atletaSelezionato={this.state.userSelected}/>
+                <TouchableOpacity style={styles.appButtonSave} onPress={() => { this.aggiungiScheda() }}>
+                    <Text style={styles.appButtonText}>Salva</Text>
+                </TouchableOpacity>
             </SafeAreaView>
         );
     }
@@ -159,6 +169,27 @@ const styles = StyleSheet.create({
         textAlign:'left',
         marginTop:25,
         marginLeft:15
+    },
+    appButtonText: {
+        fontSize: 20,
+        color: "#fff",
+        fontWeight: "bold",
+        alignSelf: "center",
+        textTransform: "uppercase"
+    },
+    appButtonSave: {
+        position: 'absolute',
+        zIndex: 11,
+        right: 20,
+        bottom: 20,
+        width: 120,
+        height: 45,
+        borderRadius: 30,
+        backgroundColor: '#ff6c16',
+        borderColor: 'black',
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 8,
     }
 })
 

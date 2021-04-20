@@ -16,8 +16,8 @@ export const Login = () => {
     
 
     const [iconName, setIconName] = React.useState("eye-off");
-    const [username, setUsername] = React.useState("fra@fra.it");
-    const [password, setPassword] = React.useState("frafra");
+    const [username, setUsername] = React.useState("nello@nello.it");
+    const [password, setPassword] = React.useState("nellonello");
     const [secureTextEntry, setSecureTextEntry] = React.useState(true)
     const [nameErrror, setNameError] = React.useState('');
     const [passwordError, setPasswordError] = React.useState('');
