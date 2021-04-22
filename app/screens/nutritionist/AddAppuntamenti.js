@@ -3,7 +3,6 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { Icon } from 'react-native-elements';
 import { Modal, Portal, Button, Provider, View } from 'react-native-paper';
 import { StyleSheet, TouchableOpacity, Platform, TextInput, Text } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
 import moment from 'moment';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -32,12 +31,12 @@ const AddAppuntamenti = (props) => {
     const hideModal = (data, cliente) => {
         setVisible(false),
         props.hidenAddAppuntamenti(data, cliente)
-        // setDate(new Date()),
-        // setHour(null),
-        // onChangeTextData(null),
-        // setSupportModify(true),
-        // setUser(''),
-        // setUid('')
+        setDate(new Date()),
+        setHour(null),
+         onChangeTextData(null),
+         setSupportModify(true),
+         setUser(''),
+         setUid(null)
     };
 
     const selectUser = (name) => { console.log(Object.values(name)); setUser(Object.values(name)[1]); setUid(Object.values(name)); }
@@ -282,10 +281,6 @@ const style = StyleSheet.create({
         margin: 12,
         borderWidth: 1,
     },
-    modal: { backgroundColor: 'white', padding: 20, },
-    selectStyle: { backgroundColor: '#fafafa', },
-    selectdropDownStyle: { backgroundColor: '#fafafa', },
-    itemSelectStyle: { justifyContent: 'flex-start', },
     button: {
         position: 'absolute',
         zIndex: 11,
@@ -307,8 +302,9 @@ const style = StyleSheet.create({
         alignSelf: "center",
         textTransform: "uppercase"
     },
+    modal: { backgroundColor: 'white', padding: 20, },
     selectStyle: { backgroundColor: '#ff6c16', },
     selectdropDownStyle: { backgroundColor: '#ff6c16', },
-    itemSelectStyle: { backgroundColor: '#ff6c16', },
+    itemSelectStyle: { justifyContent: 'flex-start', backgroundColor: '#ff6c16', },
 })
 export default AddAppuntamenti;
