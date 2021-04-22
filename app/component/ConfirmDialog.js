@@ -11,7 +11,7 @@ const ConfirmDialog = (props) => {
 
     const [visible, setVisible] = React.useState(props.visible);
 
-    const hideDialog = () => { setVisible(false) };
+    const hideDialog = () => {setVisible(false), props.hidenConfirmDialog };
 
 
     return (
@@ -23,7 +23,7 @@ const ConfirmDialog = (props) => {
                     <Dialog.Title> {props.text != undefined ? props.text : ''} </Dialog.Title>
 
                     <Dialog.Actions>
-                        <Button icon="camera" mode="contained" onPress={() => props.hidenConfirmDialog}>NO</Button>
+                        <Button icon="camera" mode="contained" onPress={() => setVisible(false),props.hidenConfirmDialog}>NO</Button>
                         <Button icon="check" mode="contained" onPress={() => console.log("chekc"), props.check}>SI</Button>
                     </Dialog.Actions>
                 </Dialog>
