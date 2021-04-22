@@ -213,7 +213,7 @@ const AddAppuntamenti = (props) => {
                                     hideModal();
                                 } else {
                                     console.log(date);
-                                    // hideModal(date, props.ArrayClienti[0]);
+                                    hideModal(date, props.ArrayClienti[0]);
                                 }
 
 
@@ -222,7 +222,7 @@ const AddAppuntamenti = (props) => {
                     </>}
 
                     {Platform.OS === 'web' && <>
-                        <Text>Inserisci la data con il seguente formato DD/MM/YYY</Text>
+                        <Text>Inserisci la data con il seguente formato YYYY-MM-DD</Text>
                         <TextInput
                             style={style.input}
                             onChangeText={onChangeTextData}
