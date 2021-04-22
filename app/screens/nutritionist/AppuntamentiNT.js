@@ -85,12 +85,17 @@ export default class AppuntamentiNT extends React.Component {
                     }
                 })
                 if (check) {
+                    this.state.visibleAddAppuntamenti = false;
+                    this.setState({ visibleAddAppuntamenti: false });
                     alert("in quel giorno a quell'ora hai già un appuntamento");
+                    this.state.visibleAddAppuntamenti = true;
+                    this.setState({ visibleAddAppuntamenti: true });
                 } else {
                     this.state.modify = false;
                     this.setState({ modify: false });
                     this.state.visibleAddAppuntamenti = false;
                     this.setState({ visibleAddAppuntamenti: false });
+                    this.refreshPage();
                 }
 
             } else {
@@ -98,6 +103,7 @@ export default class AppuntamentiNT extends React.Component {
                 this.setState({ modify: false });
                 this.state.visibleAddAppuntamenti = false;
                 this.setState({ visibleAddAppuntamenti: false });
+                this.refreshPage();
             }
         }
     }
@@ -127,9 +133,13 @@ export default class AppuntamentiNT extends React.Component {
     }
 
     addAppuntamenti = async () => {
-        this.getMyClienti();
+        this.state.ArrayClienti = [];
+        this.setState({ ArrayClienti: this.state.ArrayClienti });
+
+        this.getMyClienti(this.state.ArrayClienti);
+
         this.state.visibleAddAppuntamenti = true;
-        this.setState({ visibleAddAppuntamenti: true })
+        this.setState({ visibleAddAppuntamenti: true });
     }
 
     getUsers = async () => {
@@ -198,65 +208,82 @@ export default class AppuntamentiNT extends React.Component {
         });
 
     }
+
     modify = (item) => {
+        //gli passo la data
+        this.setState({ date: item.giorno });
 
-        this.setState({ date: item.giorno })
-
-        this.state.ArrayClienti = []
-        this.setState({ ArrayClienti: this.state.ArrayClienti })
-        this.state.ArrayClienti.push({ label: item.nome, value: item.cliente, id: item.id })
-        this.setState({ ArrayClienti: this.state.ArrayClienti })
-
+        //svuoto l'array
+        this.state.ArrayClienti = [];
+        this.setState({ ArrayClienti: this.state.ArrayClienti });
+        //gli assegno solo il cliente che devo modificare
+        this.state.ArrayClienti.push({ label: item.nome, value: item.cliente, id: item.id });
+        this.setState({ ArrayClienti: this.state.ArrayClienti });
+        //gli dico che sto in modalità modifica
         this.state.modify = true;
-        this.setState({ modify: this.state.modify })
-
+        this.setState({ modify: this.state.modify });
+        //apro il modal
         this.state.visibleAddAppuntamenti = true;
-        this.setState({ visibleAddAppuntamenti: true })
+        this.setState({ visibleAddAppuntamenti: true });
 
     }
 
     renderAppuntamenti = ({ item }) => (
-        <View style={styles.item}>
-            <TouchableOpacity>
-                <View style={styles.action}>
-                    <Feather name="book-open" color="#05375a" size={30}></Feather>
-                    <Text style={styles.title}>{this.state.clienti.map((e) => {
-                        if (e.title === item.cliente) return e.username;
-                    })}</Text>
+        <View style={[styles.item, { flexDirection: "row" }]}>
+            <View style={ { flex: 3 }}>
+                <TouchableOpacity>
+                    <View style={[styles.action, { flex: 1 }]}>
+                        <Feather name="book-open" color="#05375a" size={30}></Feather>
+                        <Text style={styles.title}>{this.state.clienti.map((e) => {
+                            if (e.title === item.cliente) return e.username;
+                        })}</Text>
+                    </View>
+                    {/* {console.log(Object.values(item.giorno))} */}
+
+
+                    {Object.values(item.giorno)[1] != null ? (
+                        <>
+                            <Text>{moment.locale('it'), moment(new Date(item.giorno.toDate())).format('LLLL')}</Text>
+
+                        </>) : (<>
+                            <Text>Errore nel caricamento si prega di ricaricare la pagina</Text>
+                        </>)}
+                </TouchableOpacity>
+            </View>
+
+            <View style={[styles.item, { flex: 1 }]}>
+                <View style={styles.item}>
+
+                    <Icon
+                        size={width > 500 ? 30 : width / 17}
+                        name='pencil'
+                        style={{ marginTop: 5 }}
+                        type='font-awesome'
+                        color='#f50'
+                        onPress={() => {
+                            this.modify(item)
+                        }}
+                    />
                 </View>
-                {/* {console.log(Object.values(item.giorno))} */}
-                {Object.values(item.giorno)[1] != null ? (
-                    <>
-                        <Text>{moment.locale('it'), moment(new Date(item.giorno.toDate())).format('LLLL')}</Text>
+                <View style={styles.item}>
 
-                    </>) : (<>
-                        <Text>Errore nel caricamento si prega di ricaricare la pagina</Text>
-                    </>)}
 
-            </TouchableOpacity>
-
-            <Icon
-                size='35'
-                name='pencil'
-                style={{ marginTop: 5 }}
-                type='font-awesome'
-                color='#f50'
-                onPress={() => {
-                    this.modify(item)
-                }}
-            />
-            <Icon
-                size='35'
-                name='trash'
-                style={{ marginTop: 5 }}
-                type='font-awesome'
-                color='#f50'
-                onPress={() => {
-                    this.trash(item)
-                }}
-            />
+                    <Icon
+                        size={width > 500 ? 30 : width / 17}
+                        name='trash'
+                        style={{ marginTop: 5 }}
+                        type='font-awesome'
+                        color='#f50'
+                        onPress={() => {
+                            this.trash(item)
+                        }}
+                    />
+                </View>
+            </View>
         </View>
+
     );
+
     render() {
 
         return (
@@ -265,7 +292,7 @@ export default class AppuntamentiNT extends React.Component {
 
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.titleParagraph}>I tuoi appuntamenti:</Text>
-                    <TouchableOpacity onPress={() => alert('Refresh')} >
+                    <TouchableOpacity onPress={() => this.refreshPage()} >
                         <MaterialIcons name="refresh" color="#05375a" size={25} style={{ marginTop: 25, marginLeft: 30 }}></MaterialIcons>
                     </TouchableOpacity>
                 </View>
@@ -313,6 +340,7 @@ const styles = StyleSheet.create({
         marginBottom: 100,
     },
     item: {
+        flexDirection: 'row',
         backgroundColor: 'transparent',
         padding: 10,
         marginVertical: 1,
