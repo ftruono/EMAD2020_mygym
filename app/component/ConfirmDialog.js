@@ -19,7 +19,7 @@ const ConfirmDialog = (props) => {
         <Provider>
             <Portal styel={{ padding: 20, }}>
 
-                <Dialog visible={props.visible} onDismiss={hideDialog} contentContainerStyle={style.modal}>
+                <Dialog visible={props.visible} onDismiss={() => setVisible(false),props.hidenConfirmDialog} contentContainerStyle={style.modal}>
                     <Dialog.Title> {props.text != undefined ? props.text : ''} </Dialog.Title>
 
                     <Dialog.Actions>
