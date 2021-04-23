@@ -12,6 +12,7 @@ import moment from 'moment';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import ConfirmDialog from "../../component/ConfirmDialog";
 
+const { width, height } = Dimensions.get('screen');
 
 export default class AppuntamentiNT extends React.Component {
     constructor(props) {
