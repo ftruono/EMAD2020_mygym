@@ -129,49 +129,59 @@ class Statistiche extends React.Component {
                             dropDownStyle={styles.selectdropDownStyle}
                             onChangeItem={item => { this.selectValori(item.value, data) }}
                         />
+                        {this.state.parteCorpo != '' ? (
+                            <>
+
+                                <Text style={styles.titleParagraph}>Grafico</Text>
+                                    <LineChart
+                                        data={{
+                                            labels: label,
+                                            datasets: [
+                                                {
+                                                    data: this.state.valori
+                                                }
+                                            ]
+                                        }}
+                                        width={Dimensions.get("window").width-40} // from react-native
+                                        width={Dimensions.get("window").width - 40} // from react-native
+                                        height={220}
+                                        yAxisLabel=""
+                                        yAxisSuffix="cm"
+                                        yAxisInterval={1} // optional, defaults to 1
+                                        chartConfig={{
+                                            backgroundColor: "#000000",
+                                            backgroundGradientFrom: "#fb8c00",
+                                            backgroundGradientTo: "#6b6761",
+                                            decimalPlaces: 0, // optional, defaults to 2dp
+                                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                                            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                                            yAxisLabel:" ",
+                                            yAxisSuffix:"cm",
+                                            yAxisLabel: " ",
+                                            yAxisSuffix: "cm",
+                                            style: {
+                                                borderRadius: 16
+                                            },
+                                            propsForDots: {
+                                                r: "6",
+                                                strokeWidth: "2",
+                                                stroke: "#ffa726"
+                                            }
+                                        }}
+                                        bezier
+                                        style={{
+                                            marginVertical: 8,
+                                            borderRadius: 16
+                                        }}
+                                    />
+                            </>
+                        ):(
+                            <>
+                                <Text style={styles.titleSubParagraph}> Seleziona una parte del corpo</Text>
+                                <Text style={styles.titleThParagraph}> e ti sarà mostrato il grafico corrispondente</Text>
+                            </>
+                        )}
                         
-                        <Text style={styles.titleParagraph}>Grafico</Text>
-                        <LineChart
-                            data={{
-                                labels: label,
-                                datasets: [
-                                    {
-                                        data: this.state.valori
-                                    }
-                                ]
-                            }}
-                            width={Dimensions.get("window").width-40} // from react-native
-                            width={Dimensions.get("window").width - 40} // from react-native
-                            height={220}
-                            yAxisLabel=""
-                            yAxisSuffix="cm"
-                            yAxisInterval={1} // optional, defaults to 1
-                            chartConfig={{
-                                backgroundColor: "#000000",
-                                backgroundGradientFrom: "#fb8c00",
-                                backgroundGradientTo: "#6b6761",
-                                decimalPlaces: 0, // optional, defaults to 2dp
-                                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                                yAxisLabel:" ",
-                                yAxisSuffix:"cm",
-                                yAxisLabel: " ",
-                                yAxisSuffix: "cm",
-                                style: {
-                                    borderRadius: 16
-                                },
-                                propsForDots: {
-                                    r: "6",
-                                    strokeWidth: "2",
-                                    stroke: "#ffa726"
-                                }
-                            }}
-                            bezier
-                            style={{
-                                marginVertical: 8,
-                                borderRadius: 16
-                            }}
-                        />
                         </>
                         )}
                     </View>
@@ -211,7 +221,13 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
         textAlign:'center',
         marginTop:50
-     }
+     },
+     titleThParagraph: {
+         fontSize:15,
+         fontWeight:'bold',
+         textAlign:'center',
+         marginTop:15
+      }
 });
 
 export default Statistiche;
