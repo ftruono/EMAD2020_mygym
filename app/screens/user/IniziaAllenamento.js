@@ -31,7 +31,7 @@ export default class IniziaAllenamento extends React.Component {
         var esercizioArray = this.props.route.params.schedaEsercizio;
         var esercizio = esercizioArray.esercizi;
         console.log(esercizio)
-        var nomeEsercizio = esercizio.map((u) => u.nome) ;
+        var nomeEsercizio = esercizio.map((u) => u.esercizio) ;
         var ripetizioni = esercizio.map((u) => u.ripetizioni);
         var colpi = esercizio.map((u) => u.colpi)
         return(

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, View, TextInput, Text, SafeAreaView, ScrollView, TouchableOpacity, SafeAreaViewBase } from 'react-native';
+import { StyleSheet, View, TextInput, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import HeaderComponent from "../../component/HeaderComponent";
-import Icon from "react-native-vector-icons/FontAwesome"
+import { Card } from 'react-native-elements';
 
 
 export default class ViewSingleDay extends React.Component {
@@ -9,14 +9,8 @@ export default class ViewSingleDay extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            modify: false
         }
     }
-
-    setModify = () =>{
-        this.setState({modify:true})
-    }
-
 
     save = () =>{
         this.setState({modify:false})
@@ -28,16 +22,16 @@ export default class ViewSingleDay extends React.Component {
         const exercise = [];
         var schedaEsercizio = this.props.route.params;
         var esercizi = schedaEsercizio.esercizi;
-        var nomeEsercizio = esercizi.map((u) => u.nome) ;
+        var nomeEsercizio = esercizi.map((u) => u.esercizio) ;
         var ripetizioni = esercizi.map((u) => u.ripetizioni);
         var colpi = esercizi.map((u) => u.colpi);
         var recupero = esercizi.map((u) => u.recupero);
         
          for(let i=0; i < nomeEsercizio.length; i++) {
             exercise.push({
-                eser: nomeEsercizio[i],
-                rec: '      Recupero: ' + recupero[i],
-                ripetizioni: ' ' + ripetizioni[i] + '*' + colpi[i]
+                eser: 'Tipo esercizio: ' + nomeEsercizio[i],
+                rec: 'Recupero: ' + recupero[i] + ' secondi',
+                ripetizioni: ripetizioni[i] + ' ripetizioni ' + '* ' + colpi[i] + ' volte'
             })
         } 
 
@@ -48,20 +42,16 @@ export default class ViewSingleDay extends React.Component {
                 <View style={styles.container}>
                     <Text style={styles.textHeader}>Visualizzazione</Text>
                     <View style={{flexDirection:"row"}}>
-                        <Text style={styles.textTitle}>{esercizi[0].day}</Text>
-
-                        {/* Il bottone di modifica verrà reso dinamico quando a livello di db ci sarà l'informazione di possibiltà della modifica della scheda*/}
-                        <TouchableOpacity onPress={this.setModify} >
-                            <Icon name="pencil" color="#05375a" size={20} style={{marginTop:30, marginLeft:50}}></Icon>
-                        </TouchableOpacity>
+                        <Text style={styles.textTitle}>Day {esercizi[0].day}</Text>
                     </View>
-                    {exercise.map((u) =>(
-                        <View style={styles.action}>
+                    {exercise.map((u,i) =>(
+                        <View>
+                            <Text style={styles.titleThParagraph}>Esercizio {i+1}</Text>
                             <TextInput
                                 placeholderTextColor="#666666"
                                 style={styles.text}
                                 autoCapitalize="none"
-                                editable={this.state.modify}
+                                editable={false}
                                 value={u.eser}
                             />
 
@@ -69,7 +59,7 @@ export default class ViewSingleDay extends React.Component {
                                 placeholderTextColor="#666666"
                                 style={styles.text}
                                 autoCapitalize="none"
-                                editable={this.state.modify}
+                                editable={false}
                                 value={u.ripetizioni}
                             />
                             
@@ -77,26 +67,18 @@ export default class ViewSingleDay extends React.Component {
                                 placeholderTextColor="#666666"
                                 style={styles.text}
                                 autoCapitalize="none"
-                                editable={this.state.modify}
+                                editable={false}
                                 value={u.rec}
                             />
+
+                            <Card.Divider />
                         </View>
                     ))}
                 </View>
                 </ScrollView>
-                {this.state.modify ?(
-                    <>
-                <TouchableOpacity style={styles.appButtonSave} onPress={this.save}>
-                        <Text style={styles.appButtonText}>Salva</Text>
-                </TouchableOpacity>
-                </>
-                ):(
-                    <>
                 <TouchableOpacity style={styles.appButtonSave} onPress={() => { this.props.navigation.navigate("IniziaAllenamento", { schedaEsercizio: schedaEsercizio }) }}>
                         <Text style={styles.appButtonText}>Inizia Allenamento</Text>
                 </TouchableOpacity>
-                </>
-                )}
             </SafeAreaView>
         )
     };
@@ -157,5 +139,11 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         alignSelf: "center",
         textTransform: "uppercase"
-    }
+    },
+    titleThParagraph: {
+        fontSize:15,
+        fontWeight:'bold',
+        textAlign:'center',
+        marginTop:15
+     }
 })

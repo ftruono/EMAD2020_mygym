@@ -137,12 +137,12 @@ export default class DatiPersonaliUser extends Component {
                     <View style={styles.action}>
                         <Text style={styles.textUsername}>Username</Text>
                             <TouchableOpacity onPress={this.setModify} >
-                                <FontAwesome name="pencil" color="#05375a" size={20} style={{marginTop:42, marginLeft:40}}></FontAwesome>
+                                <FontAwesome name="pencil" color="#05375a" size={20} style={{marginTop: 18, marginLeft:40}}></FontAwesome>
                             </TouchableOpacity>
                         {this.state.modify ? (
                             <>
                             <TouchableOpacity onPress={() => this.modifyUsername()}>
-                                <Feather name="save" color="#05375a" size={20} style={{marginTop:42, marginLeft:50}}></Feather>
+                                <Feather name="save" color="#05375a" size={20} style={{marginTop:18, marginLeft:50}}></Feather>
                             </TouchableOpacity>
                             </>
                         ):(
@@ -192,7 +192,7 @@ export default class DatiPersonaliUser extends Component {
                                             }
                                             <Text style={styles.textInput}></Text>
                                             <Icon
-                                                size="24"
+                                                size='24'
                                                 name='trash'
                                                 type='font-awesome'
                                                 color='#f50'
@@ -226,11 +226,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 2,
         paddingHorizontal: 20,
-        marginTop: 30
     },
     action: {
         flexDirection: 'row',
-        marginTop: 30,
+        marginTop: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
         paddingBottom: 7
@@ -244,13 +243,13 @@ const styles = StyleSheet.create({
         color: '#05375a',
         fontSize: 30,
         fontWeight: "bold",
-        marginTop: 30
+        marginTop: 10
     },
     textHeader: {
         color: '#05375a',
         fontSize: 30,
         fontWeight: "bold",
-        marginTop: 70,
+        marginTop: 20,
         textAlign:'center'
     },
     textInput: {

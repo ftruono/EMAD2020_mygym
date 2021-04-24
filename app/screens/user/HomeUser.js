@@ -19,7 +19,7 @@ class HomeUser extends React.Component {
         this.getUser()
     }
     state = {
-        data:'',
+        dataArray:[],
         noWorkoutCard:false,
         userUid:''
     }
@@ -30,12 +30,12 @@ class HomeUser extends React.Component {
             
             const user = (await Firestore.collection('UTENTI').doc(uid).get()).data();
             if(user.schede[0] !== undefined) {
+                var support = [];
                 const scheda = (await Firestore.collection('SCHEDE').doc(user.schede[0]).get()).data();
-                this.setState({data:scheda.days});
-                const data= Object.keys(this.state.data).map((key) =>this.state.data[key])
-                // console.log("scheda1->",data)
-                const data1= Object.keys(scheda.days).map((key) =>scheda.days[key])
-                // console.log("scheda2->",data1)
+                this.state.dataArray = scheda.days
+                this.setState({dataArray:this.state.dataArray})
+                /* this.setState({data:scheda.days});
+                const data= Object.keys(this.state.data).map((key) =>this.state.data[key])*/
             } else {
                 this.setState({noWorkoutCard:true})
             }
@@ -71,7 +71,7 @@ class HomeUser extends React.Component {
                         ):(
                             <>
                             <FlatList style={{ margin: 10, flex: 0.5 }}
-                                data={Object.keys(this.state.data).map((key) =>this.state.data[key])}
+                                data={this.state.dataArray}
                                 scrollEnabled={true}
                                 numColumns={2}
                                 renderItem={({ item }) => (
