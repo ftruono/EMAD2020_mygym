@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Text, FlatList,Dimensions } from 'react-native';
-import { Button, DataTable, FAB, Portal, Provider } from 'react-native-paper';
+import { StyleSheet, View, Platform, TouchableOpacity, Text, FlatList,Dimensions } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { TextInputMask } from 'react-native-masked-text'
 import { RefreshControl, SafeAreaView } from 'react-navigation';
 import HeaderComponent from "../../component/HeaderComponent";
 import BottoneAddWorkOut from './BottoneAddWorkOut';
@@ -17,9 +18,22 @@ class CreateWorkout extends Component {
             clienti:[],
             schedaArray: [],
             arrayClienti:[],
-            userSelected:''
+            userSelected:'',
+            oidUser:'',
+            date: Platform.OS === 'web' ? '' : new Date(),
+            mode: 'date',
         };
         this.getUser();
+    }
+
+    makeid = (length) => {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
     }
 
     addDay = () => {
@@ -68,8 +82,11 @@ class CreateWorkout extends Component {
 
     selectUser = (item) => { 
         var user = Object.values(item)[1];
+        var oidUser = Object.values(item)[0];
         this.state.userSelected = user
+        this.state.oidUser = oidUser
         this.setState({userSelected:this.state.userSelected})
+        this.setState({oidUser:this.state.oidUser})
     }
 
     getUser = async () => {
@@ -110,8 +127,46 @@ class CreateWorkout extends Component {
     aggiungiScheda = async () => {
         console.log(this.state.userSelected)
 
-        console.log(this.state.schedaArray[0].esercizi + 'day'+this.state.schedaArray[0].day)
-
+        console.log(this.state.schedaArray[0].esercizi)
+        console.log('day'+this.state.schedaArray[0].day)
+        var arrayScheda = [];
+        var arraySupport = [];
+        
+        
+        for(var i = 0; i<this.state.schedaArray.length; i++) {
+            const key = this.makeid(25);
+            arraySupport.push(key);
+            Firestore.collection(
+                'ESERCIZI'
+            ).doc(
+                key
+            ).set({
+                esercizi: this.state.schedaArray[i].esercizi,
+            }).then(console.log("Esercizi Aggiunti"));
+            console.log(this.state.schedaArray[i].esercizi)
+        }
+ 
+        const keyScheda = this.makeid(25);
+        arrayScheda.push(keyScheda)
+        
+        Firestore.collection(
+            'SCHEDE'
+        ).doc(
+            keyScheda
+        ).set({
+            days: arraySupport,
+            dataScadenza: this.state.date
+        }).then(console.log("Scheda Aggiunta"));
+        
+        Firestore.collection(
+            'UTENTI'
+        ).doc(
+            this.state.userSelected
+        ).update({
+            'schede': arrayScheda,
+        }).then(() => {
+            console.log('User updated!');
+        });
     }
 
     render() {
@@ -133,6 +188,56 @@ class CreateWorkout extends Component {
                         dropDownStyle={{ backgroundColor: '#fafafa',marginLeft:15 }}
                         onChangeItem={item => this.selectUser(item)}
                 />
+
+                {this.state.userSelected != '' ? (
+                    <>
+
+                            {Platform.OS === 'web' && <>
+                            <View style={{ flexDirection: 'row', marginTop:15 }}  >
+
+                                <Text style={styles.titleSubParagraph}>Data di scadenza scheda</Text>
+                                <TextInputMask
+                                    type={'datetime'}
+                                    options={{
+                                        format: 'DD/MM/YYYY'
+                                    }}
+                                    value={this.state.date}
+                                    onChangeText={(text) => {
+
+                                        var data = new Intl.DateTimeFormat('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+
+                                        this.state.date = text
+                                        this.setState({ date: text })
+                                        if (text === data) {
+                                            alert("si prega di selezionare una data diversa da quella odierna");
+                                            this.setState({ date: '' })
+                                        }
+
+                                    }}
+                                    style={{marginHorizontal:10, borderColor:'black', borderWidth:2}}
+                                />
+                            </View>
+                        </>}
+
+                        {Platform.OS !== 'web' && <>
+
+                            <Text style={styles.titleSubParagraph}>Data di scadenza scheda</Text>
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={this.state.date}
+                                mode={this.state.mode}
+                                dateFormat="longdate"
+                                RNDateTimePicker locale="it-IT"
+                                is24Hour={true}
+                                display="default"
+                                onChange={this.onChange}
+                            />
+                        </>}
+                    </>
+                ):(
+                    <>
+                    </>
+                )}
 
                 <FlatList style={{ margin: 10}}
                     data={schedaArray}
@@ -190,6 +295,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 8,
-    }
+    },
+    titleSubParagraph: {
+        fontSize:15,
+        fontWeight:'bold',
+        textAlign:'center',
+        marginLeft:15
+     }
 })
 
