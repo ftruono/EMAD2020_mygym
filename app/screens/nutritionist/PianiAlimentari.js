@@ -54,6 +54,7 @@ class PianiAlimentari extends Component {
     }
     //serve
     addValori = async () => {
+
         const today = moment().format("MMM Do YY");
         this.checkDati()
         if (today >= moment(this.state.date, true).format("MMM Do YY")) {
@@ -65,12 +66,13 @@ class PianiAlimentari extends Component {
         } else if (this.props.route.params.uid === undefined) {
             alert("seleziona prima un cliente")
         } else {
-            console.log(this.props.route.params.uid)
+
             let user = (await Firestore.collection('UTENTI').doc(this.props.route.params.uid).get()).data();
             const key = this.makeid(25);
             var arraySupport = [];
             arraySupport = user.diete;
             arraySupport.push(key);
+
 
             Firestore.collection(
                 'UTENTI'
@@ -89,7 +91,7 @@ class PianiAlimentari extends Component {
             ).set({
                 valori: this.state.arrayPasti,
                 datainizio: new Date(),
-                datafine: this.state.date
+                datafine: Platform.OS === 'web' ? new Date(moment(this.state.date).format()) : this.state.date
             }).then(console.log("aggiunti"));
 
 
@@ -108,7 +110,7 @@ class PianiAlimentari extends Component {
         var support = this.state.arrayPasti;
         this.setState({ arrayMisurazioni: support });
     }
-    
+
     //serve
     addTextInput = (key) => {
         let formInput = this.state.formInput;
@@ -119,128 +121,136 @@ class PianiAlimentari extends Component {
         arrayPasti.push({ tipo: "", valore: null })
         formInput.push(
             <SafeAreaView>
-            {Platform.OS !== 'web' && <>
-            <View style={{ flexDirection: 'row' }}>
-                    <DropDownPicker
-                        items={[
-                            { label: 'Colazione', value: 'colazione' },
-                            { label: 'Pranzo', value: 'pranzo' },
-                            { label: 'Cena', value: 'cena' },
-                            { label: 'Spuntino', value: 'spuntino' },
-                        ]}
-                        defaultValue={this.state.arrayPasti[key].tipo}
-                        containerStyle={{ height: 40,width:150 }}
-                        style={styles.selectStyle}
-                        itemStyle={styles.selectStyle}
-                        dropDownStyle={styles.selectdropDownStyle}
-                        onChangeItem={item => {
-                            arrayPasti[key].tipo = item.value
-                            this.setState({ arrayPasti: arrayPasti })
+                {Platform.OS !== 'web' && <>
+                    <View style={{ flexDirection: 'row' }}>
+                        <DropDownPicker
+                            items={[
+                                { label: 'Colazione', value: 'colazione' },
+                                { label: 'Pranzo', value: 'pranzo' },
+                                { label: 'Cena', value: 'cena' },
+                                { label: 'Spuntino', value: 'spuntino' },
+                            ]}
+                            defaultValue={this.state.arrayPasti[key].tipo}
+                            containerStyle={{ height: 40, width: 150 }}
+                            style={styles.selectStyle}
+                            itemStyle={styles.selectStyle}
+                            dropDownStyle={styles.selectdropDownStyle}
+                            onChangeItem={item => {
+                                arrayPasti[key].tipo = item.value
+                                this.setState({ arrayPasti: arrayPasti })
 
-                        }}
-                    />
+                            }}
+                        />
 
-                    <TextInput
-                    label="Inserisci gli alimenti"
+                        <TextInput
+                            label="Inserisci gli alimenti"
 
-                    value={arrayPasti[key].valore}
-                    style={{width:120}}
-                    placeholder="Inserisci gli alimenti"
-                    onChangeText={text => {
-                        arrayPasti[key].valore = text
-                        this.setState({ arrayPasti: arrayPasti })
-                        console.log(this.state.arrayPasti)
-                    }}
-                />
+                            value={arrayPasti[key].valore}
+                            style={{ width: 120 }}
+                            placeholder="Inserisci gli alimenti"
+                            onChangeText={text => {
+                                arrayPasti[key].valore = text
+                                this.setState({ arrayPasti: arrayPasti })
+                                console.log(this.state.arrayPasti)
+                            }}
+                        />
 
-                    <Icon
-                    size={25}
-                    style={{marginLeft:15, marginTop: 8}}
-                    name='trash'
-                    type='font-awesome'
-                    color='#f50'
-                    onPress={() => {
-                        this.state.arrayPasti = [];
-                        this.state.formInput = [];
+                        <Icon
+                            size={25}
+                            style={{ marginLeft: 15, marginTop: 8 }}
+                            name='trash'
+                            type='font-awesome'
+                            color='#f50'
+                            onPress={() => {
+                                this.state.arrayPasti = [];
+                                this.state.formInput = [];
 
-                        this.setState({ arrayPasti: [] });
-                        this.setState({ formInput: [] });
-                    }}
-                />
+                                this.setState({ arrayPasti: [] });
+                                this.setState({ formInput: [] });
+                            }}
+                        />
 
-            </View>
+                    </View>
                 </>}
-                
-               {Platform.OS === 'web' && <>
-                <View style={{ flexDirection: 'row' }}>
-                <DropDownPicker
-                    items={[
-                        { label: 'Colazione', value: 'colazione' },
-                        { label: 'Pranzo', value: 'pranzo' },
-                        { label: 'Cena', value: 'cena' },
-                        { label: 'Spuntino', value: 'spuntino' },
-                    ]}
-                    defaultValue={this.state.arrayPasti[key].tipo}
-                    containerStyle={{ height: 40 }}
-                    style={styles.selectStyle}
-                    itemStyle={styles.selectStyle}
-                    dropDownStyle={styles.selectdropDownStyle}
-                    onChangeItem={item => {
-                        arrayPasti[key].tipo = item.value
-                        this.setState({ arrayPasti: arrayPasti })
 
-                    }}
-                />
-                <TextInput
-                    label="Inserisci gli alimenti"
+                {Platform.OS === 'web' && <>
+                    <View style={{ flexDirection: 'row' }}>
+                        <DropDownPicker
+                            items={[
+                                { label: 'Colazione', value: 'colazione' },
+                                { label: 'Pranzo', value: 'pranzo' },
+                                { label: 'Cena', value: 'cena' },
+                                { label: 'Spuntino', value: 'spuntino' },
+                            ]}
+                            defaultValue={this.state.arrayPasti[key].tipo}
+                            containerStyle={{ height: 40 }}
+                            style={styles.selectStyle}
+                            itemStyle={styles.selectStyle}
+                            dropDownStyle={styles.selectdropDownStyle}
+                            onChangeItem={item => {
+                                arrayPasti[key].tipo = item.value
+                                this.setState({ arrayPasti: arrayPasti })
 
-                    value={arrayPasti[key].valore}
-                    style={styles.textInput}
-                    placeholder="Inserisci gli alimenti"
-                    onChangeText={text => {
-                        arrayPasti[key].valore = text
-                        this.setState({ arrayPasti: arrayPasti })
-                        console.log(this.state.arrayPasti)
-                    }}
-                />
-                <Icon
-                    size={25}
-                    style={{marginLeft:15, marginTop: 8}}
-                    name='trash'
-                    type='font-awesome'
-                    color='#f50'
-                    onPress={() => {
-                        this.state.arrayPasti = [];
-                        this.state.formInput = [];
+                            }}
+                        />
+                        <TextInput
+                            label="Inserisci gli alimenti"
 
-                        this.setState({ arrayPasti: [] });
-                        this.setState({ formInput: [] });
-                    }}
-                />
-                </View>
+                            value={arrayPasti[key].valore}
+                            style={styles.textInput}
+                            placeholder="Inserisci gli alimenti"
+                            onChangeText={text => {
+                                arrayPasti[key].valore = text
+                                this.setState({ arrayPasti: arrayPasti })
+                                console.log(this.state.arrayPasti)
+                            }}
+                        />
+                        <Icon
+                            size={25}
+                            style={{ marginLeft: 15, marginTop: 8 }}
+                            name='trash'
+                            type='font-awesome'
+                            color='#f50'
+                            onPress={() => {
+                                this.state.arrayPasti = [];
+                                this.state.formInput = [];
+
+                                this.setState({ arrayPasti: [] });
+                                this.setState({ formInput: [] });
+                            }}
+                        />
+                    </View>
                 </>
-    }
+                }
             </SafeAreaView>
         );
         this.setState({ formInput })
     }
     //serve
     renderItem = () => (
-        <View style={{ flexDirection: 'row' }}  >
-            {this.showPage()}
-            <Text style={styles.textInput}> Il cliente selezionato è {this.props.route.params.username}</Text>
-            <Icon
-                raised
-                size={10}
-                name='times'
-                type='font-awesome'
-                color='#f50'
-                onPress={() => {
-                    this.props.route.params.username = ''
-                    this.setState({ username: 'null' })
-                    alert("Si prega di selezionare un utente")
-                    this.props.navigation.navigate("ListaUtenti", { routeProps: this.prop })
-                }} />
+        <View>
+            <View style={{ flexDirection: 'row' }}  >
+                {this.showPage()}
+                <Text style={styles.textInput}> Il cliente selezionato è {this.props.route.params.username}</Text>
+                <Icon
+                    raised
+                    size={10}
+                    name='times'
+                    type='font-awesome'
+                    color='#f50'
+                    onPress={() => {
+                        this.props.route.params.username = ''
+                        this.setState({ username: 'null' })
+                        alert("Si prega di selezionare un utente")
+                        this.props.navigation.navigate("ListaUtenti", { routeProps: this.prop })
+                    }} />
+            </View>
+
+            <Card.Divider />
+
+            <View style={{ flexDirection: 'row' }}  >
+                <Text onPress={() => (alert("ciao"))} style={styles.textInput}>  Vuoi vedere sue su statistiche, clicca qui</Text>
+            </View>
         </View>
     );
     //serve
@@ -269,6 +279,7 @@ class PianiAlimentari extends Component {
             this.props.navigation.navigate("ListaUtenti", { routeProps: this.prop });
         }
     }
+    
     render() {
 
         return (
@@ -289,7 +300,7 @@ class PianiAlimentari extends Component {
                         {Platform.OS === 'web' && <>
                             <View style={{ flexDirection: 'row' }}  >
 
-                                <Text>Si prega di inserire una data per lo scadere della dieta</Text>
+                                <Text>Si prega di inserire una data per lo scadere della dieta con il seguente formato DD/MM/YYYY</Text>
                                 <TextInputMask
                                     type={'datetime'}
                                     options={{
@@ -299,16 +310,15 @@ class PianiAlimentari extends Component {
                                     onChangeText={(text) => {
 
                                         var data = new Intl.DateTimeFormat('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-
-                                        this.state.date = text
-                                        this.setState({ date: text })
+                                        this.state.date = text;
+                                        this.setState({ date: text });
                                         if (text === data) {
                                             alert("si prega di selezionare una data diversa da quella odierna");
-                                            this.setState({ date: '' })
+                                            this.setState({ date: '' });
                                         }
 
                                     }}
-                                    style={{marginHorizontal:10, borderColor:'black', borderWidth:2}}
+                                    style={{ marginHorizontal: 10, borderColor: 'black', borderWidth: 2 }}
                                 />
                             </View>
                         </>}
@@ -422,13 +432,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 8,
-    },titleParagraph: {
-      fontSize:30,
-      fontWeight:'bold',
-      textAlign:'left',
-      marginTop:15,
-      marginLeft:15
-  },
+    }, titleParagraph: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        textAlign: 'left',
+        marginTop: 15,
+        marginLeft: 15
+    },
     //si riferisce al textinput che si aggiunge col pulsante
     textInput: {
         flex: 1,
@@ -439,5 +449,5 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
 
     },
-    
+
 });
