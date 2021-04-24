@@ -12,11 +12,6 @@ export default class ViewSingleDay extends React.Component {
         }
     }
 
-    save = () =>{
-        this.setState({modify:false})
-        alert("Hai cliccato su salva")
-    }
-
     render() {
         
         const exercise = [];
