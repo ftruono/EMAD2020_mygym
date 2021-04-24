@@ -12,21 +12,17 @@ class WorkoutCard extends React.Component {
         super(props);
         this.state = {
             eserciziScheda: [],
-            index: 0
+            day: 0,
         }
         this.getExercise();
     }
 
 
-    getExercise = () => {
-        for (let i = 0; i < this.props.exercise.length; i++) {
-            Firestore.collection('ESERCIZI').doc(this.props.exercise[i]).get()
-                .then((esercizi) => {
-                    this.state.eserciziScheda.push(esercizi.data())
-                    var support = this.state.eserciziScheda;
-                    this.setState({ eserciziScheda: support})
-                });
-        }
+    getExercise = async () => {
+        const eseScheda = (await Firestore.collection('ESERCIZI').doc(this.props.exercise).get()).data();
+        this.state.eserciziScheda = eseScheda.esercizi;
+        this.setState({ eserciziScheda: this.state.eserciziScheda})
+        console.log(this.state.eserciziScheda)
     }
 
     render() {
@@ -38,15 +34,15 @@ class WorkoutCard extends React.Component {
             <View style={styles.item}>
                 <TouchableOpacity onPress={() => { this.props.navigation.navigate("ViewSingleDay", { esercizi: this.state.eserciziScheda, routeProps: this.props }) }}>
                     <Card style={{ flex: 1 }}>
-                        <Card.Title>{this.state.eserciziScheda[0].day}</Card.Title>
+                        <Card.Title>Day {this.state.eserciziScheda[0].day}</Card.Title>
                         <Card.Divider />
                             {this.state.eserciziScheda.map((item,i) => {
                                 return (
                                     <View style={styles.body}>
-                                        <Text>Esercizio {i+1}: </Text> 
-                                        <Text>{item.nome}</Text>
-                                        <Text> {item.ripetizioni}*{item.colpi} </Text>
-                                        <Text>{item.recupero}</Text>
+                                        <Text style={{fontWeight:'bold'}}>Esercizio {i+1}: </Text> 
+                                        <Text>{item.esercizio}</Text>
+                                        <Text> {item.ripetizioni} rip. * {item.colpi} volte </Text>
+                                        <Text>{item.recupero} sec. di recupero</Text>
                                         <Card.Divider />
                                     </View>
                                 );
@@ -69,6 +65,6 @@ const styles = StyleSheet.create({
     },
     body: {
         alignItems: 'center',
-        flex: 0.8
+        flex: 0.2,
     }
 });

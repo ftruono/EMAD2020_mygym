@@ -45,7 +45,7 @@ class CreateWorkout extends Component {
     };
 
     addEsercizio = () => {
-        this.state.schedaArray[selectDay].esercizi.push({ esercizio: '', ripetizioni: '', colpi: '', recupero: '' })
+        this.state.schedaArray[selectDay].esercizi.push({ esercizio: '', ripetizioni: '', colpi: '', recupero: '', day: '' })
         var support = this.state.schedaArray;
         this.setState({ schedaArray: support });
         console.log(this.state.schedaArray)
@@ -57,6 +57,7 @@ class CreateWorkout extends Component {
         switch (eser) {
             case '0':
                 this.state.schedaArray[daySelect].esercizi[num].esercizio = valori;
+                this.state.schedaArray[daySelect].esercizi[num].day = daySelect
                 break;
             case '1':
                 this.state.schedaArray[daySelect].esercizi[num].ripetizioni = valori;
@@ -125,14 +126,9 @@ class CreateWorkout extends Component {
     }
 
     aggiungiScheda = async () => {
-        console.log(this.state.userSelected)
-
-        console.log(this.state.schedaArray[0].esercizi)
-        console.log('day'+this.state.schedaArray[0].day)
         var arrayScheda = [];
         var arraySupport = [];
-        
-        
+                
         for(var i = 0; i<this.state.schedaArray.length; i++) {
             const key = this.makeid(25);
             arraySupport.push(key);
@@ -143,7 +139,7 @@ class CreateWorkout extends Component {
             ).set({
                 esercizi: this.state.schedaArray[i].esercizi,
             }).then(console.log("Esercizi Aggiunti"));
-            console.log(this.state.schedaArray[i].esercizi)
+            
         }
  
         const keyScheda = this.makeid(25);

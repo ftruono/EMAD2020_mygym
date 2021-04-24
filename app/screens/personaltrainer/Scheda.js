@@ -38,9 +38,34 @@ const Scheda = (props) => {
                                             style={styles.textInput}
                                             value={u.esercizio}
                                             items={[
-                                                { label: 'panca piana', value: "panca_piana" },
-                                                { label: 'panca alta', value: 'panta_alta' },
-                                                { label: 'croci', value: 'croci' },
+                                                { label: 'Panca Piana', value: "Panca_Piana" },
+                                                { label: 'Panca Alta', value: 'Panca_Alta' },
+                                                { label: 'Croci', value: 'Croci' },
+                                                { label: 'Alzate laterali', value: 'Alzate laterali' },
+                                                { label: 'Shoulder press', value: 'Shoulder press' },
+                                                { label: 'Alzate frontali', value: 'Alzate frontali' },
+                                                { label: 'Rematore verticale', value: 'Rematore verticale' },
+                                                { label: 'Stacchi da terra', value: 'Stacchi da terra' },
+                                                { label: 'Trazioni alla sbarra', value: 'Trazioni alla sbarra' },
+                                                { label: 'Lateral Pulley', value: 'Lateral Pulley' },
+                                                { label: 'Lat machine', value: 'Lat machine' },
+                                                { label: 'Squat', value: 'Squat' },
+                                                { label: 'Leg Extension', value: 'Leg Extension' },
+                                                { label: 'Leg Curl', value: 'Leg Curl' },
+                                                { label: 'Affondi frontali', value: 'Affondi frontali' },
+                                                { label: 'Affondi laterali', value: 'Affondi laterali' },
+                                                { label: 'Distensioni con bilanciere', value: 'Distensioni con bilanciere' },
+                                                { label: 'Distensioni con manubri', value: 'Distensioni con manubri' },
+                                                { label: 'Chest Press', value: 'Chest Press' },
+                                                { label: 'Chest Press Incline', value: 'Chest Press Incline' },
+                                                { label: 'Pectoral Machine', value: 'Pectoral Machine' },
+                                                { label: 'Piegamenti sulle braccia', value: 'Piegamenti sulle braccia' },
+                                                { label: 'Croci ai cavi', value: 'Croci ai cavi' },
+                                                { label: 'Curl con bilanciere', value: 'Curl con bilanciere' },
+                                                { label: 'Curl con manubri', value: 'Curl con manubri' },
+                                                { label: 'Curl a martello', value: 'Curl a martello' },
+                                                { label: 'French Press', value: 'French Press' },
+                                                { label: 'Panca presa stretta', value: 'Panca presa stretta' },
                                             ]}
                                         />
                                         <TextInput
