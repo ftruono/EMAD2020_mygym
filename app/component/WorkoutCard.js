@@ -41,7 +41,7 @@ class WorkoutCard extends React.Component {
                                     <View style={styles.body}>
                                         <Text style={{fontWeight:'bold'}}>Esercizio {i+1}: </Text> 
                                         <Text>{item.esercizio}</Text>
-                                        <Text> {item.ripetizioni} rip. * {item.colpi} volte </Text>
+                                        <Text> {item.ripetizioni} volte * {item.colpi} rip. </Text>
                                         <Text>{item.recupero} sec. di recupero</Text>
                                         <Card.Divider />
                                     </View>

@@ -31,7 +31,7 @@ export default class ViewSingleDay extends React.Component {
             exercise.push({
                 eser: 'Tipo esercizio: ' + nomeEsercizio[i],
                 rec: 'Recupero: ' + recupero[i] + ' secondi',
-                ripetizioni: ripetizioni[i] + ' ripetizioni ' + '* ' + colpi[i] + ' volte'
+                ripetizioni: ripetizioni[i] + ' volte ' + '* ' + colpi[i] + ' ripetizioni'
             })
         } 
 
