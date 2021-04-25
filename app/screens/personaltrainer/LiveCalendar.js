@@ -214,32 +214,5 @@ const styles = StyleSheet.create({
         top: 2,
         left: 1,
         color: '#008000'
-    },
-    text: {
-        color: '#05375a',
-        fontWeight: "bold",
-        fontSize: 24,
-        marginTop: 35
-    },
-    action: {
-        flexDirection: 'row',
-        marginTop: 25,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f2f2f2',
-        paddingBottom: 7
-    },
-    appButtonContainer: {
-        elevation: 8,
-        backgroundColor: "#009688",
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 12
-    },
-    appButtonText: {
-        fontSize: 18,
-        color: "#fff",
-        fontWeight: "bold",
-        alignSelf: "center",
-        textTransform: "uppercase"
     }
 });

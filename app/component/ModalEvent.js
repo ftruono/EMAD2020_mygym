@@ -178,22 +178,13 @@ const ModalEvent = (props) => {
 
 const styles = StyleSheet.create({
 
-    modal: { backgroundColor: 'transparent', padding: 20, },
-    selectStyle: { backgroundColor: '#fafafa', margin: width > 500 ? 20 : 5 },
-    selectdropDownStyle: { backgroundColor: '#fafafa', },
-    appButtonText: {
-        fontSize: 20,
-        color: "#fff",
-        fontWeight: "bold",
-        alignSelf: "center",
-        textTransform: "uppercase"
+    modal: { 
+        backgroundColor: 'transparent', 
+        padding: 20, 
     },
-    action: {
-        flexDirection: 'row',
-        // marginTop: 25,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f2f2f2',
-        paddingBottom: 7
+    selectStyle: { 
+        backgroundColor: '#fafafa', 
+        margin: width > 500 ? 20 : 5 
     },
     textTitle: {
         color: '#05375a',
@@ -213,23 +204,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
         paddingBottom: 7
-    },
-    appButtonContainer: {
-        elevation: 8,
-        backgroundColor: "#009688",
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 12
-    },
-    appButtonText: {
-        fontSize: 18,
-        color: "#fff",
-        fontWeight: "bold",
-        alignSelf: "center",
-        textTransform: "uppercase"
-    },
+    }
 });
 export default ModalEvent;
-// alignItems: 'center',
-// justifyContent: 'center',
-
