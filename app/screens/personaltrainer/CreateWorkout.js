@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { StyleSheet, View, Platform, TouchableOpacity, Text, FlatList,Dimensions } from 'react-native';
+import { StyleSheet, View, Platform, TouchableOpacity, Text, FlatList, Dimensions } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInputMask } from 'react-native-masked-text'
 import { RefreshControl, SafeAreaView } from 'react-navigation';
@@ -8,6 +8,7 @@ import BottoneAddWorkOut from './BottoneAddWorkOut';
 import Scheda from './Scheda';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Firestore, FirebaseAutentication } from "../../config/FirebaseConfig";
+import moment from 'moment';
 
 const { width, height } = Dimensions.get('screen');
 var selectDay;
@@ -15,11 +16,11 @@ class CreateWorkout extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            clienti:[],
+            clienti: [],
             schedaArray: [],
-            arrayClienti:[],
-            userSelected:'',
-            oidUser:'',
+            arrayClienti: [],
+            userSelected: '',
+            oidUser: '',
             date: Platform.OS === 'web' ? '' : new Date(),
             mode: 'date',
         };
@@ -81,24 +82,24 @@ class CreateWorkout extends Component {
         console.log(selectDay);
     }
 
-    selectUser = (item) => { 
+    selectUser = (item) => {
         var user = Object.values(item)[1];
         var oidUser = Object.values(item)[0];
-        this.state.userSelected = user
-        this.state.oidUser = oidUser
-        this.setState({userSelected:this.state.userSelected})
-        this.setState({oidUser:this.state.oidUser})
+        this.state.userSelected = user;
+        this.state.oidUser = oidUser;
+        this.setState({ userSelected: this.state.userSelected });
+        this.setState({ oidUser: this.state.oidUser });
     }
 
     getUser = async () => {
         var uid = FirebaseAutentication.currentUser.uid
         const pt = (await Firestore.collection('UTENTI').doc(uid).get()).data();
 
-        if(pt.clienti.length === 0) {
-            this.setState({arrayClienti:[]})
+        if (pt.clienti.length === 0) {
+            this.setState({ arrayClienti: [] })
         } else {
             pt.clienti.map((e, i) => {
-              this.getClienti(e)
+                this.getClienti(e)
             })
         }
     }
@@ -114,7 +115,7 @@ class CreateWorkout extends Component {
             this.state.arrayClienti.push({ label: e.username, value: e.title })
         })
 
-        
+
         this.state.arrayClienti.forEach(obj => {
             if (!newArray.some(o => o.label === obj.label)) {
                 newArray.push({ ...obj })
@@ -128,41 +129,67 @@ class CreateWorkout extends Component {
     aggiungiScheda = async () => {
         var arrayScheda = [];
         var arraySupport = [];
-                
-        for(var i = 0; i<this.state.schedaArray.length; i++) {
-            const key = this.makeid(25);
-            arraySupport.push(key);
-            Firestore.collection(
-                'ESERCIZI'
-            ).doc(
-                key
-            ).set({
-                esercizi: this.state.schedaArray[i].esercizi,
-            }).then(console.log("Esercizi Aggiunti"));
-            
+
+
+        if (this.state.userSelected === "") {
+            alert("Si prega di selezionare un utente");
+        } else if (new Date().getTime() >= new Date(this.state.date).getTime()) {
+            alert("Si prega di selezionare una data successiva a quella odierna");
+        } else if (this.state.schedaArray.length === 0) {
+            alert("Inserisci almeno un giorno ");
+        } else if (this.state.schedaArray[0].esercizi.length === 0) {
+            alert("Inserisci almeno un esercizio");
+        } else {
+            var supportCheck = true;
+            this.state.schedaArray.map((e, i) => {
+                e.esercizi.map((ese, i) => {
+                    if (ese.esercizio === "" || ese.ripetizioni === "" || ese.colpi === "" || ese.recupero === "" || ese.day === "") {
+                        alert("Si prega di copilare tutti i campi");
+                        supportCheck = false;
+                    }
+                })
+            });
+            if (supportCheck) {
+                for (var i = 0; i < this.state.schedaArray.length; i++) {
+                    const key = this.makeid(25);
+                    arraySupport.push(key);
+                    Firestore.collection(
+                        'ESERCIZI'
+                    ).doc(
+                        key
+                    ).set({
+                        esercizi: this.state.schedaArray[i].esercizi,
+                    }).then(console.log("Esercizi Aggiunti"));
+
+                }
+
+                const keyScheda = this.makeid(25);
+                arrayScheda.push(keyScheda)
+
+                Firestore.collection(
+                    'SCHEDE'
+                ).doc(
+                    keyScheda
+                ).set({
+                    days: arraySupport,
+                    dataScadenza: Platform.OS === 'web' ? new Date(this.state.date) : this.state.date
+                }).then(console.log("Scheda Aggiunta"));
+
+                Firestore.collection(
+                    'UTENTI'
+                ).doc(
+                    this.state.userSelected
+                ).update({
+                    'schede': arrayScheda,
+                }).then(() => {
+                    console.log('User updated!');
+                });
+                alert("L'utente è stato aggiunto con successo");
+
+
+                this.setState({ schedaArray: [], date: Platform.OS === 'web' ? '' : new Date(), userSelected: "", oidUser: "" });
+            }
         }
- 
-        const keyScheda = this.makeid(25);
-        arrayScheda.push(keyScheda)
-        
-        Firestore.collection(
-            'SCHEDE'
-        ).doc(
-            keyScheda
-        ).set({
-            days: arraySupport,
-            dataScadenza: this.state.date
-        }).then(console.log("Scheda Aggiunta"));
-        
-        Firestore.collection(
-            'UTENTI'
-        ).doc(
-            this.state.userSelected
-        ).update({
-            'schede': arrayScheda,
-        }).then(() => {
-            console.log('User updated!');
-        });
     }
 
     render() {
@@ -173,44 +200,38 @@ class CreateWorkout extends Component {
 
                 <Text style={styles.titleParagraph}>Scegli l'alteta:</Text>
                 <DropDownPicker
-                        items={this.state.arrayClienti}
-                        defaultValue={this.state.userSelected}
-                        placeholder="Scegli..."
-                        containerStyle={{ height: 60, width: 150 }}
-                        style={{ backgroundColor: '#fafafa', marginTop: 10, marginLeft:15 }}
-                        itemStyle={{
-                            justifyContent: 'flex-start'
-                        }}
-                        dropDownStyle={{ backgroundColor: '#fafafa',marginLeft:15 }}
-                        onChangeItem={item => this.selectUser(item)}
+                    items={this.state.arrayClienti}
+                    defaultValue={this.state.userSelected === '' ? null : this.state.userSelected}
+                    placeholder="Scegli..."
+                    containerStyle={{ height: 60, width: 150 }}
+                    style={{ backgroundColor: '#fafafa', marginTop: 10, marginLeft: 15 }}
+                    itemStyle={{
+                        justifyContent: 'flex-start'
+                    }}
+                    dropDownStyle={{ backgroundColor: '#fafafa', marginLeft: 15 }}
+                    onChangeItem={item => this.selectUser(item)}
                 />
 
                 {this.state.userSelected != '' ? (
                     <>
 
-                            {Platform.OS === 'web' && <>
-                            <View style={{ flexDirection: 'row', marginTop:15 }}  >
+                        {Platform.OS === 'web' && <>
+                            <View style={{ flexDirection: 'row', marginTop: 15 }}  >
 
                                 <Text style={styles.titleSubParagraph}>Data di scadenza scheda</Text>
+                                <Text> Si prega di inserirla con il seguente formato YYYY/MM/DD</Text>
                                 <TextInputMask
                                     type={'datetime'}
                                     options={{
-                                        format: 'DD/MM/YYYY'
+                                        format: 'YYYY/MM/DD'
                                     }}
                                     value={this.state.date}
                                     onChangeText={(text) => {
 
-                                        var data = new Intl.DateTimeFormat('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-
-                                        this.state.date = text
                                         this.setState({ date: text })
-                                        if (text === data) {
-                                            alert("si prega di selezionare una data diversa da quella odierna");
-                                            this.setState({ date: '' })
-                                        }
 
                                     }}
-                                    style={{marginHorizontal:10, borderColor:'black', borderWidth:2}}
+                                    style={{ marginHorizontal: 10, borderColor: 'black', borderWidth: 2 }}
                                 />
                             </View>
                         </>}
@@ -230,22 +251,22 @@ class CreateWorkout extends Component {
                             />
                         </>}
                     </>
-                ):(
+                ) : (
                     <>
                     </>
                 )}
 
-                <FlatList style={{ margin: 10}}
+                <FlatList style={{ margin: 10 }}
                     data={schedaArray}
                     scrollEnabled={true}
-                    numColumns={width>1000 ? 2 : 1 }
+                    numColumns={width > 1000 ? 2 : 1}
                     keyExtractor={(item) => item.day}
                     refreshing={this._onRefresh}
                     renderItem={({ item, index }) => (
                         <Scheda scheda={schedaArray[index]} aggiungiValori={this.aggiungiValori} daySelected={this.daySelected} />
                     )}
                 />
-                <BottoneAddWorkOut addDay={this.addDay} addEsercizio={this.addEsercizio} exitDay={selectDay} atletaSelezionato={this.state.userSelected}/>
+                <BottoneAddWorkOut addDay={this.addDay} addEsercizio={this.addEsercizio} exitDay={selectDay} atletaSelezionato={this.state.userSelected} />
                 <TouchableOpacity style={styles.appButtonSave} onPress={() => { this.aggiungiScheda() }}>
                     <Text style={styles.appButtonText}>Salva</Text>
                 </TouchableOpacity>
@@ -265,11 +286,11 @@ const styles = StyleSheet.create({
         marginBottom: 100,
     },
     titleParagraph: {
-        fontSize:20,
-        fontWeight:'bold',
-        textAlign:'left',
-        marginTop:25,
-        marginLeft:15
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'left',
+        marginTop: 25,
+        marginLeft: 15
     },
     appButtonText: {
         fontSize: 20,
@@ -293,10 +314,10 @@ const styles = StyleSheet.create({
         elevation: 8,
     },
     titleSubParagraph: {
-        fontSize:15,
-        fontWeight:'bold',
-        textAlign:'center',
-        marginLeft:15
-     }
+        fontSize: 15,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginLeft: 15
+    }
 })
 
