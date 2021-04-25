@@ -110,8 +110,8 @@ class Dieta extends React.Component {
                                                     style={{marginLeft:5}}
                                                     autoCapitalize="none"
                                                     editable={false}
-                                                    onChangeText={text => {this.setState({ nomeNutrizionista: text })}}
-                                                    value={this.state.nomeNutrizionista}
+                                                    onChangeText={text => {this.setState({ nutrizionista: text })}}
+                                                    value={this.state.nutrizionista}
                                             />
                                         </View>
                                         </>
