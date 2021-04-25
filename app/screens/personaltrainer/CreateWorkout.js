@@ -184,7 +184,7 @@ class CreateWorkout extends Component {
                 }).then(() => {
                     console.log('User updated!');
                 });
-                alert("L'utente è stato aggiunto con successo");
+                alert("La scheda è stata aggiunta con successo");
 
 
                 this.setState({ schedaArray: [], date: Platform.OS === 'web' ? '' : new Date(), userSelected: "", oidUser: "" });
