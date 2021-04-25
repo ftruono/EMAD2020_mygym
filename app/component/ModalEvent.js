@@ -36,7 +36,7 @@ const ModalEvent = (props) => {
                                 <TextInput
                                     label="Inserisci un orario"
                                     value={eventi.ora == '' ? ora : eventi.ora}
-                                    editable={global.userType != 'PT' ? true : false}
+                                    editable={props.userType != 'PT' ? false : true}
                                     onChangeText={text => setOra(text)}
                                 />
 
@@ -46,7 +46,7 @@ const ModalEvent = (props) => {
                                 <TextInput
                                     label="Inserisci titolo evento"
                                     value={eventi.titolo == '' ? titolo : eventi.titolo}
-                                    editable={global.userType != 'PT' ? true : false}
+                                    editable={props.userType != 'PT' ? false : true}
                                     onChangeText={text => setTitolo(text)}
                                 />
                                 <Text style={{ color: 'red' }}>{errore_titolo}</Text>
@@ -55,7 +55,7 @@ const ModalEvent = (props) => {
                                 <TextInput
                                     label="Inserisci durata evento"
                                     value={eventi.durata == '' ? durata : eventi.durata}
-                                    editable={global.userType != 'PT' ? true : false}
+                                    editable={props.userType != 'PT' ? false : true}
                                     onChangeText={text => setDurata(text)}
                                 />
                                 <Text style={{ color: 'red' }}>{errore_durata}</Text>
@@ -65,7 +65,7 @@ const ModalEvent = (props) => {
                                 <TextInput
                                     label="Inserisci descrizione/link evento"
                                     value={eventi.descrizione == '' ? descrizione : eventi.descrizione}
-                                    editable={global.userType != 'PT' ? true : false}
+                                    editable={props.userType != 'PT' ? false : true}
                                     onChangeText={text => setDescrizione(text)}
                                 />
                                 <Text style={{ color: 'red' }}>{errore_descrizione}</Text>

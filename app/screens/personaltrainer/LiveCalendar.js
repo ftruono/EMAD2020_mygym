@@ -5,10 +5,7 @@ import Icon from "react-native-vector-icons/FontAwesome"
 import _ from "lodash"
 import ModalEvent from '../../component/ModalEvent'
 import HeaderComponent from "../../component/HeaderComponent";
-import { Firestore } from '../../config/FirebaseConfig';
-// import {
-//     LineChart
-// } from "react-native-chart-kit";
+import { Firestore,FirebaseAutentication } from '../../config/FirebaseConfig';
 
 
 const { width, height } = Dimensions.get('window')
@@ -24,8 +21,18 @@ export default class LiveCalendar extends Component {
             day_event: [],
             lista_eventi: [],
             indice: 0,
+            typeUser:''
         }
+        this.getUser()
         this.getAllDay();
+    }
+
+
+    getUser = async () => {
+
+        var uid = FirebaseAutentication.currentUser.uid;
+        const user = (await Firestore.collection('UTENTI').doc(uid).get()).data();
+        this.setState({typeUser:user.type});
     }
 
     onSelectDate = (date) => {
@@ -159,13 +166,14 @@ export default class LiveCalendar extends Component {
         this.setState({ isModalVisible: false, data: this.state.data, indice: 0 })
     }
 
+
     render() {
         return (
 
             <SafeAreaView style={styles.container}>
                 <HeaderComponent {...this.props} title="Calendario Live" />
                 <View style={styles.containerModal}>
-                    <Text style={styles.textLogin}>Calendar</Text>
+                    <Text style={styles.textLogin}>Calendario eventi</Text>
                     <Calendar
                         warpDayStyle={styles.warpDay}
                         customWeekdays={['Dom ', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab']}
@@ -175,54 +183,8 @@ export default class LiveCalendar extends Component {
                     />
                     <ModalEvent isModalVisible={this.state.isModalVisible} getAdd={this.getAdd}
                         day_event={this.state.day_event} handleClose={this.handleModalClose}
-                        selectEvento={this.selectEvento} addDay={this.addDay} />
+                        selectEvento={this.selectEvento} addDay={this.addDay} userType={this.state.typeUser} />
                 </View>
-                {/* <View>
-                    <Text>Bezier Line Chart</Text>
-                    <LineChart
-                        data={{
-                            labels: ["January", "February", "March", "April", "May", "June"],
-                            datasets: [
-                                {
-                                    data: [
-                                        Math.random() * 100,
-                                        Math.random() * 100,
-                                        Math.random() * 100,
-                                        Math.random() * 100,
-                                        Math.random() * 100,
-                                        Math.random() * 100
-                                    ]
-                                }
-                            ]
-                        }}
-                        width={Dimensions.get("window").width} // from react-native
-                        height={220}
-                        yAxisLabel="$"
-                        yAxisSuffix="k"
-                        yAxisInterval={1} // optional, defaults to 1
-                        chartConfig={{
-                            backgroundColor: "#e26a00",
-                            backgroundGradientFrom: "#fb8c00",
-                            backgroundGradientTo: "#ffa726",
-                            decimalPlaces: 2, // optional, defaults to 2dp
-                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                            style: {
-                                borderRadius: 16
-                            },
-                            propsForDots: {
-                                r: "6",
-                                strokeWidth: "2",
-                                stroke: "#ffa726"
-                            }
-                        }}
-                        bezier
-                        style={{
-                            marginVertical: 8,
-                            borderRadius: 16
-                        }}
-                    />
-                </View> */}
             </SafeAreaView>
         )
     };
