@@ -1,5 +1,5 @@
 import React, { Component, useReducer } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity,Image, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity,Image, Platform, KeyboardAvoidingView, Dimensions } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome"
 import Feather from "react-native-vector-icons/Feather"
 import { AuthContext } from '../config/AutenticationConfig';
@@ -8,7 +8,7 @@ import { FirebaseAutentication } from '../config/FirebaseConfig';
 
 
 
-
+const { width, height } = Dimensions.get('screen');
 export const Login = () => {
 
 
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     sideMenuProfileIcon: {
         resizeMode: 'center',
         width: 200,
-        height: 150,
+        height: height > 700 ? 300 : 130,
         borderRadius: 100 / 2,
         alignSelf: 'center',
     },
