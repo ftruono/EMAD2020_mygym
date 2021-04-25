@@ -16,8 +16,8 @@ export default class HomeNT extends React.Component {
     this.getUser()
   }
   state = {
-    noClienti:false,
-    noAppuntamenti:false,
+    noClienti: false,
+    noAppuntamenti: false,
     clienti: [],
     diete: [],
     appuntamenti: [],
@@ -36,47 +36,59 @@ export default class HomeNT extends React.Component {
   getUser = async () => {
     var uid = FirebaseAutentication.currentUser.uid
     const nt = (await Firestore.collection('UTENTI').doc(uid).get()).data();
-    if(nt.clienti.length === 0) {
-      this.setState({noClienti:true})
-  } else {
-    nt.clienti.map((e, i) => {
-      this.getClienti(e)
-    })
-  }
+    if (nt.clienti.length === 0) {
+      this.setState({ noClienti: true })
+    } else {
+      nt.clienti.map((e, i) => {
+        this.getClienti(e)
+      })
+    }
 
-  if(nt.appuntamenti.length === 0) {
-    this.setState({noAppuntamenti:true})
-} else {
-    nt.appuntamenti.map((e) => {
-      if (moment().format("MMM Do YY") === moment(e.giorno.toDate()).format("MMM Do YY")) {
-        this.setState({appuntamenti:Object.values(e)})
-        this.renderItemList(e);
-      } else{
+    if (nt.appuntamenti.length === 0) {
+      this.setState({ noAppuntamenti: true })
+    } else {
+      nt.appuntamenti.map((e) => {
+        if (moment().format("MMM Do YY") === moment(e.giorno.toDate()).format("MMM Do YY")) {
+          this.setState({ appuntamenti: Object.values(e) })
+          this.renderItemList(e);
+        } else {
 
-        console.log(this.state.appuntamenti)
-      }
-    })
-}
+          console.log(this.state.appuntamenti)
+        }
+      })
+    }
   }
 
   //2
   getClienti = async (idCliente) => {
     const utente = (await Firestore.collection('UTENTI').doc(idCliente).get()).data();
 
-    utente.diete.map((e, i) => {
-      this.getDiete(idCliente, e);
+    utente.diete.map((id, i) => {
+      this.getDiete(idCliente, id, utente.username);
     })
-    this.state.clienti.push({ id: this.makeid(5), title: idCliente, username: utente.username })
+    // this.state.clienti.push({ id: this.makeid(5), title: idCliente, username: utente.username })
 
   }
 
   //3
-  getDiete = async (idCliente, id) => {
-    var valori = (await Firestore.collection('DIETE').doc(id).get()).data()
+  getDiete = async (idCliente, id, username) => {
+    const valori = (await Firestore.collection('DIETE').doc(id).get()).data();
+    console.log(valori.datafine)
 
-    this.state.diete.push({ 'cliente': idCliente, 'valori': valori })
-    var support = this.state.diete;
-    this.setState({ diete: support });
+
+    if ((valori.datafine.toDate()).getMonth() === new Date().getMonth()) {
+      if ((valori.datafine.toDate()).getDate() >= new Date().getDate() && (valori.datafine.toDate()).getDate() <= (new Date().getDate() + 4)) {
+
+        this.state.clienti.push({ id: this.makeid(5), title: idCliente, username: username, dataScadenza: valori.datafine.toDate() });
+        this.setState({ myClient: this.state.myClient });
+
+        this.state.diete.push({ 'cliente': idCliente, 'valori': valori });
+        this.setState({ diete: this.state.diete });
+      }
+    }
+    if (this.state.clienti.length === 0) {
+      this.setState({ noClienti: true });
+    }
 
   }
   renderItemList = (appuntamento) => {
@@ -94,7 +106,7 @@ export default class HomeNT extends React.Component {
       <TouchableOpacity onPress={() => { console.log(item), this.props.navigation.navigate("PianiAlimentari", { uid: item.title, username: item.username, routeProps: this.props }) }}>
         <View style={styles.action}>
           <Feather name="user" color="#05375a" size={20}></Feather>
-          <Text style={styles.title}> {item.username}</Text>
+          <Text style={styles.title}> {item.username}, la scheda scade {moment(item.datafine).locale("it").format('LL')}</Text>
         </View>
       </TouchableOpacity>
 
@@ -110,42 +122,42 @@ export default class HomeNT extends React.Component {
         <Text style={styles.titleParagraph}>Dieta in scadenza a:</Text>
 
         {this.state.noClienti ? (
-                    <>
-                        <Text style={styles.titleSubParagraph}> Non hai ancora clienti</Text>
-                    </>
-            ):(
-                    <>
+          <>
+            <Text style={styles.titleSubParagraph}> Non hai nessun utente a cui devi aggiornare la dieta per i prossimi 4 giorni</Text>
+          </>
+        ) : (
+          <>
 
-                        <FlatList style={{ margin: 10 }}
-                          data={this.state.clienti}
-                          scrollEnabled={true}
-                          keyExtractor={(item) => item.id}
-                          refreshing={this._onRefresh}
-                          renderItem={this.renderItem}
-                        />
-                    </>
-            )}
+            <FlatList style={{ margin: 10 }}
+              data={this.state.clienti}
+              scrollEnabled={true}
+              keyExtractor={(item) => item.id}
+              refreshing={this._onRefresh}
+              renderItem={this.renderItem}
+            />
+          </>
+        )}
 
         <Card.Divider />
 
         <Text style={styles.titleParagraph}>Lista di Appuntamenti Odierni:</Text>
-        
+
         {this.state.noAppuntamenti ? (
-                    <>
-                        <Text style={styles.titleSubParagraph}> Non hai ancora appuntamenti</Text>
-                    </>
-            ):(
-                    <>
-                        <View>
-                          {this.state.appuntamenti.length === 0 && <>
-                            <Text style={styles.titleSubParagraph}>Non hai appuntamenti per oggi</Text>
-                          </>}
-                          {this.state.itemList.map((value, index) => {
-                            return value
-                          })}
-                        </View>
-                    </>
-            )}
+          <>
+            <Text style={styles.titleSubParagraph}> Non hai ancora appuntamenti</Text>
+          </>
+        ) : (
+          <>
+            <View>
+              {this.state.appuntamenti.length === 0 && <>
+                <Text style={styles.titleSubParagraph}>Non hai appuntamenti per oggi</Text>
+              </>}
+              {this.state.itemList.map((value, index) => {
+                return value
+              })}
+            </View>
+          </>
+        )}
 
       </SafeAreaView>
     );
@@ -204,7 +216,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 50,
     marginLeft: 15,
-    paddingBottom:25
+    paddingBottom: 25
   },
   action: {
     flexDirection: 'row',

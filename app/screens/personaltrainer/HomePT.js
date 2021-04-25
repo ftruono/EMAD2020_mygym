@@ -88,7 +88,7 @@ class HomePT extends React.Component {
       <TouchableOpacity>
         <View style={styles.action}>
           <MaterialIcons name="fitness-center" color="#05375a" size={25}></MaterialIcons>
-          <Text style={styles.title}> {item.username}, la scheda scade {moment().local('IT'),moment(item.dataScadenza).format('l') }</Text>
+          <Text style={styles.title}> {item.username}, la scheda scade {moment(item.dataScadenza).locale("it").format('LL') }</Text>
         </View>
       </TouchableOpacity>
     </View>
