@@ -163,9 +163,9 @@ const AddAppuntamenti = (props) => {
 
                         <Button onPress={() => { setDatePickerVisibility(true); setMode('date') }}>Seleziona giorno e ora</Button>
                         {moment().format() === moment(date, true).format() ? (<>
-                            <Text>La data scelta è {moment.locale('it'), moment().format('LLLL')}</Text>
+                            <Text>La data scelta è {moment().format('LLLL')}</Text>
                         </>) : (<>
-                            <Text>La data scelta è {moment.locale('it'), moment(date).format('LLLL')}</Text>
+                            <Text>La data scelta è {moment(date).format('LLLL')}</Text>
 
                         </>)}
 

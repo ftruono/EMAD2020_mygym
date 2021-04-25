@@ -244,7 +244,7 @@ export default class AppuntamentiNT extends React.Component {
 
                     {Object.values(item.giorno)[1] != null ? (
                         <>
-                            <Text>{moment.locale('it'), moment(new Date(item.giorno.toDate())).format('LLLL')}</Text>
+                            <Text>{moment(new Date(item.giorno.toDate())).format('LLLL')}</Text>
 
                         </>) : (<>
                             <Text>Errore nel caricamento si prega di ricaricare la pagina</Text>

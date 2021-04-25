@@ -97,7 +97,7 @@ export default class HomeNT extends React.Component {
       < View style={styles.action} >
         <Feather name="book-open" color="#05375a" size={20} style={{ marginLeft: 20 }}></Feather>
 
-        <Text style={styles.title}> {appuntamento.nome} alle ore {moment.locale('it'), moment(new Date(appuntamento.giorno.toDate())).format('HH:mm')}</Text>
+        <Text style={styles.title}> {appuntamento.nome} alle ore {moment(new Date(appuntamento.giorno.toDate())).format('HH:mm')}</Text>
       </View >
     )
   }
@@ -106,7 +106,7 @@ export default class HomeNT extends React.Component {
       <TouchableOpacity onPress={() => { console.log(item), this.props.navigation.navigate("PianiAlimentari", { uid: item.title, username: item.username, routeProps: this.props }) }}>
         <View style={styles.action}>
           <Feather name="user" color="#05375a" size={20}></Feather>
-          <Text style={styles.title}> {item.username}, la dieta scade il {moment(item.datafine).locale("it").format('LL')}</Text>
+          <Text style={styles.title}> {item.username}, la dieta scade il {moment(item.datafine).format('LL')}</Text>
         </View>
       </TouchableOpacity>
 
