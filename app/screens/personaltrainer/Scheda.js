@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, StyleSheet, View ,TouchableOpacity} from 'react-native'
+import { Dimensions, StyleSheet, View, TouchableOpacity } from 'react-native'
 import { Card } from 'react-native-elements';
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -17,19 +17,33 @@ const Scheda = (props) => {
     let selectDay = (day) => (props.daySelected(day), console.log("ciao"));
 
 
+    const onlyNumber = (num, es, text) => {
+        let newText = '';
+        let numbers = '0123456789';
 
+        for (var i = 0; i < text.length; i++) {
+            if (numbers.indexOf(text[i]) > -1) {
+                newText = newText + text[i];
+                salva(num, es, text);
+            }
+            else {
+                alert("si prega di inserire solo numeri");
+            }
+        }
+        
+    }
 
 
     return (
         <View style={styles.item}>
-            <TouchableOpacity onPress={() => selectDay(scheda.day)} style={{activeOpacity:0.10,enabled:false}}>
+            <TouchableOpacity onPress={() => selectDay(scheda.day)} style={{ activeOpacity: 0.10, enabled: false }}>
                 <Card style={{ flex: 1 }}>
-                    <Card.Title>Day {scheda.day+1}</Card.Title>
+                    <Card.Title>Day {scheda.day + 1}</Card.Title>
                     <View >
                         {scheda.esercizi.map((u, i) => {
                             return (
                                 <View>
-                                    <Text>esercizio {i+1}</Text>
+                                    <Text>esercizio {i + 1}</Text>
                                     <Card.Divider />
                                     <View style={{ flex: 1, flexDirection: 'row' }}>
                                         <DropDownPicker
@@ -72,20 +86,20 @@ const Scheda = (props) => {
                                             label="Ripetizioni"
                                             value={u.ripetizioni}
                                             style={styles.textInput}
-                                            onChangeText={(text) => salva(i, '1', text)}
+                                            onChangeText={(text) => onlyNumber(i, '1', text)}
 
                                         />
                                         <TextInput
                                             label="Colpi"
                                             value={u.colpi}
                                             style={styles.textInput}
-                                            onChangeText={(text) => salva(i, '2', text)}
+                                            onChangeText={(text) => onlyNumber(i, '2', text)}
                                         />
                                         <TextInput
                                             label="Recupero"
                                             value={u.recupero}
                                             style={styles.textInput}
-                                            onChangeText={(text) => salva(i, '3', text)}
+                                            onChangeText={(text) => onlyNumber(i, '3', text)}
                                         />
                                     </View>
                                 </View>
@@ -103,9 +117,9 @@ export default Scheda;
 const styles = StyleSheet.create({
 
     item: {
-        width: width > 1000 ? width / 2 : width-10,
+        width: width > 1000 ? width / 2 : width - 10,
     },
     textInput: {
-        width: width > 1000 ? width / 9 : width/5,
+        width: width > 1000 ? width / 9 : width / 5,
     }
 });
