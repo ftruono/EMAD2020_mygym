@@ -112,7 +112,7 @@ class HomePT extends React.Component {
 
         {this.state.noClienti ? (
           <>
-            <Text style={styles.titleSubParagraph}> Non hai clienti a cui aggiornare la scheda per i prossimi 4 giorni</Text>
+            <Text style={styles.titleSubParagraph}> Non hai clienti a cui aggiornare la scheda</Text>
           </>
         ) : (
           <>
@@ -214,6 +214,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginTop: 50,
+    paddingBottom:25
   },
   action: {
     flexDirection: 'row',
