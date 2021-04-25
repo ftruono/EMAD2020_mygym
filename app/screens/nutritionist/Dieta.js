@@ -105,13 +105,13 @@ class Dieta extends React.Component {
                                         <View style={styles.action}>
                                             <Feather name="user" color="#05375a" size={30} style={{marginLeft:15}}></Feather>
                                             <TextInput
-                                                    placeholder="Nome Nutrizionista"
-                                                    placeholderTextColor="#666666"
-                                                    style={{marginLeft:5}}
-                                                    autoCapitalize="none"
-                                                    editable={false}
-                                                    onChangeText={text => {this.setState({ nomeNutrizionista: text })}}
-                                                    value={this.state.nomeNutrizionista}
+                                                placeholder="Nome Nutrizionista"
+                                                placeholderTextColor="#666666"
+                                                style={{marginLeft:5}}
+                                                autoCapitalize="none"
+                                                editable={false}
+                                                onChangeText={text => {this.setState({ nutrizionista: text })}}
+                                                value={this.state.nutrizionista}
                                             />
                                         </View>
                                         </>
