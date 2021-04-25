@@ -24,12 +24,12 @@ const ModalAddDati = (props) => {
     for (var i = 0; i < text.length; i++) {
       if (numbers.indexOf(text[i]) > -1) {
         newText = newText + text[i];
-      }
-      else {
+        setMisurazione(newText);
+      }else {
         alert("si prega di inserire solo numeri");
       }
     }
-    setMisurazione(newText);
+    
   }
 
   return (
