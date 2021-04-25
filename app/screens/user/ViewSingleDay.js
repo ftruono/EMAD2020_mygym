@@ -12,11 +12,6 @@ export default class ViewSingleDay extends React.Component {
         }
     }
 
-    save = () =>{
-        this.setState({modify:false})
-        alert("Hai cliccato su salva")
-    }
-
     render() {
         
         const exercise = [];
@@ -31,7 +26,7 @@ export default class ViewSingleDay extends React.Component {
             exercise.push({
                 eser: 'Tipo esercizio: ' + nomeEsercizio[i],
                 rec: 'Recupero: ' + recupero[i] + ' secondi',
-                ripetizioni: ripetizioni[i] + ' ripetizioni ' + '* ' + colpi[i] + ' volte'
+                ripetizioni: ripetizioni[i] + ' volte ' + '* ' + colpi[i] + ' ripetizioni'
             })
         } 
 
@@ -45,7 +40,7 @@ export default class ViewSingleDay extends React.Component {
                         <Text style={styles.textTitle}>Day {esercizi[0].day}</Text>
                     </View>
                     {exercise.map((u,i) =>(
-                        <View>
+                        <View key={i}>
                             <Text style={styles.titleThParagraph}>Esercizio {i+1}</Text>
                             <TextInput
                                 placeholderTextColor="#666666"

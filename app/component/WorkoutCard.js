@@ -38,10 +38,10 @@ class WorkoutCard extends React.Component {
                         <Card.Divider />
                             {this.state.eserciziScheda.map((item,i) => {
                                 return (
-                                    <View style={styles.body}>
+                                    <View style={styles.body} key={i}>
                                         <Text style={{fontWeight:'bold'}}>Esercizio {i+1}: </Text> 
                                         <Text>{item.esercizio}</Text>
-                                        <Text> {item.ripetizioni} rip. * {item.colpi} volte </Text>
+                                        <Text> {item.ripetizioni} volte * {item.colpi} rip. </Text>
                                         <Text>{item.recupero} sec. di recupero</Text>
                                         <Card.Divider />
                                     </View>
