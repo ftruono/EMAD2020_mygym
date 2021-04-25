@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { StyleSheet, View, Platform, TouchableOpacity, Text, FlatList, Dimensions } from 'react-native';
+import { StyleSheet, View, Platform, TouchableOpacity, Text, FlatList, Dimensions,ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInputMask } from 'react-native-masked-text'
 import { RefreshControl, SafeAreaView } from 'react-navigation';
@@ -195,6 +195,7 @@ class CreateWorkout extends Component {
     render() {
         const { schedaArray } = this.state;
         return (
+            
             <SafeAreaView style={styles.container}>
                 <HeaderComponent {...this.props} title="Schede allenamento" />
 
@@ -255,22 +256,25 @@ class CreateWorkout extends Component {
                     <>
                     </>
                 )}
-
-                <FlatList style={{ margin: 10 }}
-                    data={schedaArray}
-                    scrollEnabled={true}
-                    numColumns={width > 1000 ? 2 : 1}
-                    keyExtractor={(item) => item.day}
-                    refreshing={this._onRefresh}
-                    renderItem={({ item, index }) => (
-                        <Scheda scheda={schedaArray[index]} aggiungiValori={this.aggiungiValori} daySelected={this.daySelected} />
-                    )}
-                />
+                <ScrollView style={{height:100}}>
+                    <FlatList style={{ margin: 10 }}
+                        data={schedaArray}
+                        scrollEnabled={true}
+                        numColumns={width > 1000 ? 2 : 1}
+                        keyExtractor={(item) => item.day}
+                        refreshing={this._onRefresh}
+                        renderItem={({ item, index }) => (
+                            <Scheda scheda={schedaArray[index]} aggiungiValori={this.aggiungiValori} daySelected={this.daySelected} />
+                        )}
+                    />
+                </ScrollView>
+                
                 <BottoneAddWorkOut addDay={this.addDay} addEsercizio={this.addEsercizio} exitDay={selectDay} atletaSelezionato={this.state.userSelected} />
                 <TouchableOpacity style={styles.appButtonSave} onPress={() => { this.aggiungiScheda() }}>
                     <Text style={styles.appButtonText}>Salva</Text>
                 </TouchableOpacity>
             </SafeAreaView>
+            
         );
     }
 
