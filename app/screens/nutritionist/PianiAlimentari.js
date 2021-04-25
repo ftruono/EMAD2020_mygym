@@ -55,9 +55,8 @@ class PianiAlimentari extends Component {
     //serve
     addValori = async () => {
 
-        const today = moment().format("MMM Do YY");
         this.checkDati()
-        if (today >= moment(this.state.date, true).format("MMM Do YY")) {
+        if (new Date().getTime() >= new Date(this.state.date).getTime()) {
             alert("si prega di selezionare una data successiva a quella odierna");
         } else if (0 === this.state.arrayPasti.length) {
             alert("scrivere prima i pasti")
@@ -91,9 +90,10 @@ class PianiAlimentari extends Component {
             ).set({
                 valori: this.state.arrayPasti,
                 datainizio: new Date(),
-                datafine: Platform.OS === 'web' ? new Date(moment(this.state.date).format()) : this.state.date
+                datafine: Platform.OS === 'web' ? new Date(this.state.date) : this.state.date
             }).then(console.log("aggiunti"));
 
+            alert("Dieta aggiunta");
 
             this.state.arrayPasti = [];
             this.state.formInput = [];
@@ -249,7 +249,7 @@ class PianiAlimentari extends Component {
             <Card.Divider />
 
             <View style={{ flexDirection: 'row' }}  >
-                <Text onPress={() => (alert("ciao"))} style={styles.textInput}>  Vuoi vedere sue su statistiche, clicca qui</Text>
+                <Text onPress={() => { this.props.navigation.navigate("Statistiche", { uid: this.props.route.params.username, routeProps: this.props }) }} style={styles.textInput}>  Vuoi vedere sue su statistiche, clicca qui</Text>
             </View>
         </View>
     );
@@ -279,7 +279,7 @@ class PianiAlimentari extends Component {
             this.props.navigation.navigate("ListaUtenti", { routeProps: this.prop });
         }
     }
-    
+
     render() {
 
         return (
@@ -308,15 +308,8 @@ class PianiAlimentari extends Component {
                                     }}
                                     value={this.state.date}
                                     onChangeText={(text) => {
-
-                                        var data = new Intl.DateTimeFormat('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
                                         this.state.date = text;
                                         this.setState({ date: text });
-                                        if (text === data) {
-                                            alert("si prega di selezionare una data diversa da quella odierna");
-                                            this.setState({ date: '' });
-                                        }
-
                                     }}
                                     style={{ marginHorizontal: 10, borderColor: 'black', borderWidth: 2 }}
                                 />
